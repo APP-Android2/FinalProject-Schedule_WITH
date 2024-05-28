@@ -66,7 +66,7 @@ class _LoginPasswordResetDoneState extends State<LoginPasswordResetDone> {
             ),
             // 하단에 위치한 버튼
             Container(
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.fromLTRB(20, 20, 20, 30),
               child: MainButton(
                 text: "로그인",
                 onPressed: () {

@@ -89,7 +89,7 @@ class _LoginPasswordResetState extends State<LoginPasswordReset> {
             // 비밀번호 변경 버튼 설정
             Container(
               color: Colors.white,
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.fromLTRB(20, 20, 20, 30),
               child: MainButton(
                   text: "비밀번호 변경",
                   onPressed: () {
