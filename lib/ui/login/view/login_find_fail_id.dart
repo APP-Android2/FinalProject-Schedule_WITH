@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:schedule_with/assets/colors/color.dart';
-import 'package:schedule_with/widget/view/main_button.dart';
+import 'package:schedule_with/widget/main_button.dart';
 
 class LoginFindFailId extends StatefulWidget {
   const LoginFindFailId({super.key});

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:schedule_with/ui/login/view/login_find_success_id.dart';
-import 'package:schedule_with/widget/view/main_button.dart';
+import 'package:schedule_with/widget/main_button.dart';
 import '../../../assets/colors/color.dart';
-import '../../../widget/view/main_text_field.dart';
+import '../../../widget/main_text_field.dart';
 
 class LoginFindIdAndPassword extends StatefulWidget {
   const LoginFindIdAndPassword({super.key});

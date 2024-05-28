@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schedule_with/assets/colors/color.dart';
-import 'package:schedule_with/widget/view/main_button.dart';
+import 'package:schedule_with/widget/main_button.dart';
 
-import '../../../widget/view/main_text_field.dart';
+import '../../../widget/main_text_field.dart';
 
 class LoginPasswordReset extends StatefulWidget {
   const LoginPasswordReset({super.key});

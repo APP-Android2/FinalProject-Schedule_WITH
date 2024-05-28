@@ -5,8 +5,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:schedule_with/assets/colors/color.dart';
-import 'package:schedule_with/widget/view/main_button.dart';
-import 'package:schedule_with/widget/view/main_text_field.dart';
+import 'package:schedule_with/widget/main_button.dart';
+import 'package:schedule_with/widget/main_text_field.dart';
 
 class LoginJoin extends StatefulWidget {
   const LoginJoin({super.key});

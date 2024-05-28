@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 import '../../../assets/colors/color.dart';
-import '../../../widget/view/main_button.dart';
+import '../../../widget/main_button.dart';
 
 class LoginPasswordResetDone extends StatefulWidget {
   const LoginPasswordResetDone({super.key});
