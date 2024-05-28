@@ -8,6 +8,8 @@ import 'package:schedule_with/ui/login/view/login_main.dart';
 import 'package:schedule_with/ui/login/view/login_password_reset.dart';
 import 'package:schedule_with/ui/login/view/login_password_reset_done.dart';
 import 'package:schedule_with/ui/login/view/login_read_terms.dart';
+import 'package:schedule_with/ui/notification/view/notification_main.dart';
+import 'package:schedule_with/ui/notification/view/notification_request_detail.dart';
 
 void main(){
   runApp(ScheduleWith());
@@ -36,7 +38,7 @@ class _ScheduleWithState extends State<ScheduleWith> {
       home: Container(
         child: Scaffold(
           // 나중에 홈 화면으로 변경해야 됨
-          body: LoginMain(),
+          body: NotificationMain(),
         ),
       ),
       // Name을 지정하여 페이지 이동
@@ -49,6 +51,7 @@ class _ScheduleWithState extends State<ScheduleWith> {
         GetPage(name: '/passwordReset', page: () => LoginPasswordReset()),
         GetPage(name: '/passwordResetDone', page: () => LoginPasswordResetDone()),
         GetPage(name: '/readTerms', page: () => LoginReadTerms()),
+        GetPage(name: '/requestDetail', page: () => NotificationRequestDetail()),
       ],
     );
   }

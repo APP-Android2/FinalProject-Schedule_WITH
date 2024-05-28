@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 import '../../../assets/colors/color.dart';
-import '../../../widget/view/main_button.dart';
+import '../../../widget/main_button.dart';
 
 class LoginPasswordResetDone extends StatefulWidget {
   const LoginPasswordResetDone({super.key});
@@ -66,7 +66,7 @@ class _LoginPasswordResetDoneState extends State<LoginPasswordResetDone> {
             ),
             // 하단에 위치한 버튼
             Container(
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.fromLTRB(20, 20, 20, 30),
               child: MainButton(
                 text: "로그인",
                 onPressed: () {
