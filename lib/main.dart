@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:schedule_with/ui/login/view/login_find_fail_id.dart';
 import 'package:schedule_with/ui/login/view/login_find_id_password.dart';
@@ -25,6 +25,18 @@ class _ScheduleWithState extends State<ScheduleWith> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+
+      // 요일을 한국어로 변경하기 위한 작업
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate
+      ],
+      // 요일을 한국어로 변경하기 위한 작업
+      supportedLocales: const [
+        Locale('ko','KO')
+      ],
+      // 요일을 한국어로 변경하기 위한 작업
+      locale: const Locale('ko'),
 
       // 우상단 디버그 표시 제거
       debugShowCheckedModeBanner: false,
