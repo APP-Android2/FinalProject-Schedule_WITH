@@ -1,25 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../assets/colors/color.dart';
-import '../assets/colors/color.dart';
-import '../ui/schedule/widget/add_schedule_bottom_sheet.dart';
+import 'package:schedule_with/assets/colors/color.dart';
 
-class DatePicker extends StatefulWidget {
+class SelectDate extends StatefulWidget {
   final Widget back_page ;
   final String title;
-
-  const DatePicker({
-   required this.back_page,
+  const SelectDate({
+    required this.back_page,
     required this.title,
     Key? key,
   }) : super(key: key);
 
   @override
-  State<DatePicker> createState() => _DatePickerState();
+  State<SelectDate> createState() => _SelectDateState();
 }
 
-class _DatePickerState extends State<DatePicker> {
+class _SelectDateState extends State<SelectDate> {
   @override
   Widget build(BuildContext context) {
     DateTime selectDate;
