@@ -10,8 +10,7 @@ class MainButton extends StatelessWidget {
     required this.text,
     required this.onPressed,
     required this.color,
-    Key? key,
-  }) : super(key: key);
+    Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

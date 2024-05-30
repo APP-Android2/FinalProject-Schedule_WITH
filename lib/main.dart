@@ -16,6 +16,7 @@ import 'package:schedule_with/ui/notification/view/notification_request_detail.d
 import 'package:schedule_with/widget/main_bottom_navigation_bar.dart';
 
 
+
 void main() {
   runApp(ScheduleWith());
 }
