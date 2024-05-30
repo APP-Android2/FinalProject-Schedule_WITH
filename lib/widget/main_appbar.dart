@@ -6,7 +6,6 @@ class MainAppBar extends StatefulWidget implements PreferredSizeWidget {
 
   @override
   State<MainAppBar> createState() => _MainAppBarState();
-
   @override
   Size get preferredSize => Size.fromHeight(50);
 }

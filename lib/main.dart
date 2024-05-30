@@ -31,7 +31,6 @@ class _ScheduleWithState extends State<ScheduleWith> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      //
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
