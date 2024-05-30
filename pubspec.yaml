@@ -31,6 +31,18 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_svg: ^1.0.0
+  table_calendar: ^3.0.0
+  syncfusion_flutter_calendar: ^25.2.6
+  logger: ^2.3.0
+  get:
+flutter_localizations:
+  sdk: flutter
+  intl: ^0.17.0
+
+
+  flutter_localizations:
+    sdk: flutter
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -52,6 +64,16 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+
+  assets:
+    - lib/assets/image/logo.png
+    - lib/assets/icon/icon_bell_outline.svg
+
+  fonts:
+    - family: FontMD
+      fonts:
+        - asset: lib/assets/font/font.md
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
