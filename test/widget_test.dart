@@ -1,30 +1,39 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:schedule_with/assets/colors/color.dart';
 import 'package:schedule_with/main.dart';
-
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  testWidgets('TodoMainScreen has tabs and changes color on selection', (WidgetTester tester) async {
+    // 앱을 빌드하고 트리거합니다.
     await tester.pumpWidget(const MyApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // TODO 탭이 초기 선택된 상태인지 확인합니다.
+    expect(find.text('TODO'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    // 캘린더 탭을 찾고 탭합니다.
+    await tester.tap(find.text('캘린더'));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // 캘린더 탭이 선택된 상태인지 확인합니다.
+    final calendarTab = tester.widget<Container>(find.byWidgetPredicate(
+          (Widget widget) =>
+      widget is Container &&
+          widget.decoration != null &&
+          (widget.decoration as BoxDecoration).color == mainOrange,
+    ));
+    expect(calendarTab, isNotNull);
+
+    // 메모 탭을 찾고 탭합니다.
+    await tester.tap(find.text('메모'));
+    await tester.pump();
+
+    // 메모 탭이 선택된 상태인지 확인합니다.
+    final memoTab = tester.widget<Container>(find.byWidgetPredicate(
+          (Widget widget) =>
+      widget is Container &&
+          widget.decoration != null &&
+          (widget.decoration as BoxDecoration).color == mainOrange,
+    ));
+    expect(memoTab, isNotNull);
   });
 }
