@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:schedule_with/assets/colors/color.dart';
-import 'package:schedule_with/widget/view/main_button.dart';
+import 'package:schedule_with/widget/main_button.dart';
 
 class LoginFindFailId extends StatefulWidget {
   const LoginFindFailId({super.key});
@@ -52,7 +52,7 @@ class _LoginFindFailIdState extends State<LoginFindFailId> {
             ),
             // 하단에 위치한 버튼
             Container(
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.fromLTRB(20, 20, 20, 30),
               child: MainButton(
                 text: "확인",
                 onPressed: () {

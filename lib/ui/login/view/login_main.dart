@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schedule_with/assets/colors/color.dart';
-import 'package:schedule_with/widget/view/main_button.dart';
-import 'package:schedule_with/widget/view/main_text_field.dart';
+import 'package:schedule_with/widget/main_button.dart';
+import 'package:schedule_with/widget/main_text_field.dart';
 
 class LoginMain extends StatefulWidget {
   const LoginMain({Key? key}) : super(key: key);

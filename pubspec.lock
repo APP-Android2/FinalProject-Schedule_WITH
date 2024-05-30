@@ -25,6 +25,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  carousel_slider:
+    dependency: "direct main"
+    description:
+      name: carousel_slider
+      sha256: "9c695cc963bf1d04a47bd6021f68befce8970bcd61d24938e1fb0918cf5d9c42"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.1"
   characters:
     dependency: transitive
     description:
@@ -221,6 +229,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  smooth_page_indicator:
+    dependency: "direct main"
+    description:
+      name: smooth_page_indicator
+      sha256: "725bc638d5e79df0c84658e1291449996943f93bacbc2cec49963dbbab48d8ae"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   source_span:
     dependency: transitive
     description:
@@ -253,30 +269,38 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  stylish_bottom_bar:
+    dependency: "direct main"
+    description:
+      name: stylish_bottom_bar
+      sha256: ca72557a5bd8f44caae9017eb3a73002e9189d7a9d2fac598fa55be13724f32b
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   syncfusion_flutter_calendar:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_calendar
-      sha256: "398f8debce35a001cdbad74b23ede8ffba3d5b6668b2b348d15dfbd2dc2b00b2"
+      sha256: ba573a204f5ac52da570d9a427d8d8808fcf8b602718694e5e4f553b446ccb20
       url: "https://pub.dev"
     source: hosted
-    version: "25.2.5"
+    version: "25.2.6"
   syncfusion_flutter_core:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
-      sha256: "63108a33f9b0d89f7b6b56cce908b8e519fe433dbbe0efcf41ad3e8bb2081bd9"
+      sha256: "75683ee7356d240243e491526a669069ea9280275299bb79760f1aaf6d4e07d1"
       url: "https://pub.dev"
     source: hosted
-    version: "25.2.5"
+    version: "25.2.6"
   syncfusion_flutter_datepicker:
     dependency: transitive
     description:
       name: syncfusion_flutter_datepicker
-      sha256: c2bda86a6137a64168584a36959bad9141cc9305f274b2a15f233074b92700a4
+      sha256: e001c3b5dee7d27f39a8db51c3cc9d8d89ecd6f7fe136c91da58f831285e7d2f
       url: "https://pub.dev"
     source: hosted
-    version: "25.2.5"
+    version: "25.2.6"
   term_glyph:
     dependency: transitive
     description:

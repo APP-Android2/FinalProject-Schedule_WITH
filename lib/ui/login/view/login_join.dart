@@ -5,8 +5,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:schedule_with/assets/colors/color.dart';
-import 'package:schedule_with/widget/view/main_button.dart';
-import 'package:schedule_with/widget/view/main_text_field.dart';
+import 'package:schedule_with/widget/main_button.dart';
+import 'package:schedule_with/widget/main_text_field.dart';
 
 class LoginJoin extends StatefulWidget {
   const LoginJoin({super.key});
@@ -32,25 +32,28 @@ class _JoinScreenState extends State<LoginJoin> {
   Widget build(BuildContext context) {
     return Scaffold(
       // 상단 툴바
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        // 뒤로가기 버튼
-        leading: IconButton(
-          padding: EdgeInsets.zero,
-          icon: SvgPicture.asset("lib/assets/icon/icon_angel_brackets.svg"),
-          onPressed: () {
-            Get.back();
-          },
-        ),
-        // 타이틀
-        centerTitle: true,
-        title: Container(
-          padding: EdgeInsets.only(bottom: 8),
-          child: Text(
-            "회원가입",
-            style: TextStyle(color: mainBrown, fontSize: 16, fontWeight: FontWeight.bold),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50),
+        child: AppBar(
+          backgroundColor: Colors.white,
+          // 뒤로가기 버튼
+          leading: IconButton(
+            padding: EdgeInsets.zero,
+            icon: SvgPicture.asset("lib/assets/icon/icon_angel_brackets.svg"),
+            onPressed: () {
+              Get.back();
+            },
           ),
-        )
+          // 타이틀
+          centerTitle: true,
+          title: Container(
+            padding: EdgeInsets.only(bottom: 8),
+            child: Text(
+              "회원가입",
+              style: TextStyle(color: mainBrown, fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          )
+        ),
       ),
       backgroundColor: Colors.white,
       body: CustomScrollView(
@@ -315,7 +318,7 @@ class _JoinScreenState extends State<LoginJoin> {
                       } : null,
                       color: mainOrange
                   ),
-                  Padding(padding: EdgeInsets.only(bottom: 20)),
+                  Padding(padding: EdgeInsets.only(bottom: 30)),
                 ],
               ),
             ),

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:schedule_with/ui/login/view/login_find_success_id.dart';
-import 'package:schedule_with/widget/view/main_button.dart';
+import 'package:schedule_with/widget/main_button.dart';
 import '../../../assets/colors/color.dart';
-import '../../../widget/view/main_text_field.dart';
+import '../../../widget/main_text_field.dart';
 
 class LoginFindIdAndPassword extends StatefulWidget {
   const LoginFindIdAndPassword({super.key});
@@ -24,23 +24,26 @@ class _LoginFindIdAndPasswordState extends State<LoginFindIdAndPassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          padding: EdgeInsets.zero,
-          icon: SvgPicture.asset("lib/assets/icon/icon_angel_brackets.svg"),
-          onPressed: () {
-            Get.back();
-          },
-        ),
-        centerTitle: true,
-        title: Container(
-          padding: EdgeInsets.only(bottom: 8),
-          child: Text(
-            "ID/PW 찾기",
-            style: TextStyle(color: mainBrown, fontSize: 16,fontWeight: FontWeight.bold),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50),
+        child: AppBar(
+          backgroundColor: Colors.white,
+          leading: IconButton(
+            padding: EdgeInsets.zero,
+            icon: SvgPicture.asset("lib/assets/icon/icon_angel_brackets.svg"),
+            onPressed: () {
+              Get.back();
+            },
           ),
-        )
+          centerTitle: true,
+          title: Container(
+            padding: EdgeInsets.only(bottom: 8),
+            child: Text(
+              "ID/PW 찾기",
+              style: TextStyle(color: mainBrown, fontSize: 16,fontWeight: FontWeight.bold),
+            ),
+          )
+        ),
       ),
       body: Column(
         children: [
@@ -122,7 +125,7 @@ class _LoginFindIdAndPasswordState extends State<LoginFindIdAndPassword> {
                                   },
                                   color: mainOrange
                               ),
-                              Padding(padding: EdgeInsets.only(bottom: 20)),
+                              Padding(padding: EdgeInsets.only(bottom: 30)),
                             ],
                           ),
                         ),
@@ -171,7 +174,7 @@ class _LoginFindIdAndPasswordState extends State<LoginFindIdAndPassword> {
                                   },
                                   color: mainOrange
                               ),
-                              Padding(padding: EdgeInsets.only(bottom: 20)),
+                              Padding(padding: EdgeInsets.only(bottom: 30)),
                             ],
                           ),
                         ),
