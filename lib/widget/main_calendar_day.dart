@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:schedule_with/assets/colors/color.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import '../assets/color/color.dart';
-// import '../domain/repository/sample_data.dart';
+import '../domain/repository/sample_data.dart';
 
 class MainCalendarDay extends StatefulWidget {
   const MainCalendarDay({super.key});
@@ -27,7 +27,7 @@ class _MainCalendarDayState extends State<MainCalendarDay> {
           ),
           view: CalendarView.day,
           // 샘플 데이터 불러오기
-          // dataSource: getDataSource(),
+          dataSource: getDataSource(),
           todayTextStyle: TextStyle(color: Colors.white),
           todayHighlightColor: mainOrange,
           cellBorderColor: grey3,

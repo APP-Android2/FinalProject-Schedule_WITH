@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 
-class MainAppBar extends StatefulWidget implements PreferredSizeWidget {
+class MainAppBar extends StatefulWidget {
   const MainAppBar({super.key});
 
   @override
   State<MainAppBar> createState() => _MainAppBarState();
-  @override
-  Size get preferredSize => Size.fromHeight(50);
 }
 
 class _MainAppBarState extends State<MainAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      scrolledUnderElevation: 0,
       backgroundColor: Colors.white,
       title: Container(
         alignment: Alignment.centerLeft,
@@ -22,7 +22,10 @@ class _MainAppBarState extends State<MainAppBar> {
         ),
       ),
       actions: [
-        IconButton(onPressed: (){},
+        IconButton(
+            onPressed: (){
+              Get.toNamed('/notificationMain');
+            },
             icon: SvgPicture.asset("lib/assets/icon/icon_bell_outline.svg"))
       ],
     );

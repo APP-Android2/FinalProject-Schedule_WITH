@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:schedule_with/assets/colors/color.dart';
 
 class MainButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Color color;
 
   const MainButton({
@@ -21,17 +22,38 @@ class MainButton extends StatelessWidget {
         child: Text(
           text,
           style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
           ), // 텍스트 색상
         ),
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(color), // 배경색 설정
-          padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 13)), // 패딩 설정
+          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                (states) {
+              if (states.contains(MaterialState.disabled)) {
+                return Colors.white;
+              }
+              return color;
+            },
+          ),
+          foregroundColor: MaterialStateProperty.resolveWith<Color>(
+                (states) {
+              if (states.contains(MaterialState.disabled)) {
+                return mainOrange;
+              }
+              return Colors.white;
+            },
+          ),
+          side: MaterialStateProperty.resolveWith<BorderSide>(
+                (states) {
+              if (states.contains(MaterialState.disabled)) {
+                return BorderSide(color: mainOrange);
+              }
+              return BorderSide.none;
+            },
+          ),
           shape: MaterialStateProperty.all(
             RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              borderRadius: BorderRadius.circular(10.0),
             ),
           ),
         ),

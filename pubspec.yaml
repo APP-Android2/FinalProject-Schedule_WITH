@@ -30,18 +30,23 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  smooth_page_indicator: ^1.1.0
+  carousel_slider: ^4.2.1
+  syncfusion_flutter_calendar: ^25.2.6
+  stylish_bottom_bar: ^1.1.0
+  cupertino_icons: ^1.0.6
+  flutter_svg: ^2.0.10+1
+  get: ^4.6.6
+  logger: ^2.3.0
+  #달력 라이브러리 한글화때 필요
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+  # intl: ^0.17.0
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.6
-  syncfusion_flutter_calendar: ^25.2.6
-  logger: ^2.3.0
-#  flutter_localizations:
-#  sdk: flutter
-  flutter_svg: ^2.0.10+1
-  get: ^4.6.6
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -59,6 +64,16 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
 
+  assets:
+    - lib/assets/image/logo.png
+    - lib/assets/icon/icon_bell_outline.svg
+
+  fonts:
+    - family: FontMD
+      fonts:
+        - asset: lib/assets/font/font.md
+
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -66,8 +81,9 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-     - lib/assets/icon/
+     - lib/assets/
      - lib/assets/image/
+     - lib/assets/icon/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

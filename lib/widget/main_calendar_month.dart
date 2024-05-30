@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:schedule_with/assets/colors/color.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import '../assets/color/color.dart';
-// import '../domain/repository/sample_data.dart';
+import '../domain/repository/sample_data.dart';
 
 class MainCalendarMonth extends StatefulWidget {
   const MainCalendarMonth({super.key});
@@ -49,7 +49,7 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
           // 탭할 경우 작동
           onTap: _onCalendarTap,
           // 임시 데이터 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 나중에 삭제 해야됨
-          // dataSource: getDataSource(),
+          dataSource: getDataSource(),
           // 변경 가능한 표시형식 (월, 주)
           allowedViews: const [
             CalendarView.month,
@@ -79,9 +79,10 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
           selectionDecoration: BoxDecoration(
           color: Colors.transparent,
           border: Border.all(color: isCurrentMonth ? mainOrange : Colors.transparent, width: 2)),
-            // month 달력에 나타낼 주 수
+            // 달력 표시
             monthViewSettings: MonthViewSettings(
-              numberOfWeeksInView: 6
+              // 나타낼 주 수
+              numberOfWeeksInView: 6,
             ),
             // week 설정
             timeSlotViewSettings: TimeSlotViewSettings(
