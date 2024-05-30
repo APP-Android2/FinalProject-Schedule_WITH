@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:schedule_with/assets/colors/color.dart';
 import 'package:schedule_with/ui/home/view/home_main.dart';
 import 'package:schedule_with/ui/login/view/login_main.dart';
+import 'package:schedule_with/ui/mypage/view/my_page_main.dart';
 import 'package:schedule_with/ui/notification/view/notification_main.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 
@@ -11,7 +12,7 @@ class BottomNavigationBarController extends GetxController {
   var tabIndex = 2.obs;
 }
 
-class BottomNavigationBar2 extends StatelessWidget {
+class MainBottomNavigationBar extends StatelessWidget {
   final BottomNavigationBarController controller = Get.put(BottomNavigationBarController());
 
   final List<Widget> pages = [
@@ -24,7 +25,7 @@ class BottomNavigationBar2 extends StatelessWidget {
     // 알람 메인 화면
     HomeMain(),
     // 더보기 메인 화면
-    HomeMain(),
+    MyPageMain(),
   ];
 
   @override

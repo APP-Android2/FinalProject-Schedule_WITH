@@ -37,6 +37,7 @@ class _HomeMainState extends State<HomeMain> {
       supportedLocales: [
         const Locale("ko","KO")
       ],
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         // 화면 배경색 설정
         backgroundColor: Colors.white,

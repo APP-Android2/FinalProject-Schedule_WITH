@@ -9,9 +9,10 @@ import 'package:schedule_with/ui/login/view/login_main.dart';
 import 'package:schedule_with/ui/login/view/login_password_reset.dart';
 import 'package:schedule_with/ui/login/view/login_password_reset_done.dart';
 import 'package:schedule_with/ui/login/view/login_read_terms.dart';
+import 'package:schedule_with/ui/mypage/view/my_page_info_modify.dart';
 import 'package:schedule_with/ui/notification/view/notification_main.dart';
 import 'package:schedule_with/ui/notification/view/notification_request_detail.dart';
-import 'package:schedule_with/widget/bottom_navigation_bar.dart';
+import 'package:schedule_with/widget/main_bottom_navigation_bar.dart';
 
 void main(){
   runApp(ScheduleWith());
@@ -37,7 +38,7 @@ class _ScheduleWithState extends State<ScheduleWith> {
         ),
         primarySwatch: Colors.blue
       ),
-      home: BottomNavigationBar2(),
+      home: MainBottomNavigationBar(),
       // Name을 지정하여 페이지 이동
       getPages: [
         GetPage(name: '/join', page: () => LoginJoin()),
@@ -50,6 +51,7 @@ class _ScheduleWithState extends State<ScheduleWith> {
         GetPage(name: '/readTerms', page: () => LoginReadTerms()),
         GetPage(name: '/notificationMain', page: () => NotificationMain()),
         GetPage(name: '/requestDetail', page: () => NotificationRequestDetail()),
+        GetPage(name: '/myPageInfoModify', page: () => MyPageInfoModify()),
       ],
     );
   }
