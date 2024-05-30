@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
@@ -9,6 +10,7 @@ import 'package:schedule_with/ui/login/view/login_main.dart';
 import 'package:schedule_with/ui/login/view/login_password_reset.dart';
 import 'package:schedule_with/ui/login/view/login_password_reset_done.dart';
 import 'package:schedule_with/ui/schedule/view/schedule_main.dart';
+import 'package:schedule_with/widget/main_appbar.dart';
 
 void main() {
   runApp(ScheduleWith());
@@ -25,23 +27,33 @@ class _ScheduleWithState extends State<ScheduleWith> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-
-      // 요일을 한국어로 변경하기 위한 작업
+      //
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
       ],
-      // 요일을 한국어로 변경하기 위한 작업
       supportedLocales: const [
-        Locale('ko','KO')
+        Locale('en', ''), // English, no country code
+        Locale('ko', ''), // Korean, no country code
       ],
       // 요일을 한국어로 변경하기 위한 작업
       locale: const Locale('ko'),
-
       // 우상단 디버그 표시 제거
       debugShowCheckedModeBanner: false,
       // 테마
       theme: ThemeData(
+        // DatePicker
+        datePickerTheme: DatePickerThemeData(
+          backgroundColor: Colors.white,
+        ),
+        // Dialog
+        dialogTheme: DialogTheme(
+            backgroundColor: Colors.white
+        ),
+        timePickerTheme: TimePickerThemeData(
+          backgroundColor: Colors.white,
+        ),
         textSelectionTheme:
         // 커서 포인트 색상 변경
         TextSelectionThemeData(selectionHandleColor: Colors.transparent),
@@ -52,6 +64,7 @@ class _ScheduleWithState extends State<ScheduleWith> {
       ),
       home: Container(
         child: Scaffold(
+          appBar: MainAppBar(),
           // 나중에 홈 화면으로 변경해야 됨
           body: ScheduleMain(),
         ),
