@@ -1,4 +1,6 @@
+
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:schedule_with/ui/home/view/home_main.dart';
 import 'package:schedule_with/ui/login/view/login_find_fail_id.dart';
@@ -14,7 +16,7 @@ import 'package:schedule_with/ui/notification/view/notification_main.dart';
 import 'package:schedule_with/ui/notification/view/notification_request_detail.dart';
 import 'package:schedule_with/widget/main_bottom_navigation_bar.dart';
 
-void main(){
+void main() {
   runApp(ScheduleWith());
 }
 
@@ -29,16 +31,44 @@ class _ScheduleWithState extends State<ScheduleWith> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      //
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en', ''), // English, no country code
+        Locale('ko', ''), // Korean, no country code
+      ],
+      // 요일을 한국어로 변경하기 위한 작업
+      locale: const Locale('ko'),
       // 우상단 디버그 표시 제거
       debugShowCheckedModeBanner: false,
+      // 테마
       theme: ThemeData(
-        // 커서 포인트 색상 변경
-        textSelectionTheme: TextSelectionThemeData(
-          selectionHandleColor: Colors.transparent
+        // DatePicker
+        datePickerTheme: DatePickerThemeData(
+          backgroundColor: Colors.white,
         ),
-        primarySwatch: Colors.blue
+        // Dialog
+        dialogTheme: DialogTheme(
+            backgroundColor: Colors.white
+        ),
+        timePickerTheme: TimePickerThemeData(
+          backgroundColor: Colors.white,
+        ),
+        textSelectionTheme:
+        // 커서 포인트 색상 변경
+        TextSelectionThemeData(selectionHandleColor: Colors.transparent),
+        primarySwatch: Colors.blue,
+        // 배경 컬러
+        scaffoldBackgroundColor: Colors.white,
+
       ),
+
       home: MainBottomNavigationBar(),
+
       // Name을 지정하여 페이지 이동
       getPages: [
         GetPage(name: '/join', page: () => LoginJoin()),
