@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../assets/colors/color.dart';
 import '../assets/colors/color.dart';
-import '../ui/schedule/widget/add_schedule_bottom_sheet.dart';
+import '../ui/schedule/widget/schedule_bottom_sheet.dart';
 
 class DatePicker extends StatefulWidget {
   final Widget back_page ;
@@ -42,10 +42,13 @@ class _DatePickerState extends State<DatePicker> {
             children: [
               IconButton(onPressed: (){
                 Get.back();
-                Get.bottomSheet(
-                  widget.back_page,
-                  isDismissible: true,
-                  );
+                showModalBottomSheet(
+                  // 바텀 시트 높이 지정하려면 isScrollControlled: true,
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (BuildContext context){
+                      return widget.back_page;
+                    });
                 },
                 // icon: SvgPicture.asset("lib/assets/icon/icon_angel_brackets.svg"),
                 icon: Icon(CupertinoIcons.back),
