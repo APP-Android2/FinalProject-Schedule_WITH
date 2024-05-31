@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:schedule_with/ui/todo/view/todo_main_screen.dart';
 import 'package:schedule_with/widget/main_calendar_day.dart';
 import 'package:schedule_with/widget/main_calendar_month.dart';
 
 import '../assets/colors/color.dart';
+import '../ui/memo/view/memo_main.dart';
 
 class MainTabBar extends StatefulWidget {
   const MainTabBar({super.key});
@@ -58,7 +60,9 @@ class _MainTabBarState extends State<MainTabBar>
                 // 탭1 : 캘린더
                 TabViewCalendar(),
                 // 탭2 : 투두
+                TodoMainScreen(),
                 // 탭3 : 메모
+                MemoMainScreen()
               ],
             )
         )

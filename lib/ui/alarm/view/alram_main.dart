@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:schedule_with/assets/colors/color.dart';
 import 'package:schedule_with/ui/alarm/view/alram_detail.dart';
 
-import '../../../widget/main_appbar.dart';
+import '../../../widget/main_app_bar.dart';
 import '../widget/alram_item.dart';
 
 class AlramMain extends StatefulWidget {
@@ -22,6 +22,7 @@ class _AlramMainState extends State<AlramMain> {
   @override
   Widget build(BuildContext context) {
     return  MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: PreferredSize(
         preferredSize: Size.fromHeight(50),

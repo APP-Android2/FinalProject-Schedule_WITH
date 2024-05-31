@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:schedule_with/assets/color/color.dart';
+import 'package:schedule_with/assets/colors/color.dart';
 import '../../../widget/main_button.dart';
 
 class MyHomePage extends StatefulWidget {

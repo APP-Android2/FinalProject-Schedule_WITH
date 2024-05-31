@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:schedule_with/widget/view/main_appbar.dart';
-import 'package:schedule_with/widget/view/main_tab_bar.dart';
+import 'package:schedule_with/widget/main_app_bar.dart';
+import 'package:schedule_with/widget/main_tab_bar.dart';
 
 class ScheduleMain extends StatefulWidget {
   const ScheduleMain({super.key});
@@ -19,13 +19,7 @@ class _ScheduleMainState extends State<ScheduleMain> {
           child: MainAppBar()),
       // 탭바
       body: MainTabBar(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // 스케쥴 추가 화면으로 이동
-          print("object");
-        },
-        child: Icon(Icons.add),
-      ),
+
     );
   }
 }
