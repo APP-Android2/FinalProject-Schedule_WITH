@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../assets/color/color.dart';
+import '../assets/colors/color.dart';
 
 class SelectDate extends StatefulWidget {
   final Widget back_page ;

@@ -7,19 +7,6 @@ import '../widget/todo_app_bar.dart';
 import '../widget/todo_edit_bottom_sheet.dart';
 import '../widget/todo_page_share.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: TodoMainScreen(),
-    );
-  }
-}
-
 class TodoMainScreen extends StatefulWidget {
   const TodoMainScreen({super.key});
 
@@ -164,7 +151,6 @@ class _TodoMainScreenState extends State<TodoMainScreen> with SingleTickerProvid
           : null,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: TodoAppBar(tabController: _tabController),
         body: Column(
           children: [
             CalendarWidget(onDateSelected: onDateSelected),
@@ -208,36 +194,7 @@ class _TodoMainScreenState extends State<TodoMainScreen> with SingleTickerProvid
                   ],
                 ),
               ),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  CalendarTab(),
-                  ListView.builder(
-                    itemCount: todosForSelectedDate.length,
-                    itemBuilder: (context, index) {
-                      final item = todosForSelectedDate[index];
-                      return ListTile(
-                        leading: Checkbox(
-                          value: item.isCompleted,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              item.isCompleted = value ?? false;
-                            });
-                          },
-                          activeColor: mainOrange,
-                          checkColor: Colors.white,
-                          side: BorderSide(color: mainOrange),
-                        ),
-                        title: Text(item.content),
-                        onTap: () => onTodoEdit(item),
-                      );
-                    },
-                  ),
-                  Center(child: Text('메모 탭 (아직 구현되지 않음)')),
-                ],
-              ),
-            ),
+
           ],
         ),
         floatingActionButton: FloatingActionButton(

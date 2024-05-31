@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:schedule_with/assets/color/color.dart';
+import 'package:schedule_with/assets/colors/color.dart';
 
 class TitleFieldUnderline extends StatelessWidget {
   final TextEditingController titleController;

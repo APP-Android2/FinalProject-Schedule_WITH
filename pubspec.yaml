@@ -64,10 +64,6 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
 
-  assets:
-    - lib/assets/image/logo.png
-    - lib/assets/icon/icon_bell_outline.svg
-
   fonts:
     - family: FontMD
       fonts:

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:schedule_with/assets/color/color.dart';
+import 'package:schedule_with/assets/colors/color.dart';
 
 class PaySettlementStatus extends StatefulWidget {
   const PaySettlementStatus({Key? key}) : super(key: key);
