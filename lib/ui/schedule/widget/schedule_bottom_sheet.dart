@@ -59,6 +59,7 @@ class AddScheduleBottomSheet extends StatelessWidget {
                   detailText: '선택',
                   detailTextColor: grey4,
                   onTap: () {
+                    Get.dialog(widget)
                   },
                 )
               ],
