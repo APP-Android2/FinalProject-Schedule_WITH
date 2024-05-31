@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:schedule_with/assets/colors/color.dart';
-import 'package:schedule_with/ui/schedule/widget/add_schedule_bottom_sheet.dart';
+import 'package:schedule_with/ui/schedule/widget/schedule_bottom_sheet.dart';
 import 'package:schedule_with/widget/main_app_bar.dart';
 import 'package:schedule_with/widget/main_tab_bar.dart';
 
@@ -35,7 +35,6 @@ class _ScheduleMainState extends State<ScheduleMain> {
         child: Icon(Icons.add, color: Colors.white,
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-
       ),
 
     );
