@@ -5,9 +5,8 @@ import '../../../widget/bottom_sheet_detail_button.dart';
 import '../../../widget/date_picker.dart';
 
 // 스케쥴 추가 바텀 시트 위젯
-class CustomBottomSheet extends StatelessWidget {
-
-  const CustomBottomSheet({super.key});
+class AddScheduleBottomSheet extends StatelessWidget {
+  AddScheduleBottomSheet({super.key});
 
 
   @override
@@ -38,7 +37,7 @@ class CustomBottomSheet extends StatelessWidget {
                     onTap: () {
                       Get.back(); // Close first
                       Get.bottomSheet(DatePicker(
-                        back_page: CustomBottomSheet(),
+                        back_page: AddScheduleBottomSheet(),
                         title: '날짜',
                       ));
                     }),
@@ -50,7 +49,7 @@ class CustomBottomSheet extends StatelessWidget {
                     onTap: () {
                       Get.back(); // Close first
                       Get.bottomSheet(DatePicker(
-                        back_page: CustomBottomSheet(),
+                        back_page: AddScheduleBottomSheet(),
                         title: '날짜',
                       ));
                     }),
