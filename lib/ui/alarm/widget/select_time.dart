@@ -17,17 +17,6 @@ class _SelectDateState extends State<SelectTime> {
     DateTime dateTime;
     return Column(
       children: [
-        // Row(
-        //   children: [
-        //     IconButton(
-        //       onPressed: (){
-        //         Navigator.pop(context);
-        //       },
-        //       icon: SvgPicture.asset("lib/assets/icon/icon_bell_outline.svg"),
-        //         color: grey3,)
-        //   ],
-        // ),
-
         Container(
           height: 180,
           child: CupertinoTheme(
@@ -46,9 +35,7 @@ class _SelectDateState extends State<SelectTime> {
               onDateTimeChanged: (dateTime) {
                 selectDate = dateTime;
               },
-
           ),
-
           ),
         )
       ],
