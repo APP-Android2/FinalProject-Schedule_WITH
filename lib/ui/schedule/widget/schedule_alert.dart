@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:schedule_with/assets/colors/color.dart';
-import 'package:schedule_with/ui/schedule/widget/schedule_bottom_sheet.dart';
+import 'package:schedule_with/ui/schedule/controller/schedule_controller.dart';
 
 class ScheduleAlert extends StatefulWidget {
 
@@ -24,6 +23,9 @@ class ScheduleAlert extends StatefulWidget {
 }
 
 class _MainAlertState extends State<ScheduleAlert> {
+  final ScheduleController scheduleController = Get.find<ScheduleController>();
+
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -52,6 +54,8 @@ class _MainAlertState extends State<ScheduleAlert> {
               ),
               child: MaterialButton(
                 onPressed: () {
+                  // 선택한 값으로 업데이트
+                  scheduleController.settingVisibility(widget.showAll);
                   print('공개여부선택 >> 전체공개');
                   Get.back();
                 },
@@ -73,6 +77,7 @@ class _MainAlertState extends State<ScheduleAlert> {
               ),
               child: MaterialButton(
                 onPressed: () {
+                  scheduleController.settingVisibility(widget.showTitle);
                   print('공개여부선택 >> 일부공개');
                   Get.back();
                 },
@@ -94,8 +99,9 @@ class _MainAlertState extends State<ScheduleAlert> {
               ),
               child: MaterialButton(
                 onPressed: () {
+                  scheduleController.settingVisibility(widget.showNothing);
                   print('공개여부선택 >> 비공개');
-                  Get.back();
+                  Get.back(result: "비공개");
                 },
                 child: Text(widget.showNothing,
                   style: TextStyle(

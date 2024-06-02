@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:schedule_with/ui/schedule/controller/schedule_controller.dart';
 
 
-// 색상 버튼 1개
-class ScheduleColorButton extends StatefulWidget {
+// 바텀 시트에 보이도록 할 색상
+class DisplayColor extends StatelessWidget {
+  final ScheduleController scheduleController = Get.find<ScheduleController>();
   final Color colorName;
 
-  const ScheduleColorButton({
+  DisplayColor({
     required this.colorName,
     Key? key,
   }) : super(key: key);
 
-  @override
-  State<ScheduleColorButton> createState() => _ScheduleColorButtonState();
-}
-
-class _ScheduleColorButtonState extends State<ScheduleColorButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,11 +20,34 @@ class _ScheduleColorButtonState extends State<ScheduleColorButton> {
       width: 90,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(10)),
-          color: widget.colorName
+          color: colorName
+      ),
+    );
+  }
+}
+
+// 색상 선택 다이얼로그에 표시할 색상 버튼
+class ColorOption extends StatelessWidget {
+  final ScheduleController scheduleController = Get.find<ScheduleController>();
+  final Color colorName;
+
+  ColorOption({
+    required this.colorName,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 45,
+      width: 90,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: colorName
       ),
       child: MaterialButton(
         onPressed: () {
-          print('색깔버튼');
+          scheduleController.settingColor(colorName);
           Get.back();
         },
       ),
@@ -37,14 +57,9 @@ class _ScheduleColorButtonState extends State<ScheduleColorButton> {
 
 
 // 전체 색상 버튼 묶음
-class ColorButtonSet extends StatefulWidget {
+class ColorButtonSet extends StatelessWidget {
   const ColorButtonSet({super.key});
 
-  @override
-  State<ColorButtonSet> createState() => _ColorButtonSetState();
-}
-
-class _ColorButtonSetState extends State<ColorButtonSet> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -55,11 +70,11 @@ class _ColorButtonSetState extends State<ColorButtonSet> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(width: 12, height: 12),
-                  ScheduleColorButton(colorName: Color(0xFFFF9E9E)),
+                  ColorOption(colorName: Color(0xFFFF9E9E)),
                   SizedBox(width: 12, height: 12),
-                  ScheduleColorButton(colorName: Color(0xFFFFD39E)),
+                  ColorOption(colorName: Color(0xFFFFD39E)),
                   SizedBox(width: 12, height: 12),
-                  ScheduleColorButton(colorName: Color(0xFFFFFB94)),
+                  ColorOption(colorName: Color(0xFFFFFB94)),
                   SizedBox(width: 12, height: 12)
                 ]
             ),
@@ -68,11 +83,11 @@ class _ColorButtonSetState extends State<ColorButtonSet> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(width: 12, height: 12),
-                  ScheduleColorButton(colorName: Color(0xFFA5FB97)),
+                  ColorOption(colorName: Color(0xFFA5FB97)),
                   SizedBox(width: 12, height: 12),
-                  ScheduleColorButton(colorName: Color(0xFF9EDCFF)),
+                  ColorOption(colorName: Color(0xFF9EDCFF)),
                   SizedBox(width: 12, height: 12),
-                  ScheduleColorButton(colorName: Color(0xFF84A6FF)),
+                  ColorOption(colorName: Color(0xFF84A6FF)),
                   SizedBox(width: 12, height: 12)
                 ]
             )
@@ -81,11 +96,11 @@ class _ColorButtonSetState extends State<ColorButtonSet> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(width: 12, height: 12),
-                  ScheduleColorButton(colorName: Color(0xFFC99EFF)),
+                  ColorOption(colorName: Color(0xFFC99EFF)),
                   SizedBox(width: 12, height: 12),
-                  ScheduleColorButton(colorName: Color(0xFFFFB6DD)),
+                  ColorOption(colorName: Color(0xFFFFB6DD)),
                   SizedBox(width: 12, height: 12),
-                  ScheduleColorButton(colorName: Color(0xFFC2C2C2)),
+                  ColorOption(colorName: Color(0xFFC2C2C2)),
                   SizedBox(width: 12, height: 12)
                 ]
             )

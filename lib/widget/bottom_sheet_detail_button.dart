@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:schedule_with/assets/colors/color.dart';
 
-import '../../../assets/colors/color.dart';
 
 class BottomSheetDetailTextButton extends StatefulWidget {
   final String titleText;
-  final String detailText;
+  // 사용자의 선택에 따라 업데이트 할 번수
+  final Rx detailText;
   final Color detailTextColor;
   final VoidCallback? onTap;
 
+
   const BottomSheetDetailTextButton({
     required this.titleText,
-    required this.detailText,
     required this.detailTextColor,
+    required this.detailText,
     this.onTap,
     Key? key,
   }): super(key: key);
@@ -35,7 +39,7 @@ class _BottomSheetDetailButtonState extends State<BottomSheetDetailTextButton> {
               ),
             ),
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+              padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -45,11 +49,12 @@ class _BottomSheetDetailButtonState extends State<BottomSheetDetailTextButton> {
                       color: Colors.black,
                     ),
                   ),
-                  Text("${widget.detailText}",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: widget.detailTextColor,
-                    ),
+                  Obx(()
+                  => Text("${widget.detailText}",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: widget.detailTextColor,
+                      )),
                   ),
                 ],
               ),

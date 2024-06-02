@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:schedule_with/assets/colors/color.dart';
-import 'package:schedule_with/ui/schedule/widget/schedule_color_button.dart';
+import 'package:schedule_with/ui/schedule/widget/schedule_color_option.dart';
 
 class ScheduleColorPicker extends StatefulWidget {
   final msg;
