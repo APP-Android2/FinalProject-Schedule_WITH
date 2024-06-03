@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:schedule_with/ui/schedule/widget/calendar_cell_custom.dart';
+import 'package:schedule_with/ui/schedule/widget/long_appoint.dart';
 import 'package:schedule_with/ui/todo/view/todo_main_screen.dart';
 import 'package:schedule_with/widget/main_calendar_day.dart';
 import 'package:schedule_with/widget/main_calendar_month.dart';
@@ -55,22 +57,20 @@ class _MainTabBarState extends State<MainTabBar>
         Expanded(
             // 각 탭바에 나타낼 View
             child: TabBarView(
-              controller: _tabController,
-              children: const [
-                // 탭1 : 캘린더
-                TabViewCalendar(),
-                // 탭2 : 투두
-                TodoMainScreen(),
-                // 탭3 : 메모
-                MemoMainScreen()
-              ],
-            )
-        )
+          controller: _tabController,
+          children: [
+            // 탭1 : 캘린더
+            TabViewCalendar(),
+            // 탭2 : 투두
+            TodoMainScreen(),
+            // 탭3 : 메모
+            MemoMainScreen()
+          ],
+        ))
       ],
     );
   }
 }
-
 
 // 캘린더 탭에 보일 항목들
 class TabViewCalendar extends StatelessWidget {
@@ -87,7 +87,7 @@ class TabViewCalendar extends StatelessWidget {
         ),
         SliverToBoxAdapter(
           // 상세 일정
-          child: DayWork(),
+          child: showLongAppoint(),
         ),
         SliverToBoxAdapter(
           // 일간 일정
@@ -95,38 +95,5 @@ class TabViewCalendar extends StatelessWidget {
         )
       ],
     );
-  }
-}
-
-// 장기일정 숨기기 펼치기
-class DayWork extends StatelessWidget {
-  const DayWork({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ExpansionTile(
-        leading: Container(width: 24),
-        title: const Center(
-            child: Text(
-          '상세 일정',
-          style: TextStyle(fontSize: 14),
-        )),
-        collapsedIconColor: Colors.grey,
-        children: [
-          Row(children: [
-            const Padding(padding: EdgeInsets.all(10)),
-            TextButton(
-                onPressed: () {},
-                child: Text(
-                  '장기일정1',
-                )),
-            const Padding(padding: EdgeInsets.all(10)),
-            TextButton(onPressed: () {}, child: Text('장기일정2')),
-            const Padding(padding: EdgeInsets.all(10)),
-            TextButton(onPressed: () {}, child: Text('장기일정3')),
-            const Padding(padding: EdgeInsets.all(10)),
-            TextButton(onPressed: () {}, child: Text('장기일정4'))
-          ])
-        ]);
   }
 }

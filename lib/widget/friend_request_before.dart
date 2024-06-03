@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:schedule_with/assets/colors/color.dart';
 import 'package:schedule_with/widget/main_small_button.dart';
 
-class FriendRequestPage extends StatelessWidget {
-  const FriendRequestPage({super.key});
+class FriendRequestBefore extends StatelessWidget {
+  const FriendRequestBefore({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class FriendRequestPage extends StatelessWidget {
                 SizedBox(
                     width: double.infinity,
                     height: 20),
-                MainSmallButton(text: '친구 요청', onPressed: () {  }, color: mainOrange,)
+                MainSmallButton(text: '친구요청', onPressed: () {  }, color: mainOrange,)
               ],
             )
           ])),
