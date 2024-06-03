@@ -55,8 +55,9 @@ class _MainTabBarState extends State<MainTabBar>
           ],
         ),
         Expanded(
-            // 각 탭바에 나타낼 View
-            child: TabBarView(
+          // 각 탭바에 나타낼 View
+          child: TabBarView(
+          physics: NeverScrollableScrollPhysics(), // 스와이프 비활성화 설정
           controller: _tabController,
           children: [
             // 탭1 : 캘린더
@@ -87,7 +88,7 @@ class TabViewCalendar extends StatelessWidget {
         ),
         SliverToBoxAdapter(
           // 상세 일정
-          child: showLongAppoint(),
+          child: ShowLongAppoint(),
         ),
         SliverToBoxAdapter(
           // 일간 일정

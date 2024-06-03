@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:schedule_with/assets/colors/color.dart';
 
+
 // 장기일정 숨기기 펼치기
-class showLongAppoint extends StatelessWidget {
-  const showLongAppoint({super.key});
+class ShowLongAppoint extends StatelessWidget {
+  const ShowLongAppoint({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
         initiallyExpanded: true,
         shape: Border(
-          bottom: BorderSide(
-            color: grey2
-          )
+            bottom: BorderSide(
+                color: grey2
+            )
         ),
-          // side: BorderSide(color: grey2)),
+        // side: BorderSide(color: grey2)),
         leading: Container(width: 24),
         minTileHeight: 40,
         title: const Center(
@@ -27,19 +28,30 @@ class showLongAppoint extends StatelessWidget {
         collapsedIconColor: grey1,
         children: [
           Padding(padding: EdgeInsets.all(4)),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            const Padding(padding: EdgeInsets.all(10)),
-            LongAppointText(title: '장기일정1'),
-            const Padding(padding: EdgeInsets.all(10)),
-            LongAppointText(title: '장기일정2'),
-            Padding(padding: EdgeInsets.all(10)),
-            LongAppointText(title: '장기일정3'),
-            const Padding(padding: EdgeInsets.all(10)),
-          ]),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Padding(padding: EdgeInsets.all(10)),
+                LongAppointText(title: '장기일정1'),
+                const Padding(padding: EdgeInsets.all(10)),
+                LongAppointText(title: '장기일정2'),
+                const Padding(padding: EdgeInsets.all(10)),
+                LongAppointText(title: '장기일정3'),
+                const Padding(padding: EdgeInsets.all(10)),
+                LongAppointText(title: '장기일정4'),
+                const Padding(padding: EdgeInsets.all(10)),
+                LongAppointText(title: '장기일정5'),
+                const Padding(padding: EdgeInsets.all(10)),
+              ],
+            ),
+          ),
           Padding(padding: EdgeInsets.all(4)),
         ]);
   }
 }
+
 
 // 장기 일정 Text
 class LongAppointText extends StatelessWidget {
