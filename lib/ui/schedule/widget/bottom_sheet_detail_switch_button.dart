@@ -1,30 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:schedule_with/assets/colors/color.dart';
+import 'package:schedule_with/ui/schedule/widget/schedule_switch_button.dart';
 
-
-class BottomSheetDetailTextButton extends StatefulWidget {
+class BottomSheetDetailSwitchButton extends StatefulWidget {
   final String titleText;
-  // 사용자의 선택에 따라 업데이트 할 번수
-  final Rx detailText;
-  final Color detailTextColor;
   final VoidCallback? onTap;
 
-
-  const BottomSheetDetailTextButton({
+  const BottomSheetDetailSwitchButton({
     required this.titleText,
-    required this.detailTextColor,
-    required this.detailText,
     this.onTap,
     Key? key,
   }): super(key: key);
 
   @override
-  State<BottomSheetDetailTextButton> createState() => _BottomSheetDetailButtonState();
+  State<BottomSheetDetailSwitchButton> createState() => _BottomSheetDetailButtonState();
 }
 
-class _BottomSheetDetailButtonState extends State<BottomSheetDetailTextButton> {
+class _BottomSheetDetailButtonState extends State<BottomSheetDetailSwitchButton> {
   @override
   Widget build(BuildContext context) {
     return
@@ -39,7 +31,7 @@ class _BottomSheetDetailButtonState extends State<BottomSheetDetailTextButton> {
               ),
             ),
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
+              padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -49,13 +41,7 @@ class _BottomSheetDetailButtonState extends State<BottomSheetDetailTextButton> {
                       color: Colors.black,
                     ),
                   ),
-                  Obx(()
-                  => Text("${widget.detailText}",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: widget.detailTextColor,
-                      )),
-                  ),
+                  ScheduleSwitchButton()
                 ],
               ),
             ),
