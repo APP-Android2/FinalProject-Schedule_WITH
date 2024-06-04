@@ -12,7 +12,13 @@ import 'package:schedule_with/ui/login/view/login_main.dart';
 import 'package:schedule_with/ui/login/view/login_password_reset.dart';
 import 'package:schedule_with/ui/login/view/login_password_reset_done.dart';
 import 'package:schedule_with/ui/login/view/login_read_terms.dart';
+import 'package:schedule_with/ui/mypage/view/my_page_background_photo_detail.dart';
 import 'package:schedule_with/ui/mypage/view/my_page_info_modify.dart';
+import 'package:schedule_with/ui/mypage/view/my_page_inquiry.dart';
+import 'package:schedule_with/ui/mypage/view/my_page_notice.dart';
+import 'package:schedule_with/ui/mypage/view/my_page_profile_photo_detail.dart';
+import 'package:schedule_with/ui/mypage/view/my_page_read_terms.dart';
+import 'package:schedule_with/ui/mypage/view/my_page_setting.dart';
 import 'package:schedule_with/ui/notification/view/notification_main.dart';
 import 'package:schedule_with/ui/notification/view/notification_request_detail.dart';
 import 'package:schedule_with/widget/main_bottom_navigation_bar.dart';
@@ -86,6 +92,12 @@ class _ScheduleWithState extends State<ScheduleWith> {
         GetPage(name: '/myPageInfoModify', page: () => MyPageInfoModify()),
         GetPage(name: '/groupDetail', page: () => GroupDetail()),
         GetPage(name: '/groupMenu', page: () => GroupMenu()),
+        GetPage(name: '/myPageSetting', page: () => MyPageSetting()),
+        GetPage(name: '/myPageNotice', page: () => MyPageNotice()),
+        GetPage(name: '/myPageReadTerms', page: () => MyPageReadTerms()),
+        GetPage(name: '/myPageInquiry', page: () => MyPageInquiry()),
+        GetPage(name: '/myPageBackgroundPhotoDetail', page: () => MyPageBackgroundPhotoDetail()),
+        GetPage(name: '/myPageProfilePhotoDetail', page: () => MyPageProfilePhotoDetail()),
       ],
     );
   }

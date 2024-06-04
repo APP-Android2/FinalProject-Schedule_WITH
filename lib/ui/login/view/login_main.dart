@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schedule_with/assets/colors/color.dart';
+import 'package:schedule_with/ui/home/view/home_main.dart';
 import 'package:schedule_with/widget/main_button.dart';
 import 'package:schedule_with/widget/main_text_field.dart';
+
+import '../../../main.dart';
+import '../../../widget/main_bottom_navigation_bar.dart';
 
 class LoginMain extends StatefulWidget {
   const LoginMain({Key? key}) : super(key: key);
@@ -15,7 +19,6 @@ class _LoginScreenState extends State<LoginMain> {
   var user_id_controller = TextEditingController();
   var user_password_controller = TextEditingController();
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -47,6 +50,7 @@ class _LoginScreenState extends State<LoginMain> {
                         labelText: "아이디",
                         hintText: "아이디를 입력해 주세요",
                         controller: user_id_controller,
+                        textInputAction: TextInputAction.next,
                       ),
                       Padding(padding: EdgeInsets.only(top: 15)),
                       // 비밀번호 입력 TextField
@@ -54,6 +58,7 @@ class _LoginScreenState extends State<LoginMain> {
                         labelText: "비밀번호",
                         hintText: "비밀번호를 입력해 주세요",
                         controller: user_password_controller,
+                        textInputAction: TextInputAction.done,
                       ),
                       Padding(padding: EdgeInsets.only(top: 15)),
                       // 로그인 버튼
@@ -61,6 +66,7 @@ class _LoginScreenState extends State<LoginMain> {
                         text: "로그인",
                         onPressed: () {
                           // 로그인 버튼 클릭 시 동작
+                          Get.offAll(() => MainBottomNavigationBar());
                         },
                         color: mainOrange,
                       ),
@@ -133,7 +139,7 @@ class _LoginScreenState extends State<LoginMain> {
                                 ),
                               ),
                               onTap: () {
-
+                                Get.offAll(() => MainBottomNavigationBar());
                               },
                             ),
                           ),

@@ -11,8 +11,7 @@ import '../ui/mypage/widget/nick_name_controller.dart';
 
 class MainProfile extends StatefulWidget {
 
-
-  const MainProfile({super.key});
+  // const MainProfile({super.key});
 
   @override
   State<MainProfile> createState() => _MainProfileState();
@@ -73,12 +72,12 @@ class _MainProfileState extends State<MainProfile> {
               Get.toNamed('/myPageBackgroundPhotoDetail', arguments: _backgroundImage);
             },
             child: Container(
-                width: double.infinity,
-                height: double.infinity,
-                color: grey2,
-                // child 로 배경 이미지 설정
-                child: _backgroundImage == null ? Image.asset("lib/assets/image/image2.png",fit: BoxFit.cover)
-                    : Image.file(File(_backgroundImage!.path),fit: BoxFit.cover)
+              width: double.infinity,
+              height: double.infinity,
+              color: grey2,
+              // child 로 배경 이미지 설정
+              child: _backgroundImage == null ? Image.asset("lib/assets/image/image2.png",fit: BoxFit.cover)
+                  : Image.file(File(_backgroundImage!.path),fit: BoxFit.cover)
             ),
           ),
         ),
@@ -104,9 +103,9 @@ class _MainProfileState extends State<MainProfile> {
                       ),
                       margin: EdgeInsets.only(bottom: 5),
                       child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: _profileImage == null ? SvgPicture.asset("lib/assets/icon/icon_profile.svg", color: genderMale)
-                              : Image.file(File(_profileImage!.path),fit: BoxFit.cover,)
+                        borderRadius: BorderRadius.circular(20),
+                        child: _profileImage == null ? SvgPicture.asset("lib/assets/icon/icon_profile.svg", color: genderMale)
+                            : Image.file(File(_profileImage!.path),fit: BoxFit.cover,)
                       )
                   ),
                 ),
@@ -125,13 +124,12 @@ class _MainProfileState extends State<MainProfile> {
                               decoration: InputDecoration(border: InputBorder.none,isDense: true),
                               style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,decorationThickness: 0),
                               autofocus: true,
-                              controller: _textEditingController,
+                              controller: widget.controller,
                             ),
                             width: 100,
                             height: 25,
                           )
-                              : Text(_textEditingController.text,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),);
-
+                          : Text(widget.controller.text,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),);
                         }),
                         // 수정 아이콘
                         Obx((){

@@ -1,21 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:schedule_with/assets/colors/color.dart';
 
 class PaySettlementStatus extends StatefulWidget {
-  const PaySettlementStatus({Key? key}) : super(key: key);
+  final bool isComplete;
+  final Function(bool) onStatusChanged;
+
+  const PaySettlementStatus({Key? key, required this.isComplete, required this.onStatusChanged}) : super(key: key);
 
   @override
   _PaySettlementStatusState createState() => _PaySettlementStatusState();
 }
 
 class _PaySettlementStatusState extends State<PaySettlementStatus> {
-  String _settlementStatus = 'processing';
+  late bool _isComplete;
+
+  @override
+  void initState() {
+    super.initState();
+    _isComplete = widget.isComplete;
+  }
+
+  void _payupdateStatus(bool isComplete) {
+    setState(() {
+      _isComplete = isComplete;
+      widget.onStatusChanged(isComplete);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 10),
+      padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -33,32 +48,19 @@ class _PaySettlementStatusState extends State<PaySettlementStatus> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _settlementStatus = 'processing';
-                          });
-                        },
+                        onTap: () => _payupdateStatus(false),
                         child: Row(
                           children: <Widget>[
                             SizedBox(
                               width: 10,
                               height: 10,
-                              child: Radio<String>(
-                                value: 'processing',
-                                groupValue: _settlementStatus,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _settlementStatus = value ?? 'processing';
-                                  });
-                                },
+                              child: Radio<bool>(
+                                value: false,
+                                groupValue: _isComplete,
+                                onChanged: (value) => _payupdateStatus(value ?? false),
                                 activeColor: mainBrown,
                                 fillColor: MaterialStateProperty.resolveWith<Color>(
-                                      (states) {
-                                    if (states.contains(MaterialState.selected)) {
-                                      return mainBrown;
-                                    }
-                                    return mainBrown.withOpacity(1);
-                                  },
+                                      (states) => states.contains(MaterialState.selected) ? mainBrown : mainBrown.withOpacity(1),
                                 ),
                               ),
                             ),
@@ -69,32 +71,19 @@ class _PaySettlementStatusState extends State<PaySettlementStatus> {
                       ),
                       SizedBox(width: 20),
                       GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _settlementStatus = 'completed';
-                          });
-                        },
+                        onTap: () => _payupdateStatus(true),
                         child: Row(
                           children: <Widget>[
                             SizedBox(
                               width: 10,
                               height: 10,
-                              child: Radio<String>(
-                                value: 'completed',
-                                groupValue: _settlementStatus,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _settlementStatus = value ?? 'completed';
-                                  });
-                                },
+                              child: Radio<bool>(
+                                value: true,
+                                groupValue: _isComplete,
+                                onChanged: (value) => _payupdateStatus(value ?? true),
                                 activeColor: mainOrange,
                                 fillColor: MaterialStateProperty.resolveWith<Color>(
-                                      (states) {
-                                    if (states.contains(MaterialState.selected)) {
-                                      return mainOrange;
-                                    }
-                                    return mainOrange.withOpacity(0.5);
-                                  },
+                                      (states) => states.contains(MaterialState.selected) ? mainOrange : mainOrange.withOpacity(0.5),
                                 ),
                               ),
                             ),

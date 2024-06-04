@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:schedule_with/assets/colors/color.dart';
-import 'package:schedule_with/widget/main_button.dart';
+import 'package:schedule_with/ui/mypage/widget/my_page_divider.dart';
 
+import '../../../widget/main_alert.dart';
 import '../../../widget/main_app_bar.dart';
 
 class MyPageMain extends StatefulWidget {
@@ -56,19 +57,13 @@ class _MyPageMainState extends State<MyPageMain> {
             ),
           ),
           // 디바이더 설정
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: Divider(
-              thickness: 1,
-              height: 1,
-              color: grey2,
-            ),
-          ),
+          MyPageDivider(verticalPadding: 0, horizontalPadding: 10),
           // 설정 화면 이동 + "설정" 텍스트 설정
           InkWell(
             // 설정 화면 이동
             onTap: () {
               // 설정 화면 이동
+              Get.toNamed('/myPageSetting');
             },
             // "설정" 텍스트 설정
             child: Container(
@@ -83,7 +78,7 @@ class _MyPageMainState extends State<MyPageMain> {
           InkWell(
             // 공지사항 화면 이동
             onTap: () {
-              // 설정 화면 이동
+              Get.toNamed('/myPageNotice');
             },
             // "공지사항" 텍스트 설정
             child: Container(
@@ -98,7 +93,8 @@ class _MyPageMainState extends State<MyPageMain> {
           InkWell(
             // 정보 화면 이동
             onTap: () {
-              // 설정 화면 이동
+              // 정보 화면 이동
+              Get.toNamed('/myPageReadTerms');
             },
             // "정보" 텍스트 설정
             child: Container(
@@ -113,7 +109,8 @@ class _MyPageMainState extends State<MyPageMain> {
           InkWell(
             // 문의 화면 이동
             onTap: () {
-              // 설정 화면 이동
+              // 문의 화면 이동
+              Get.toNamed('/myPageInquiry');
             },
             // "문의" 텍스트 설정
             child: Container(
@@ -125,14 +122,7 @@ class _MyPageMainState extends State<MyPageMain> {
             ),
           ),
           // 디바이더 설정
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: Divider(
-              thickness: 1,
-              height: 0.5,
-              color: grey2,
-            ),
-          ),
+          MyPageDivider(verticalPadding: 0, horizontalPadding: 10),
           // 버전 정보 + "버전" 텍스트 설정
           Container(
             width: double.infinity,
@@ -151,6 +141,10 @@ class _MyPageMainState extends State<MyPageMain> {
             // 로그아웃 팝업창 설정
             onTap: () {
               // 로그아웃 팝업창
+              Get.dialog(
+                  barrierDismissible: false,
+                  MainAlert(msg: "로그아웃 하시겠습니까?",YesMsg: "예",NoMsg: "아니오",)
+              );
             },
             // "로그아웃" 텍스트 설정
             child: Container(

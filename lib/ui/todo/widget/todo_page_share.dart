@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../assets/colors/color.dart';
+import 'todo_controller.dart';
 import '../view/todo_main_screen.dart';
 
 class TodoSharePage extends StatelessWidget {
@@ -84,7 +85,7 @@ class TodoSharePage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Divider(color: Colors.grey),
+            Divider(color: grey2),
             SizedBox(height: 20.0),
             Expanded(
               flex: 3,
@@ -108,7 +109,7 @@ class TodoSharePage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 16.0),
-            Divider(color: Colors.grey, thickness: 1),
+            Divider(color: grey2, thickness: 1),
             SizedBox(height: 8.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -134,7 +135,7 @@ class TodoSharePage extends StatelessWidget {
               ],
             ),
             SizedBox(height: 8.0),
-            Divider(color: Colors.grey, thickness: 1, indent: 16, endIndent: 16),
+            Divider(color: grey2, thickness: 1, indent: 16, endIndent: 16),
             Expanded(
               flex: 3,
               child: ListView.builder(
@@ -147,7 +148,7 @@ class TodoSharePage extends StatelessWidget {
                       onChanged: null, // 이미 완료된 TODO는 수정 불가
                       activeColor: mainOrange,
                       checkColor: Colors.white,
-                      side: BorderSide(color: mainOrange),
+                      side: BorderSide(color: mainOrange), // 체크박스 테두리 색상
                     ),
                     title: Text(item.content),
                   );
@@ -173,7 +174,7 @@ class DonutProgressPainter extends CustomPainter {
     double radius = size.width / 2;
 
     Paint backgroundPaint = Paint()
-      ..color = Colors.grey
+      ..color = grey2
       ..style = PaintingStyle.stroke
       ..strokeWidth = thickness;
 

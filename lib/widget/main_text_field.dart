@@ -5,12 +5,14 @@ class MainTextField extends StatelessWidget {
   final String labelText;
   final String hintText;
   final TextEditingController controller;
+  final TextInputAction textInputAction;
 
   const MainTextField({
     Key? key,
     required this.labelText,
     required this.hintText,
     required this.controller,
+    required this.textInputAction,
   }) : super(key: key);
 
   @override
@@ -18,6 +20,8 @@ class MainTextField extends StatelessWidget {
     return SizedBox(
       height: 45,
       child: TextField(
+        textInputAction: textInputAction,
+        onSubmitted: (_) => FocusScope.of(context).nextFocus,
         controller: controller,
         // 커서 색상
         cursorColor: mainOrange,

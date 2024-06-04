@@ -73,6 +73,7 @@ class _LoginPasswordResetState extends State<LoginPasswordReset> {
                         labelText: "비밀번호",
                         hintText: "8자이상, 영문 대/소문자, 숫자, 특수문자 2가지 이상 조합",
                         controller: user_password_controller,
+                        textInputAction: TextInputAction.next,
                       ),
                       Padding(padding: EdgeInsets.only(top: 15)),
                       // 비밀번호 확인 입력
@@ -80,6 +81,7 @@ class _LoginPasswordResetState extends State<LoginPasswordReset> {
                         labelText: "비밀번호 확인",
                         hintText: "8자이상, 영문 대/소문자, 숫자, 특수문자 2가지 이상 조합",
                         controller: user_password_check_controller,
+                        textInputAction: TextInputAction.done,
                       ),
                       
                     ],

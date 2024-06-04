@@ -1,8 +1,11 @@
+import 'package:cr_file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:schedule_with/assets/colors/color.dart';
 import 'package:schedule_with/ui/mypage/widget/my_page_divider.dart';
+import 'package:schedule_with/ui/mypage/widget/platform_utils.dart';
 import 'package:schedule_with/widget/main_profile.dart';
 import 'nick_name_controller.dart';
 
@@ -61,6 +64,32 @@ class _MainAlertState extends State<MyPageAlert> {
     }
   }
 
+  // 앨범 권한 요첨 함수
+  void requestAlbumPermission() async {
+    PermissionStatus status = await Permission.photos.request();
+    print("${status.isGranted}");
+    print("${status.isPermanentlyDenied}");
+    if (status.isGranted) {
+      // 권한이 허용되었을 때
+      getProfileImage(ImageSource.gallery);
+    } else {
+      // 권한이 거부되었을 때
+    }
+  }
+
+  // 앨범 권한 요첨 함수
+  void requestStoragePermission() async {
+    PermissionStatus status = await Permission.storage.request();
+    print("${status.isGranted}");
+    print("${status.isPermanentlyDenied}");
+    if (status.isGranted) {
+      // 권한이 허용되었을 때
+      getProfileImage(ImageSource.gallery);
+    } else {
+      // 권한이 거부되었을 때
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // 수정 아이콘을 눌렀을 때 보여줄 위젯
@@ -81,11 +110,12 @@ class _MainAlertState extends State<MyPageAlert> {
               ),
               child: MaterialButton(
                 onPressed: () async {
-                  // 갤러리 권한 요청
-                  // var status = await Permission.photos.request();
-                  // print("${status.isGranted}");
-                  // if(status.isGranted)
-                  //   getProfileImage(ImageSource.gallery);
+                  final isAndroidUnder33 = await PlatformUtils.isAndroidUnder33();
+                  if(isAndroidUnder33){
+                    requestStoragePermission();
+                  }else{
+                    requestAlbumPermission();
+                  }
                 },
                 child: Text("프로필 사진 변경",
                   style: TextStyle(
@@ -106,9 +136,13 @@ class _MainAlertState extends State<MyPageAlert> {
                   color: Colors.white
               ),
               child: MaterialButton(
-                onPressed: () {
-                  getBackgroundImage(ImageSource.gallery);
-
+                onPressed: () async {
+                  final isAndroidUnder33 = await PlatformUtils.isAndroidUnder33();
+                  if(isAndroidUnder33){
+                    requestStoragePermission();
+                  }else{
+                    requestAlbumPermission();
+                  }
                 },
                 child: Text("배경 사진 변경",
                   style: TextStyle(
