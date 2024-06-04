@@ -9,7 +9,7 @@ class PayTitleField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 20, top: 0, right: 20, bottom: 10),
+      padding: EdgeInsets.only(left: 20, top: 0, right: 20, bottom: 5),
       child: Container(
         decoration: BoxDecoration(border: Border(bottom: BorderSide(color: grey2))),
         child: Row(
@@ -23,6 +23,7 @@ class PayTitleField extends StatelessWidget {
               child: TextField(
                 controller: titleController,
                 textAlign: TextAlign.right,
+                style: TextStyle(decorationThickness: 0),
                 decoration: InputDecoration(
                   hintText: '제목을 입력해 주세요.',
                   hintStyle: TextStyle(fontSize: 14, color: grey3),

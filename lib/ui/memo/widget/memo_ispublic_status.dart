@@ -1,63 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:schedule_with/assets/colors/color.dart';
 
-class PaySettlementStatus extends StatefulWidget {
-  final bool isComplete;
+class MemoIspublicStatus extends StatefulWidget {
+  final bool isPublic;
   final Function(bool) onStatusChanged;
 
-  const PaySettlementStatus({Key? key, required this.isComplete, required this.onStatusChanged}) : super(key: key);
+  const MemoIspublicStatus({Key? key, required this.isPublic, required this.onStatusChanged}) : super(key: key);
 
   @override
-  _PaySettlementStatusState createState() => _PaySettlementStatusState();
+  _MemoIspublicStatusState createState() => _MemoIspublicStatusState();
 }
 
-class _PaySettlementStatusState extends State<PaySettlementStatus> {
-  late bool _isComplete;
+class _MemoIspublicStatusState extends State<MemoIspublicStatus> {
+  late String _isPublicStatus;
 
   @override
   void initState() {
     super.initState();
-    _isComplete = widget.isComplete;
+    _isPublicStatus = widget.isPublic ? 'true' : 'false';
   }
 
-  void _payupdateStatus(bool isComplete) {
+  void _updateStatus(String status) {
+    bool isPublic = status == 'true';
     setState(() {
-      _isComplete = isComplete;
-      widget.onStatusChanged(isComplete);
+      _isPublicStatus = status;
     });
+    widget.onStatusChanged(isPublic);
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 0),
+      padding: EdgeInsets.only(left: 0, top: 0, right: 0, bottom: 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: EdgeInsets.only(bottom: 10),
             decoration: BoxDecoration(
-               border: Border(bottom: BorderSide(color: grey2)),
+              border: Border(bottom: BorderSide(color: grey2)),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text("정산 상태", style: TextStyle(fontSize: 14)),
+                Text("공개 상태", style: TextStyle(fontSize: 14)),
                 Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       GestureDetector(
-                        onTap: () => _payupdateStatus(false),
+                        onTap: () => _updateStatus('false'),
                         child: Row(
                           children: <Widget>[
                             SizedBox(
                               width: 10,
                               height: 10,
-                              child: Radio<bool>(
-                                value: false,
-                                groupValue: _isComplete,
-                                onChanged: (value) => _payupdateStatus(value ?? false),
+                              child: Radio<String>(
+                                value: 'false',
+                                groupValue: _isPublicStatus,
+                                onChanged: (value) => _updateStatus(value ?? 'false'),
                                 activeColor: mainBrown,
                                 fillColor: MaterialStateProperty.resolveWith<Color>(
                                       (states) => states.contains(MaterialState.selected) ? mainBrown : mainBrown.withOpacity(1),
@@ -65,22 +66,22 @@ class _PaySettlementStatusState extends State<PaySettlementStatus> {
                               ),
                             ),
                             SizedBox(width: 10),
-                            Text("정산중", style: TextStyle(color: mainBrown, fontSize: 14)),
+                            Text("비공개", style: TextStyle(color: mainBrown, fontSize: 14)),
                           ],
                         ),
                       ),
                       SizedBox(width: 20),
                       GestureDetector(
-                        onTap: () => _payupdateStatus(true),
+                        onTap: () => _updateStatus('true'),
                         child: Row(
                           children: <Widget>[
                             SizedBox(
                               width: 10,
                               height: 10,
-                              child: Radio<bool>(
-                                value: true,
-                                groupValue: _isComplete,
-                                onChanged: (value) => _payupdateStatus(value ?? true),
+                              child: Radio<String>(
+                                value: 'true',
+                                groupValue: _isPublicStatus,
+                                onChanged: (value) => _updateStatus(value ?? 'true'),
                                 activeColor: mainOrange,
                                 fillColor: MaterialStateProperty.resolveWith<Color>(
                                       (states) => states.contains(MaterialState.selected) ? mainOrange : mainOrange.withOpacity(0.5),
@@ -88,7 +89,7 @@ class _PaySettlementStatusState extends State<PaySettlementStatus> {
                               ),
                             ),
                             SizedBox(width: 10),
-                            Text("정산 완료", style: TextStyle(color: mainOrange, fontSize: 14)),
+                            Text("전체 공개", style: TextStyle(color: mainOrange, fontSize: 14)),
                           ],
                         ),
                       ),

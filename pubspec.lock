@@ -118,6 +118,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_dash:
+    dependency: "direct main"
+    description:
+      name: flutter_dash
+      sha256: dc282109cc12806853e102a4e8b9d99abb7f527fcedec2ea03860e2500ee6622
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -147,6 +155,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.10+1"
+  flutter_swipe_action_cell:
+    dependency: "direct main"
+    description:
+      name: flutter_swipe_action_cell
+      sha256: "5cea4d8c3d333c5610ffa4bc39a30561927f90857be19ba33a8322fdc856d335"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.3"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -422,10 +438,10 @@ packages:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_calendar
-      sha256: d0f4f570c6833101774bed5961c796d11ff5f5cd5e81daf39b9430da2feeb0de
+      sha256: "4c14947b6a398afbbb341b4ea069bc0c1a68d5459ff8b04c8668342ea6380820"
       url: "https://pub.dev"
     source: hosted
-    version: "25.2.6+1"
+    version: "25.2.7"
   syncfusion_flutter_core:
     dependency: transitive
     description:
@@ -438,10 +454,10 @@ packages:
     dependency: transitive
     description:
       name: syncfusion_flutter_datepicker
-      sha256: e001c3b5dee7d27f39a8db51c3cc9d8d89ecd6f7fe136c91da58f831285e7d2f
+      sha256: ebe93b6b54937164ee8b19cd036f314f226a5d69c47da97d05ce07a0ecae4dee
       url: "https://pub.dev"
     source: hosted
-    version: "25.2.6"
+    version: "25.2.7"
   term_glyph:
     dependency: transitive
     description:

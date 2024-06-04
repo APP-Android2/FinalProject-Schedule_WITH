@@ -1,54 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:schedule_with/assets/colors/color.dart';
+import 'package:schedule_with/widget/main_two_button.dart';
 import '../../../widget/main_button.dart';
-
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            showModalBottomSheet(
-              isScrollControlled: false,
-              context: context,
-              builder: (BuildContext context) {
-                return Wrap(
-                  children: [
-                    BottomSheetWidget(),
-                  ],
-                );
-              },
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
-              ),
-              barrierColor: Colors.grey.withOpacity(0.5),
-            );
-          },
-          child: Text('돼돼도대대돼라고!!!!!'),
-        ),
-      ),
-    );
-  }
-}
+import '../view/ex.dart';
 
 class BottomSheetWidget extends StatefulWidget {
+  final Function(String usage, String cost, bool isAddition) onAdd;
+
+  BottomSheetWidget({Key? key, required this.onAdd}) : super(key: key);
+
   @override
   _BottomSheetWidgetState createState() => _BottomSheetWidgetState();
 }
 
 class _BottomSheetWidgetState extends State<BottomSheetWidget> {
-  TextEditingController titleController = TextEditingController();
+  TextEditingController usageController = TextEditingController();
   TextEditingController costController = TextEditingController();
-  TextEditingController usageFieldUnderlineController = TextEditingController();
+  String transactionType = "expense";
+
+  bool fieldsAreEmpty() {
+    return usageController.text.isEmpty && costController.text.isEmpty;
+  }
+
+  void _addTransaction(bool isIncome) {
+    String sign = isIncome ? "" : "-";
+    transactionType = isIncome ? "income" : "expense";
+    widget.onAdd(usageController.text, sign + costController.text, isIncome);
+    FocusScope.of(context).unfocus();
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,24 +45,21 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.close),
+                    icon: Icon(Icons.close, color: grey4,),
                     onPressed: () => Navigator.pop(context),
                   ),
                   Text('사용 내역', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   SizedBox(width: 48),
                 ],
               ),
-              UsageFieldUnderline(usageFieldUnderlineController: usageFieldUnderlineController),
+              UsageAddField(usageAddFieldController: usageController),
               CostFieldUnderline(costController: costController),
               Spacer(flex: 30),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10),
-                child: MainButton(
-                  text: '확인',
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  color: mainOrange,
+                child: MainTwoButton(
+                  leftText: '+ 수입내역', leftColor: mainBrown, leftOnPressed: () => _addTransaction(true),
+                  rightText: '- 사용내역', rightColor: mainOrange, rightOnPressed: () => _addTransaction(false),
                 ),
               ),
               Spacer(flex: 3),
@@ -101,7 +79,7 @@ class CostFieldUnderline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 20, top: 0, right: 20, bottom: 10),
+      padding: EdgeInsets.only(left: 20, top: 0, right: 20, bottom: 0),
       child: Container(
         decoration: BoxDecoration(border: Border(bottom: BorderSide(color: grey2))),
         child: Row(
@@ -131,26 +109,20 @@ class CostFieldUnderline extends StatelessWidget {
   }
 }
 
-class UsageFieldUnderline extends StatefulWidget {
-  final TextEditingController usageFieldUnderlineController;
+class UsageAddField extends StatefulWidget {
+  final TextEditingController usageAddFieldController;
 
-  const UsageFieldUnderline({Key? key, required this.usageFieldUnderlineController}) : super(key: key);
+  const UsageAddField({Key? key, required this.usageAddFieldController}) : super(key: key);
 
   @override
-  UsageFieldUnderlineState createState() => UsageFieldUnderlineState();
+  _UsageAddFieldState createState() => _UsageAddFieldState();
 }
 
-class UsageFieldUnderlineState extends State<UsageFieldUnderline> {
-  String dropdownValue = '지출내역';
-  final Map<String, Color> colorMap = {
-    '지출내역': mainBrown,
-    '수입내역': mainOrange,
-  };
-
+class _UsageAddFieldState extends State<UsageAddField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 20, top: 0, right: 20, bottom: 10),
+      padding: EdgeInsets.only(left: 20, top: 0, right: 20, bottom: 0),
       child: Container(
         decoration: BoxDecoration(
           border: Border(bottom: BorderSide(color: grey2)),
@@ -159,53 +131,19 @@ class UsageFieldUnderlineState extends State<UsageFieldUnderline> {
           children: <Widget>[
             Expanded(
               flex: 1,
-              child: PopupMenuButton<String>(
-                onSelected: (String newValue) {
-                  setState(() {
-                    dropdownValue = newValue;
-                    widget.usageFieldUnderlineController.text = "";
-                  });
-                  FocusScope.of(context).unfocus(); // 포커스 해제
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        dropdownValue,
-                        style: TextStyle(color: colorMap[dropdownValue], fontSize: 14),
-                      ),
-                      SizedBox(width: 8), // Reduce space between text and icon
-                      Icon(Icons.arrow_drop_down, color: colorMap[dropdownValue]),
-                    ],
-                  ),
-                ),
-                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                  PopupMenuItem<String>(
-                    value: '지출내역',
-                    child: Text('지출내역', style: TextStyle(color: colorMap['지출내역'])),
-                  ),
-                  PopupMenuItem<String>(
-                    value: '수입내역',
-                    child: Text('수입내역', style: TextStyle(color: colorMap['수입내역'])),
-                  ),
-                ],
-                color: Colors.white,
-              ),
+              child: Text('내역', style: TextStyle(fontSize: 14)),
             ),
             Expanded(
               flex: 2,
               child: TextField(
-                controller: widget.usageFieldUnderlineController,
+                controller: widget.usageAddFieldController,
                 textAlign: TextAlign.right,
+                style: TextStyle(decorationThickness: 0),
                 decoration: InputDecoration(
                   hintText: '내역을 입력해 주세요.',
                   hintStyle: TextStyle(fontSize: 14, color: grey3),
                   border: InputBorder.none,
+                  focusedBorder: InputBorder.none,
                 ),
               ),
             ),
@@ -215,3 +153,4 @@ class UsageFieldUnderlineState extends State<UsageFieldUnderline> {
     );
   }
 }
+
