@@ -309,34 +309,30 @@ class _PayMemoScreenState extends State<PayMemoScreen> {
           List<String> parts = _usageDetails[index].split(' ');
           var isIncome = parts[1].startsWith('-');
           return SwipeActionCell(
-              key: ObjectKey(_usageDetails[index]),
-              backgroundColor: Colors.white,
-              trailingActions: [
-                SwipeAction(
-                  title: "삭제",
-                  onTap: (CompletionHandler handler) async {
-                    await handler(true);
-                    setState(() {
-                      _usageDetails.removeAt(index);
-                    });
-                  },
-                  color: mainBrown,
-                ),
-              ],
-          child: Padding(
-            padding: EdgeInsets.only(left: 30, top: 10, right: 20, bottom: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(parts[0], style: TextStyle(fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: isIncome ? mainOrange : mainBrown)),
-                Text(parts[1], style: TextStyle(fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: isIncome ? mainOrange : mainBrown)),
+            key: ObjectKey(_usageDetails[index]),
+            backgroundColor: Colors.white,
+            trailingActions: [
+              SwipeAction(
+                title: "삭제",
+                onTap: (CompletionHandler handler) async {
+                  await handler(true);
+                  setState(() {
+                    _usageDetails.removeAt(index);
+                  });
+                },
+                color: mainBrown,
+              ),
+            ],
+            child: Padding(
+              padding: EdgeInsets.only(left: 30, top: 10, right: 20, bottom: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(parts[0], style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: isIncome ? mainOrange : mainBrown)),
+                  Text(parts[1], style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: isIncome ? mainOrange : mainBrown)),
                 ],
               ),
-            )
+            ),
           );
         },
       ),
@@ -451,7 +447,7 @@ class _PayMemoScreenState extends State<PayMemoScreen> {
       Navigator.pop(context);
     }
   }
-  }
+}
 
 
 
