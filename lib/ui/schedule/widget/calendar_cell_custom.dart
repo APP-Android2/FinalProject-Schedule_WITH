@@ -1,126 +1,184 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:schedule_with/assets/colors/color.dart';
+import 'package:schedule_with/ui/group/widget/my_todo_indicator.dart';
+import 'package:schedule_with/ui/schedule/widget/schedule_edit_bottom_sheet.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
+// GetX 컨트롤러
+class CalendarController extends GetxController {
+  var currentMonth = DateTime.now().month.obs;
+  var selectedDate = DateTime.now().obs;
+
+  void updateMonth(int month) {
+    currentMonth.value = month;
+  }
+
+  void updateSelectedDate(DateTime date) {
+    selectedDate.value = date;
+  }
+}
+
 class CalendarCellCustom extends StatefulWidget {
-  const CalendarCellCustom({super.key});
+  CalendarCellCustom({super.key});
 
   @override
   State<CalendarCellCustom> createState() => _CalendarCellCustomState();
 }
 
 class _CalendarCellCustomState extends State<CalendarCellCustom> {
-  // 캘린더 컨트롤러
-  final CalendarController _customCalendarController = CalendarController();
-  int? currentMonth = DateTime.now().month;
-  bool isTabCurrentMonth = true;
+  // GetX Controller 초기화
+  final CalendarController calendarControllerGetX =
+  Get.put(CalendarController());
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   // 초기 현재 월 설정
-  //   currentMonth = DateTime.now().month;
-  // }
+  // 현재 표시되는 날짜 (보이는 날짜의 중간)
+  void _onViewChanged(ViewChangedDetails details) {
+    DateTime displayDate =
+    details.visibleDates[details.visibleDates.length ~/ 2];
+    calendarControllerGetX.updateMonth(displayDate.month);
+  }
 
   // 선택된 셀의 날짜 확인
-  // void _onCalendarTap(CalendarTapDetails details) {
-  //   // 선택한 요소의 인덱스 (0 = 헤더 , 1 = 요일 , 2 = 셀)
-  //   var onTapElement = details.targetElement.index;
-  //   // 선택된 날짜
-  //   var userSelectMonth = _customCalendarController.selectedDate?.month;
-  //   // 달력상 날짜
-  //   var calendarMonth = _customCalendarController.displayDate?.month;
-  //
-  //   if (onTapElement == 2) {
-  //     // UI 변경
-  //     setState(() {
-  //       if (userSelectMonth == calendarMonth) {
-  //         isTabCurrentMonth = true;
-  //       } else {
-  //         isTabCurrentMonth = false;
-  //       }
-  //     });
-  //   }
-  // }
+  void _onCalendarTap(CalendarTapDetails details) {
+    // 약속이 있으면 스케줄 수정 바텀 시트를 띄운다
+    var todayAppoint = details.appointments?.isNotEmpty ?? false;
+    print(details.targetElement);
 
-  // // 현재 표시되는 날짜 (보이는 날짜의 중간)
-  // void _onViewChanged(ViewChangedDetails details) {
-  //   DateTime displayDate = details.visibleDates[details.visibleDates.length ~/ 2];
-  //   // 현재 표시되는 월 업데이트
-  //   if (
-  //
-  //   )
-  // }
+    if (details.targetElement.name == CalendarElement.calendarCell) {
+      Get.back();
+    }
 
-
+    if (todayAppoint == true) {
+      showModalBottomSheet(
+        // 바텀 시트 높이 지정하려면 isScrollControlled: true,
+          isScrollControlled: true,
+          context: context,
+          builder: (BuildContext context) {
+            return EditScheduleBottomSheet();
+          });
+    } else {
+      // 약속이 없을 때의 동작 추가 (필요한 경우)
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        child: SfCalendar(
-      // onTap: _onCalendarTap,
-      // onViewChanged:_onViewChanged,
-      controller: _customCalendarController,
-      view: CalendarView.month,
-      cellBorderColor: grey1,
-      backgroundColor: Colors.transparent,
-          todayHighlightColor: mainOrange,
-          todayTextStyle: TextStyle(color: Colors.white),
-      headerDateFormat: 'yyyy년 MM월',
-      showNavigationArrow: true,
-      showTodayButton: true,
-      headerHeight: 50,
-      headerStyle: const CalendarHeaderStyle(
-        backgroundColor: Colors.white,
-        textStyle: TextStyle(
-          fontSize: 14,
-          // fontWeight: FontWeight.bold,
-          color: Colors.black,
+      child: SfCalendar(
+        // 캘린더 스타일 설정
+        onViewChanged: _onViewChanged,
+        onTap: _onCalendarTap,
+        // controller: _calendarController,
+        view: CalendarView.month,
+        cellBorderColor: grey1,
+        backgroundColor: Colors.transparent,
+        todayHighlightColor: mainOrange,
+        todayTextStyle: TextStyle(color: Colors.white),
+        headerDateFormat: 'yyyy년 MM월',
+        showDatePickerButton: true,
+        // showNavigationArrow: true,
+        allowViewNavigation: true,
+        allowedViews: [
+          CalendarView.month,
+          CalendarView.timelineMonth,
+        ],
+        monthViewSettings: MonthViewSettings(
+          // showTrailingAndLeadingDates: false
         ),
-      ),
-      // 특정 날짜 선택시 셀 스타일 설정
-      selectionDecoration: BoxDecoration(
+        timeSlotViewSettings: TimeSlotViewSettings(),
+        showTodayButton: true,
+        headerHeight: 50,
+        headerStyle: const CalendarHeaderStyle(
+          backgroundColor: Colors.white,
+          textStyle: TextStyle(
+            fontSize: 14,
+            color: Colors.black,
+          ),
+        ),
+        // 특정 날짜 선택시 셀 스타일 설정
+        selectionDecoration: BoxDecoration(
           color: Colors.transparent,
           border: Border.all(
-              color: isTabCurrentMonth ? mainOrange : Colors.transparent,
-              width: 2)),
-      // 커스텀 셀
-      monthCellBuilder: (BuildContext buildContext, MonthCellDetails details) {
-        return CustomMonthCell(
-            details: details,
-            currentMonth: _customCalendarController.displayDate?.month);
-      },
-    ));
+            color: mainOrange,
+            width: 2,
+          ),
+        ),
+        // 커스텀 셀
+        monthCellBuilder:
+            (BuildContext buildContext, MonthCellDetails details) {
+          return Obx(() {
+            return CustomMonthCell(
+              details: details,
+              currentMonth: calendarControllerGetX.currentMonth.value,
+              selectedDate: calendarControllerGetX.selectedDate.value,
+            );
+          });
+        },
+      ),
+    );
   }
 }
 
+
+
+// 캘린더 셀 내용에 달성률 indicator 넣기 위해 커스터마이징
 class CustomMonthCell extends StatelessWidget {
   final MonthCellDetails details;
-  final int? currentMonth;
+  final int currentMonth;
+  final DateTime selectedDate;
 
-  CustomMonthCell({required this.details, required this.currentMonth});
+  CustomMonthCell({
+    super.key,
+    required this.details,
+    required this.currentMonth,
+    required this.selectedDate,
+  });
 
   @override
   Widget build(BuildContext context) {
     bool isCurrentMonthCell = (details.date.month == currentMonth);
+    bool isSelectedDate = details.date == selectedDate;
+    bool isCurrentMonthSelected = selectedDate.month == currentMonth;
 
-    return Container(
-      // 셀 테두리 색상 설정
+    return
+      Column(children: [
+      Container(
+        // 셀 테두리 색상 설정
         decoration: BoxDecoration(
-          border: Border.all(color: grey1, width: 1.0),
+          border: Border.all(
+            color: isSelectedDate && !isCurrentMonthSelected
+                ? Colors.transparent
+                : grey2,
+            width: 0.5,
+          ),
         ),
-      child: Center(
-      child: Column(
-        children: [
-          SizedBox(height: 4),
-          Text(details.date.day.toString(),
-              style:
-                  TextStyle(color: isCurrentMonthCell ? Colors.black : grey4)),
-          SizedBox(height: 10),
-          Icon(Icons.event, color: isCurrentMonthCell ? grey4 : Colors.transparent),
-        ],
-      ),
-    )
-    );
+        child: SizedBox(
+          // 달력 셀 높이
+            height: 90,
+            child: Column(
+              children: [
+                SizedBox(height: 10),
+                Text(
+                  details.date.day.toString(),
+                  style: TextStyle(
+                    color: isCurrentMonthCell ? Colors.black87 : grey4,
+                  ),
+                ),
+                SizedBox(height: 4),
+                // 셀 내부에 들어갈 내용
+                Container(
+                  height: 50,
+                  alignment: Alignment.center,
+                  // // 현재 달만 indicator 보이도록 함
+                  child: isCurrentMonthCell
+                      ? MyTodoIndicator(totalTodo: 10, doneTodo: 10)
+                      : SizedBox(),
+                )
+              ],
+            )),
+      )
+    ]);
   }
 }
+
+
