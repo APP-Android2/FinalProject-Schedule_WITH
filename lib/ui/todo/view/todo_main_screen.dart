@@ -59,6 +59,7 @@ class _TodoMainScreenState extends State<TodoMainScreen> with SingleTickerProvid
             _todoController.addTodoItem(dateString, _contentController.text);
             _contentController.clear();
             Navigator.of(context).pop();
+            setState(() {}); // 상태를 새로고침하여 UI 업데이트
           },
         ),
       );
@@ -75,14 +76,16 @@ class _TodoMainScreenState extends State<TodoMainScreen> with SingleTickerProvid
           Navigator.of(context).pop();
         },
         onSave: (updatedTodoItem) {
-          _todoController.updateTodoItem(updatedTodoItem.date, updatedTodoItem);
-          Navigator.of(context).pop(); // Close the edit bottom sheet
-          setState(() {}); // Refresh the screen to reflect changes
+          setState(() {
+            _todoController.updateTodoItem(updatedTodoItem.date, updatedTodoItem);
+          });
+          Navigator.of(context).pop(); // 수정 바텀 시트 닫기
         },
         onDelete: () {
-          _todoController.deleteTodoItem(todoItemData.date, todoItemData);
+          setState(() {
+            _todoController.deleteTodoItem(todoItemData.date, todoItemData);
+          });
           Navigator.of(context).pop();
-          setState(() {}); // Refresh the screen to reflect changes
         },
       ),
     );
@@ -155,26 +158,33 @@ class _TodoMainScreenState extends State<TodoMainScreen> with SingleTickerProvid
                 todosForSelectedDate = _todoController.getTodoItemsForDate(dateString);
               }
 
-              return ListView.separated(
+              return ListView.builder(
                 itemCount: todosForSelectedDate.length,
-                separatorBuilder: (context, index) => SizedBox(height: 0), // 항목 간 간격 추가
                 itemBuilder: (context, index) {
                   TodoItemData todoItem = todosForSelectedDate[index];
-                  return ListTile(
-                    leading: Checkbox(
-                      value: todoItem.isCompleted,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          todoItem.isCompleted = value ?? false;
-                        });
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 2.0), // 상하 간격 조정
+                    child: ListTile(
+                      contentPadding: EdgeInsets.only(left: 0, right: 16.0), // ListTile의 패딩 조정
+                      leading: Checkbox(
+                        value: todoItem.isCompleted,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            todoItem.isCompleted = value ?? false;
+                            _todoController.updateTodoItem(todoItem.date, todoItem);
+                          });
+                        },
+                        activeColor: mainOrange, // 체크박스 색상
+                        side: BorderSide(color: mainOrange), // 체크박스 테두리 색상
+                      ),
+                      title: Text(
+                        todoItem.content,
+                        style: TextStyle(fontSize: 14), // 텍스트 크기 조정
+                      ),
+                      onTap: () {
+                        onTodoEdit(todoItem); // TODO 편집 기능 추가
                       },
-                      activeColor: mainOrange, // 체크박스 색상
-                      side: BorderSide(color: mainOrange), // 체크박스 테두리 색상
                     ),
-                    title: Text(todoItem.content),
-                    onTap: () {
-                      onTodoEdit(todoItem); // TODO 편집 기능 추가
-                    },
                   );
                 },
               );

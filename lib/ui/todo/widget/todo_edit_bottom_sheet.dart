@@ -42,25 +42,27 @@ class _TodoEditBottomSheetState extends State<TodoEditBottomSheet> {
     super.dispose();
   }
 
+  // 취소 확인 바텀 시트를 보여주는 함수
   void _showCancelBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (context) => TodoCancelBottomSheet(
         onConfirm: () {
-          Navigator.of(context).pop(); // Close the confirmation bottom sheet
-          Navigator.of(context).pop(); // Close the edit bottom sheet
-          widget.onCancel(); // Execute any additional onCancel logic
+          Navigator.of(context).pop(); // 확인 바텀 시트 닫기
+          Navigator.of(context).pop(); // 수정 바텀 시트 닫기
+          widget.onCancel(); // 추가적인 취소 로직 실행
         },
         onContinue: () {
-          Navigator.of(context).pop(); // Close the confirmation bottom sheet
+          Navigator.of(context).pop(); // 확인 바텀 시트 닫기
         },
       ),
     );
   }
 
+  // 날짜 선택 바텀 시트를 열고 날짜를 선택하는 함수
   Future<void> _openSelectDateBottomSheet(BuildContext context) async {
-    Navigator.of(context).pop(); // Close the current bottom sheet
+    Navigator.of(context).pop(); // 현재 바텀 시트 닫기
 
     final DateTime? pickedDate = await showModalBottomSheet<DateTime>(
       context: context,
@@ -94,10 +96,15 @@ class _TodoEditBottomSheetState extends State<TodoEditBottomSheet> {
         selectedDate = '${pickedDate.year}-${pickedDate.month}-${pickedDate.day}';
       });
 
-      _showEditBottomSheet(context); // Reopen the bottom sheet with the updated date
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _showEditBottomSheet(context); // 업데이트된 날짜로 수정 바텀 시트를 다시 열기
+        }
+      });
     }
   }
 
+  // 수정 바텀 시트를 다시 여는 함수
   void _showEditBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -123,7 +130,7 @@ class _TodoEditBottomSheetState extends State<TodoEditBottomSheet> {
       child: SingleChildScrollView(
         padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.5, // Set height to 50% of the screen
+          height: MediaQuery.of(context).size.height * 0.5, // 화면 높이의 50%로 설정
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
@@ -133,8 +140,8 @@ class _TodoEditBottomSheetState extends State<TodoEditBottomSheet> {
           ),
           child: Column(
             children: [
-              // Custom BottomSheetTitle widget with aligned elements
-              BottomSheetTitle(title: 'TODO 수정', closeIcon: true),
+              // 정렬된 요소가 있는 커스텀 BottomSheetTitle 위젯
+              BottomSheetTitle(title: '         TODO 수정', closeIcon: true),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
@@ -182,7 +189,7 @@ class _TodoEditBottomSheetState extends State<TodoEditBottomSheet> {
                             ),
                           ],
                         ),
-                        Spacer(), // Pushes the buttons to the bottom
+                        Spacer(),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           child: Row(
@@ -209,7 +216,7 @@ class _TodoEditBottomSheetState extends State<TodoEditBottomSheet> {
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 10), // Add space between buttons
+                              SizedBox(width: 10), // 버튼 사이 간격 추가
                               Expanded(
                                 child: ElevatedButton(
                                   onPressed: () {
@@ -218,7 +225,9 @@ class _TodoEditBottomSheetState extends State<TodoEditBottomSheet> {
                                         date: selectedDate,
                                         content: _contentController.text,
                                       ));
-                                      Navigator.of(context).pop(); // Close the edit bottom sheet
+                                      if (Navigator.canPop(context)) {
+                                        Navigator.of(context).pop(); // 수정 바텀 시트 닫기
+                                      }
                                     }
                                   },
                                   style: ElevatedButton.styleFrom(
@@ -268,7 +277,6 @@ class BottomSheetTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Expanded(
           child: Padding(
