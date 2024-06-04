@@ -76,11 +76,13 @@ class _TodoMainScreenState extends State<TodoMainScreen> with SingleTickerProvid
         },
         onSave: (updatedTodoItem) {
           _todoController.updateTodoItem(updatedTodoItem.date, updatedTodoItem);
-          Navigator.of(context).pop();
+          Navigator.of(context).pop(); // Close the edit bottom sheet
+          setState(() {}); // Refresh the screen to reflect changes
         },
         onDelete: () {
           _todoController.deleteTodoItem(todoItemData.date, todoItemData);
           Navigator.of(context).pop();
+          setState(() {}); // Refresh the screen to reflect changes
         },
       ),
     );
@@ -182,7 +184,7 @@ class _TodoMainScreenState extends State<TodoMainScreen> with SingleTickerProvid
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: onTodoAdd,
-        backgroundColor: mainOrange.withOpacity(0.7),
+        backgroundColor: mainOrange,
         shape: CircleBorder(),
         child: const Icon(Icons.add, color: Colors.white),
       ),

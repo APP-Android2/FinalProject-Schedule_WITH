@@ -43,8 +43,7 @@ class _TodoAddBottomSheetState extends State<TodoAddBottomSheet> {
 
     if (pickedDate != null) {
       setState(() {
-        selectedDate =
-            '<span class="math-inline">\{pickedDate\.year\}\-</span>{pickedDate.month}-${pickedDate.day}';
+        selectedDate = '${pickedDate.year}-${pickedDate.month}-${pickedDate.day}';
         widget.dateController.text = selectedDate;
       });
     }
@@ -57,8 +56,7 @@ class _TodoAddBottomSheetState extends State<TodoAddBottomSheet> {
         FocusScope.of(context).unfocus();
       },
       child: SingleChildScrollView(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Container(
           // Adjust the height based on your preference
           height: MediaQuery.of(context).size.height * 0.5,
@@ -72,7 +70,7 @@ class _TodoAddBottomSheetState extends State<TodoAddBottomSheet> {
           child: Column(
             children: [
               // Custom BottomSheetTitle widget with aligned elements
-              BottomSheetTitle(title: 'TODO 추가', closeIcon: true),
+              BottomSheetTitle(title: '       TODO 추가', closeIcon: true),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
@@ -120,7 +118,7 @@ class _TodoAddBottomSheetState extends State<TodoAddBottomSheet> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 16.0), // Spacing before button
+                        Spacer(),
                         ElevatedButton(
                           onPressed: widget.onSave,
                           style: ElevatedButton.styleFrom(
@@ -157,23 +155,17 @@ class BottomSheetTitle extends StatelessWidget {
   final String title;
   final bool closeIcon;
 
-  const BottomSheetTitle(
-      {Key? key, required this.title, this.closeIcon = false})
-      : super(key: key);
+  const BottomSheetTitle({
+    Key? key,
+    required this.title,
+    this.closeIcon = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        if (closeIcon)
-          IconButton(
-            padding: EdgeInsets.only(top: 10),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: Icon(Icons.close),
-            alignment: Alignment.topRight,
-          ),
         Expanded(
           child: Padding(
             padding: EdgeInsets.only(top: 10),
@@ -184,7 +176,15 @@ class BottomSheetTitle extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(width: 40),
+        if (closeIcon)
+          IconButton(
+            padding: EdgeInsets.only(top: 10),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: Icon(Icons.close),
+            alignment: Alignment.topRight,
+          ),
       ],
     );
   }
