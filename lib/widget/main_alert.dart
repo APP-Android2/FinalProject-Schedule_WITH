@@ -4,7 +4,6 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:schedule_with/assets/colors/color.dart';
 import 'package:schedule_with/ui/login/view/login_main.dart';
 
-
 class MainAlert extends StatefulWidget {
   final msg;
   final YesMsg;

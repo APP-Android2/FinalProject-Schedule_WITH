@@ -11,17 +11,15 @@ import '../ui/mypage/widget/nick_name_controller.dart';
 
 class MainProfile extends StatefulWidget {
 
-  final TextEditingController controller;
-  
-  const MainProfile({super.key, required this.controller});
+  // const MainProfile({super.key});
 
   @override
   State<MainProfile> createState() => _MainProfileState();
 }
 
 class _MainProfileState extends State<MainProfile> {
-
-  // var user_nickname = TextEditingController();
+  var _textEditingController = TextEditingController();
+  var user_nickname = TextEditingController();
 
   // 배경 이미지
   XFile? _backgroundImage;
@@ -31,7 +29,7 @@ class _MainProfileState extends State<MainProfile> {
 
   @override void initState() {
     super.initState();
-    widget.controller.text = "이름";
+    _textEditingController.text = "이름";
   }
 
   // 배경 이미지를 가져오는 함수
@@ -132,7 +130,6 @@ class _MainProfileState extends State<MainProfile> {
                             height: 25,
                           )
                           : Text(widget.controller.text,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),);
-
                         }),
                         // 수정 아이콘
                         Obx((){

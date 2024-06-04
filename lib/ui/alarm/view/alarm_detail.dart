@@ -7,22 +7,22 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:schedule_with/assets/colors/color.dart';
 import 'package:schedule_with/widget/bottom_sheet_text_button.dart';
-import 'package:schedule_with/ui/alarm/widget/alram_detail_text_field.dart';
+import 'package:schedule_with/ui/alarm/widget/alarm_detail_text_field.dart';
 import 'package:schedule_with/widget/main_alert.dart';
 import 'package:schedule_with/widget/main_button.dart';
 import 'package:schedule_with/widget/date_picker.dart';
 
-import '../widget/alram_detail_switch_button.dart';
+import '../widget/alarm_detail_switch_button.dart';
 import '../widget/select_time.dart';
 
-class AlramDetail extends StatefulWidget {
-  const AlramDetail({super.key});
+class AlarmDetail extends StatefulWidget {
+  const AlarmDetail({super.key});
 
   @override
-  State<AlramDetail> createState() => _AlramDetailState();
+  State<AlarmDetail> createState() => _AlarmDetailState();
 }
 
-class _AlramDetailState extends State<AlramDetail> {
+class _AlarmDetailState extends State<AlarmDetail> {
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -59,9 +59,10 @@ class _AlramDetailState extends State<AlramDetail> {
                         ),
                 IconButton(onPressed: (){
                   // Get.back();
-                  Get.dialog(MainAlert(msg: "did", YesMsg: "d", NoMsg: "d",));
+                  Get.dialog(
+                    barrierDismissible: false,
+                    MainAlert(msg: "등록을 취소하시겠습니까?", YesMsg: "예", NoMsg: "아니요",));
                 },
-                  // icon: Icon(CupertinoIcons.clear,
                   icon: Icon(Icons.close,
                     color: grey4,
                   ),
@@ -75,14 +76,14 @@ class _AlramDetailState extends State<AlramDetail> {
                 SelectTime(),
               ],
             ),
-            AlramDetailTextField(titleText: '타이틀', textHint: '알람',),
+            AlarmDetailTextField(titleText: '타이틀', textHint: '알람',),
             BottomSheetDetailButton(titleText: '날짜', detailText: '없음', detailTextColor: grey3,
               onTap: (){
                 Navigator.pop(context); // Close first
                 showModalBottomSheet<void>(
                   context: context,
                   builder: (context) =>   DatePicker(
-                    back_page: AlramDetail(),
+                    back_page: AlarmDetail(),
                     title: "날짜",
                   ),
                 );
@@ -90,8 +91,8 @@ class _AlramDetailState extends State<AlramDetail> {
             ),
             BottomSheetDetailButton(titleText: '알림음', detailText: '기본 알림음', detailTextColor: Colors.black),
             BottomSheetDetailButton(titleText: '반복', detailText: '없음', detailTextColor: grey3),
-            AlramDetailSwitchButton(titleText: '다시알림', alramIsChecked: false,),
-            AlramDetailSwitchButton(titleText: '스케줄에 추가', alramIsChecked: false,),
+            AlarmDetailSwitchButton(titleText: '다시알림', alarmIsChecked: false,),
+            AlarmDetailSwitchButton(titleText: '스케줄에 추가', alarmIsChecked: false,),
             Spacer(),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 30),

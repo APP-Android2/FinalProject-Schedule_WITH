@@ -6,6 +6,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:schedule_with/ui/group/widget/group_divider.dart';
 
 import '../../../assets/colors/color.dart';
+import '../../../widget/group_invite_item.dart';
 import '../widget/friend_add_mini_button.dart';
 import '../widget/group_invite_item.dart';
 

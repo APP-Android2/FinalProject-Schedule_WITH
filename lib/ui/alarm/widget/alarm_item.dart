@@ -2,20 +2,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../assets/colors/color.dart';
+import '../view/alarm_detail.dart';
 
-class AlramItem extends StatefulWidget {
-  final bool alramIsChecked ;
+class AlarmItem extends StatefulWidget {
+  final Alarm alarm;
 
-  const AlramItem({
-    required this.alramIsChecked,
+  const AlarmItem({
     Key? key,
+    required this.alarm,
   }) : super(key: key);
 
   @override
-  State<AlramItem> createState() => _AlramListState();
+  State<AlarmItem> createState() => _AlarmListState();
 }
 
-class _AlramListState extends State<AlramItem> {
+class _AlarmListState extends State<AlarmItem> {
+  bool _isChecked = false;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -53,11 +55,11 @@ class _AlramListState extends State<AlramItem> {
                   ),
                 // 스위치 버튼
                 CupertinoSwitch(
-                  value: widget.alramIsChecked,
+                  value: _isChecked,
                   activeColor: mainOrange,
-                  onChanged: (bool? value) {
+                  onChanged: (value) {
                     setState(() {
-                      value = true ?? false;
+                      _isChecked = value;
                       // value ?? false;
                     });
                   },
@@ -99,4 +101,11 @@ class _AlramListState extends State<AlramItem> {
       ),
     );
   }
+}
+
+class Alarm {
+  final String title; // Alarm title
+  bool isChecked; // Whether the alarm is active or not
+
+  Alarm({required this.title, required this.isChecked});
 }

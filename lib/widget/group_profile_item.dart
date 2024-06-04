@@ -1,11 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:image_picker/image_picker.dart';
 
-import '../../../assets/colors/color.dart';
-import 'friend_add_mini_button.dart';
+import '../assets/colors/color.dart';
 
 class Invite{
   String ProfileImage;
@@ -14,16 +10,19 @@ class Invite{
   Invite({required this.ProfileImage, required this.UserName});
 }
 
-class GroupInviteItem extends StatefulWidget {
+class GroupProfileItem extends StatefulWidget {
   final Invite invite;
 
-  const GroupInviteItem({Key? key, required this.invite}) : super(key: key);
+  const GroupProfileItem({
+    Key? key,
+    required this.invite})
+      : super(key: key);
 
   @override
-  State<GroupInviteItem> createState() => _GroupInviteItemState();
+  State<GroupProfileItem> createState() => _GroupProfileItemState();
 }
 
-class _GroupInviteItemState extends State<GroupInviteItem> {
+class _GroupProfileItemState extends State<GroupProfileItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -44,22 +43,14 @@ class _GroupInviteItemState extends State<GroupInviteItem> {
                     border: Border.all(color: grey2,width: 0.5)
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: widget.invite.ProfileImage == "" ? SvgPicture.asset("lib/assets/icon/icon_plus.svg", width: 15, height: 15, fit: BoxFit.scaleDown,)
-                      : Image.asset(widget.invite.ProfileImage,fit: BoxFit.cover,)
+                    borderRadius: BorderRadius.circular(20),
+                    child: widget.invite.ProfileImage == "" ? SvgPicture.asset("lib/assets/icon/icon_plus.svg", width: 15, height: 15, fit: BoxFit.scaleDown,)
+                        : Image.asset(widget.invite.ProfileImage,fit: BoxFit.cover,)
                 ),
               ),
               Text(widget.invite.UserName)
             ],
           ),
-          // 친구요청 버튼
-x          FriendAddMiniButton(
-              text: "그룹초대",
-              onPressed: () {
-
-              },
-              color: mainOrange
-          )
         ],
       ),
     );

@@ -1,11 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../../assets/colors/color.dart';
-import 'friend_add_mini_button.dart';
 
 class Invite{
   String ProfileImage;
@@ -53,13 +49,13 @@ class _GroupInviteItemState extends State<GroupInviteItem> {
             ],
           ),
           // 친구요청 버튼
-x          FriendAddMiniButton(
-              text: "그룹초대",
-              onPressed: () {
-
-              },
-              color: mainOrange
-          )
+          // FriendAddMiniButton(
+          //     text: "그룹초대",
+          //     onPressed: () {
+          //
+          //     },
+          //     color: mainOrange
+          // )
         ],
       ),
     );

@@ -3,24 +3,24 @@ import 'package:flutter/material.dart';
 
 import '../../../assets/colors/color.dart';
 
-class AlramDetailSwitchButton extends StatefulWidget {
+class AlarmDetailSwitchButton extends StatefulWidget {
   final String titleText;
-  final bool alramIsChecked;
+  final bool alarmIsChecked;
   final VoidCallback? onPressed;
 
-  const AlramDetailSwitchButton({
+  const AlarmDetailSwitchButton({
     required this.titleText,
-    required this.alramIsChecked,
+    required this.alarmIsChecked,
     this.onPressed,
     Key? key,
     }): super(key: key);
 
   @override
-  State<AlramDetailSwitchButton> createState() => _AlramdetailswitchbuttonState();
+  State<AlarmDetailSwitchButton> createState() => _AlarmdetailswitchbuttonState();
 }
 
-class _AlramdetailswitchbuttonState extends State<AlramDetailSwitchButton> {
-  // final bool alramIsChecked = false;
+class _AlarmdetailswitchbuttonState extends State<AlarmDetailSwitchButton> {
+  bool _isChecked = true;
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +44,11 @@ class _AlramdetailswitchbuttonState extends State<AlramDetailSwitchButton> {
                 ),
               ),
               CupertinoSwitch(
-                value: widget.alramIsChecked,
+                value: _isChecked,
                 activeColor: mainOrange,
-                onChanged: (bool? value) {
+                onChanged: (value) {
                   setState(() {
-                    value = true ?? false;
+                    _isChecked = value;
                     // value ?? false;
                   });
                 },
