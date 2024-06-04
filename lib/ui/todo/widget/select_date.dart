@@ -1,16 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:schedule_with/assets/colors/color.dart';
 
 class SelectDate extends StatefulWidget {
-  final Widget backPage;
-  final String title;
   final Function(DateTime) onDateSelected;
 
   const SelectDate({
-    required this.backPage,
-    required this.title,
     required this.onDateSelected,
     Key? key,
   }) : super(key: key);
@@ -30,75 +24,74 @@ class _SelectDateState extends State<SelectDate> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // 바텀 시트 높이 조절
-      height: MediaQuery.of(context).size.height * 0.3,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10),
-          topRight: Radius.circular(10),
-        ),
-        color: Colors.white,
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                onPressed: () {
-                  Get.back();
-                  Get.bottomSheet(
-                    widget.backPage,
-                    isDismissible: true,
-                  );
-                },
-                icon: Icon(CupertinoIcons.back),
-                color: grey4,
-              ),
-              Container(
-                alignment: Alignment.center,
-                height: 45,
-                child: Text(
-                  widget.title,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ),
-              IconButton(
-                onPressed: () {
-                  widget.onDateSelected(selectDate);
-                  Get.back();
-                },
-                icon: Icon(Icons.check),
-                color: grey4,
-              ),
-            ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).pop();
+      },
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.4,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(0),
+            topRight: Radius.circular(0),
           ),
-          Container(
-            height: 200,
-            child: CupertinoTheme(
-              data: CupertinoThemeData(
-                textTheme: CupertinoTextThemeData(
-                  dateTimePickerTextStyle: TextStyle(
-                    fontSize: 20,
+          color: Colors.white,
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    widget.onDateSelected(selectDate);
+                    Navigator.of(context).pop();
+                  },
+                  icon: Icon(CupertinoIcons.back),
+                  color: Colors.grey,
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  height: 45,
+                  child: Text(
+                    '날짜',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
-              ),
-              child: CupertinoDatePicker(
-                initialDateTime: DateTime.now(),
-                maximumYear: 2300,
-                minimumYear: 2000,
-                mode: CupertinoDatePickerMode.date,
-                onDateTimeChanged: (dateTime) {
-                  setState(() {
-                    selectDate = dateTime;
-                  });
-                },
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  icon: Icon(Icons.close),
+                  color: Colors.grey,
+                ),
+              ],
+            ),
+            Divider(color: Colors.grey),
+            Container(
+              height: 200,
+              child: CupertinoTheme(
+                data: CupertinoThemeData(
+                  textTheme: CupertinoTextThemeData(
+                    dateTimePickerTextStyle: TextStyle(fontSize: 20),
+                  ),
+                ),
+                child: CupertinoDatePicker(
+                  initialDateTime: selectDate,
+                  maximumYear: 2300,
+                  minimumYear: 2000,
+                  mode: CupertinoDatePickerMode.date,
+                  onDateTimeChanged: (dateTime) {
+                    setState(() {
+                      selectDate = dateTime;
+                    });
+                  },
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

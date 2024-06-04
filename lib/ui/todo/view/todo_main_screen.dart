@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../../assets/colors/color.dart';
-import '../widget/calendar_tab.dart';
+import 'package:get/get.dart';
+import 'package:schedule_with/assets/colors/color.dart';
+import '../widget/todo_controller.dart';
 import '../widget/calendar_widget.dart';
-import '../widget/todo_app_bar.dart';
+import '../widget/select_share_option.dart';
+import '../widget/todo_add_bottom_sheet.dart';
 import '../widget/todo_edit_bottom_sheet.dart';
-import '../widget/todo_page_share.dart';
 
 class TodoMainScreen extends StatefulWidget {
   const TodoMainScreen({super.key});
@@ -19,7 +20,9 @@ class _TodoMainScreenState extends State<TodoMainScreen> with SingleTickerProvid
   DateTime? selectedDate;
   bool isEditing = false;
 
-  final Map<String, List<TodoItemData>> _todoItemsByDate = {};
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _contentController = TextEditingController();
+  final TodoController _todoController = Get.put(TodoController());
 
   @override
   void initState() {
@@ -31,34 +34,38 @@ class _TodoMainScreenState extends State<TodoMainScreen> with SingleTickerProvid
   @override
   void dispose() {
     _tabController.dispose();
+    _dateController.dispose();
+    _contentController.dispose();
     super.dispose();
   }
 
   void onDateSelected(DateTime date) {
     setState(() {
       selectedDate = date;
+      _dateController.text = DateFormat('yyyy-MM-dd').format(date);
     });
   }
 
   void onTodoAdd() {
     if (selectedDate != null) {
-      String dateString = DateFormat('yyyy-MM-dd').format(selectedDate!);
-      setState(() {
-        if (_todoItemsByDate[dateString] == null) {
-          _todoItemsByDate[dateString] = [];
-        }
-        _todoItemsByDate[dateString]!.add(TodoItemData(
-          date: dateString,
-          content: '   ',
-        ));
-      });
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        builder: (context) => TodoAddBottomSheet(
+          dateController: _dateController,
+          contentController: _contentController,
+          onSave: () {
+            String dateString = DateFormat('yyyy-MM-dd').format(selectedDate!);
+            _todoController.addTodoItem(dateString, _contentController.text);
+            _contentController.clear();
+            Navigator.of(context).pop();
+          },
+        ),
+      );
     }
   }
 
   void onTodoEdit(TodoItemData todoItemData) {
-    setState(() {
-      isEditing = true;
-    });
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -66,157 +73,120 @@ class _TodoMainScreenState extends State<TodoMainScreen> with SingleTickerProvid
         todoItemData: todoItemData,
         onCancel: () {
           Navigator.of(context).pop();
-          setState(() {
-            isEditing = false;
-          });
         },
         onSave: (updatedTodoItem) {
-          setState(() {
-            String dateString = todoItemData.date;
-            int index = _todoItemsByDate[dateString]!.indexOf(todoItemData);
-            if (index != -1) {
-              _todoItemsByDate[dateString]![index] = updatedTodoItem;
-            }
-            isEditing = false;
-          });
+          _todoController.updateTodoItem(updatedTodoItem.date, updatedTodoItem);
           Navigator.of(context).pop();
         },
         onDelete: () {
-          setState(() {
-            String dateString = todoItemData.date;
-            _todoItemsByDate[dateString]!.remove(todoItemData);
-            isEditing = false;
-          });
+          _todoController.deleteTodoItem(todoItemData.date, todoItemData);
           Navigator.of(context).pop();
         },
       ),
-    ).whenComplete(() {
-      setState(() {
-        isEditing = false;
-      });
-    });
+    );
+  }
+
+  void onDownload() {
+    if (selectedDate != null) {
+      String dateString = DateFormat('yyyy-MM-dd').format(selectedDate!);
+      List<TodoItemData> todosForSelectedDate = _todoController.getTodoItemsForDate(dateString);
+
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => SelectShareOption(
+          todosForSelectedDate: todosForSelectedDate,
+          completionRate: _todoController.calculateCompletionRate(dateString),
+          selectedDate: selectedDate!,
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    List<TodoItemData> todosForSelectedDate = [];
-    if (selectedDate != null) {
-      String dateString = DateFormat('yyyy-MM-dd').format(selectedDate!);
-      todosForSelectedDate = _todoItemsByDate[dateString] ?? [];
-    }
-
-    double completionRate = 0.0;
-    if (todosForSelectedDate.isNotEmpty) {
-      int completedCount = todosForSelectedDate.where((item) => item.isCompleted).length;
-      completionRate = completedCount / todosForSelectedDate.length;
-    }
-
-    return GestureDetector(
-      onTap: isEditing
-          ? () {
-        showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          builder: (context) => Container(
-            height: 200,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Are you sure you want to cancel editing?'),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        setState(() {
-                          isEditing = false;
-                        });
-                      },
-                      child: Text('Confirm'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('Continue Editing'),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      }
-          : null,
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Column(
-          children: [
-            CalendarWidget(onDateSelected: onDateSelected),
-            if (selectedDate != null)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          DateFormat('yyyy년 MM월 dd일').format(selectedDate!),
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.download, color: grey3),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => TodoSharePage(
-                                  todosForSelectedDate: todosForSelectedDate,
-                                  completionRate: completionRate,
-                                  selectedDate: selectedDate!,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Column(
+        children: [
+          CalendarWidget(onDateSelected: onDateSelected),
+          if (selectedDate != null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        DateFormat('yyyy년 MM월 dd일').format(selectedDate!),
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.download, color: grey3),
+                        onPressed: onDownload,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Obx(() {
+                        double completionRate = selectedDate != null
+                            ? _todoController.calculateCompletionRate(DateFormat('yyyy-MM-dd').format(selectedDate!))
+                            : 0.0;
+                        return Text(
                           ' ${(completionRate * 100).toStringAsFixed(0)}%',
                           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: mainOrange),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                        );
+                      }),
+                    ],
+                  ),
+                ],
               ),
+            ),
+          Expanded(
+            child: Obx(() {
+              List<TodoItemData> todosForSelectedDate = [];
+              if (selectedDate != null) {
+                String dateString = DateFormat('yyyy-MM-dd').format(selectedDate!);
+                todosForSelectedDate = _todoController.getTodoItemsForDate(dateString);
+              }
 
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: onTodoAdd,
-          backgroundColor: mainOrange.withOpacity(0.7),
-          shape: CircleBorder(),
-          child: const Icon(Icons.add, color: Colors.white),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+              return ListView.separated(
+                itemCount: todosForSelectedDate.length,
+                separatorBuilder: (context, index) => SizedBox(height: 0), // 항목 간 간격 추가
+                itemBuilder: (context, index) {
+                  TodoItemData todoItem = todosForSelectedDate[index];
+                  return ListTile(
+                    leading: Checkbox(
+                      value: todoItem.isCompleted,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          todoItem.isCompleted = value ?? false;
+                        });
+                      },
+                      activeColor: mainOrange, // 체크박스 색상
+                      side: BorderSide(color: mainOrange), // 체크박스 테두리 색상
+                    ),
+                    title: Text(todoItem.content),
+                    onTap: () {
+                      onTodoEdit(todoItem); // TODO 편집 기능 추가
+                    },
+                  );
+                },
+              );
+            }),
+          ),
+        ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: onTodoAdd,
+        backgroundColor: mainOrange.withOpacity(0.7),
+        shape: CircleBorder(),
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
-}
-
-class TodoItemData {
-  String date;
-  String content;
-  bool isCompleted;
-
-  TodoItemData({
-    required this.date,
-    required this.content,
-    this.isCompleted = false,
-  });
 }

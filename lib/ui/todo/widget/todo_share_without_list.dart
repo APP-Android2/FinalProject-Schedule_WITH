@@ -1,94 +1,94 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../../assets/colors/color.dart';
-import 'todo_controller.dart';
-import '../view/todo_main_screen.dart';
+import 'package:schedule_with/assets/colors/color.dart';
 
-class TodoSharePage extends StatelessWidget {
-  final List<TodoItemData> todosForSelectedDate;
+class TodoShareWithoutList extends StatelessWidget {
   final double completionRate;
+  final int totalCount;
+  final int completedCount;
+  final int remainingCount;
   final DateTime selectedDate;
 
-  const TodoSharePage({
+  const TodoShareWithoutList({
     Key? key,
-    required this.todosForSelectedDate,
     required this.completionRate,
+    required this.totalCount,
+    required this.completedCount,
+    required this.remainingCount,
     required this.selectedDate,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    int completedCount = todosForSelectedDate.where((item) => item.isCompleted).length;
-    int totalCount = todosForSelectedDate.length;
-    int remainingCount = totalCount - completedCount;
-
     String formattedDate = DateFormat('yyyy년 MM월 dd일').format(selectedDate);
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false, // 뒤로 이동 화살표 버튼 제거
-        title: Container(
-          padding: EdgeInsets.symmetric(vertical: 8.0), // AppBar 높이 줄이기
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    formattedDate,
-                    style: TextStyle(fontSize: 16, color: Colors.black),
+        automaticallyImplyLeading: false,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  formattedDate,
+                  style: TextStyle(fontSize: 16, color: Colors.black),
+                ),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'xXxX 님의 ',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      TextSpan(
+                        text: 'WITH',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: mainOrange,
+                        ),
+                      ),
+                      TextSpan(
+                        text: ' 기록',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
                   ),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: 'xXxX 님의 ',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold, // Bold 처리
-                            color: Colors.black,
-                          ),
-                        ),
-                        TextSpan(
-                          text: 'WITH',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: mainOrange,
-                          ),
-                        ),
-                        TextSpan(
-                          text: ' 기록',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold, // Bold 처리
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              Image.asset(
-                'lib/assets/image/logo.png',
-                height: 20,
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+            Image.asset(
+              'lib/assets/image/logo.png',
+              height: 20,
+            ),
+          ],
         ),
         backgroundColor: Colors.white,
         elevation: 0,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(1.0),
+          child: Container(
+            color: grey2,
+            height: 1.0,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Divider(color: grey2),
-            SizedBox(height: 20.0),
-            Expanded(
-              flex: 3,
+            Container(
+              height: MediaQuery.of(context).size.height * 0.5,
               child: Center(
                 child: AspectRatio(
                   aspectRatio: 1,
@@ -108,9 +108,13 @@ class TodoSharePage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 16.0),
-            Divider(color: grey2, thickness: 1),
-            SizedBox(height: 8.0),
+            Divider(
+              color: grey2,
+              thickness: 1,
+              height: 16,
+              endIndent: 16,
+              indent: 16,
+            ),// 점선으로 대체예정
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -133,27 +137,6 @@ class TodoSharePage extends StatelessWidget {
                   ],
                 ),
               ],
-            ),
-            SizedBox(height: 8.0),
-            Divider(color: grey2, thickness: 1, indent: 16, endIndent: 16),
-            Expanded(
-              flex: 3,
-              child: ListView.builder(
-                itemCount: todosForSelectedDate.length,
-                itemBuilder: (context, index) {
-                  final item = todosForSelectedDate[index];
-                  return ListTile(
-                    leading: Checkbox(
-                      value: item.isCompleted,
-                      onChanged: null, // 이미 완료된 TODO는 수정 불가
-                      activeColor: mainOrange,
-                      checkColor: Colors.white,
-                      side: BorderSide(color: mainOrange), // 체크박스 테두리 색상
-                    ),
-                    title: Text(item.content),
-                  );
-                },
-              ),
             ),
           ],
         ),
