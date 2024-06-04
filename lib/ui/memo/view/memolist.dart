@@ -1,25 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_swipe_action_cell/core/cell.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:schedule_with/assets/colors/color.dart';
-import 'package:schedule_with/ui/memo/view/memo.dart' as MemoView;
-
+import '../widget/memo_controller.dart';
+import 'memo.dart';
 import 'memo_item.dart';
 
-class MemoListView extends StatefulWidget {
-  final List<Memo> memos = [
-    Memo(date: '2024.05.13', title: '메모 제목입니다.', body: '메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.', hasImage: true, isPublic: true),
-    Memo(date: '2024.05.13', title: '다른 메모 제목입니다.', body: '다른 메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.', hasImage: false, isPublic: false),
-    Memo(date: '2024.05.13', title: '다른 메모 제목입니다.', body: '다른 메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.', hasImage: false, isPublic: false),
-    Memo(date: '2024.05.13', title: '다른 메모 제목입니다.', body: '다른 메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.', hasImage: false, isPublic: false),
-    Memo(date: '2024.05.13', title: '다른 메모 제목입니다.', body: '다른 메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.메모 내용입니다.', hasImage: false, isPublic: false),
-  ];
-
-
-  @override
-  _MemoListViewState createState() => _MemoListViewState();
-}
-
-class _MemoListViewState extends State<MemoListView> {
-  bool isExpanded = true;
+class MemoListView extends StatelessWidget {
+  final MemoController controller = Get.put(MemoController());
 
   @override
   Widget build(BuildContext context) {
@@ -45,12 +35,10 @@ class _MemoListViewState extends State<MemoListView> {
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: IconButton(
-                      icon: Icon(isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, color: mainOrange),
-                      onPressed: () {
-                        setState(() {
-                          isExpanded = !isExpanded;
-                        });
-                      },
+                      icon: Obx(() => Icon(
+                          controller.isExpanded.value ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                          color: mainOrange)),
+                      onPressed: controller.toggleExpansion,
                     ),
                   ),
                 ),
@@ -62,27 +50,56 @@ class _MemoListViewState extends State<MemoListView> {
             thickness: 1.5,
             color: mainOrange,
           ),
-          Expanded(
-            child: AnimatedSize(
-              duration: Duration(milliseconds: 300),
-              child: ListView(
-                children: isExpanded ? widget.memos.map((memo) => MemoItem(memo: memo)).toList() : [],
-              ),
+          Obx(() => controller.isExpanded.value ? Expanded(
+            child: ListView.builder(
+              padding: EdgeInsets.zero,
+              itemCount: controller.memos.length,
+              itemBuilder: (context, index) {
+                return Column(
+                  children: [
+                    SwipeActionCell(
+                      key: ObjectKey(controller.memos[index]),
+                      backgroundColor: Colors.white,
+                      trailingActions: <SwipeAction>[
+                      SwipeAction(
+                        title: "삭제",
+                        onTap: (CompletionHandler handler) async {
+                          await handler(true);
+                          controller.memos.removeAt(index);
+                          // setState(() {});
+                        },
+                        color:  mainBrown,
+                        ),
+                      ],
+                      child: MemoItem(
+                        memo: controller.memos[index],
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MemoScreen(memo: controller.memos[index]),
+                            ),
+                          );
+                        },
+                        onDelete: () {
+                        controller.deleteMemo(index);
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Container(
+                        height: 1,
+                        color: grey2,
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
-          ),
+          ) : Offstage()),
         ],
       ),
     );
   }
 }
-
-// class MemoListWidget extends StatelessWidget {
-//   final List<MemoView.Memo> memos;
-//
-//   const MemoListWidget({Key? key, required this.memos}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return MemoListView(memos: memos);
-//   }
-// }

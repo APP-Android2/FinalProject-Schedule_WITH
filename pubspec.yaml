@@ -38,6 +38,9 @@ dependencies:
   flutter_svg: ^2.0.10+1
   get: ^4.6.6
   logger: ^2.3.0
+  image_picker: ^0.8.5+3
+  flutter_swipe_action_cell: ^3.1.3
+  flutter_dash:
   #달력 라이브러리 한글화때 필요
   flutter_localizations:
     sdk: flutter
