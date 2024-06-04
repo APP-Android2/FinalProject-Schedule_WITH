@@ -56,7 +56,7 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
             CalendarView.week,
           ],
           // 배경색
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.white,
           // 오늘 날짜 강조색
           todayHighlightColor: mainBrown,
           todayTextStyle: TextStyle(color: Colors.white),
