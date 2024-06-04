@@ -10,6 +10,7 @@ import 'package:schedule_with/ui/schedule/widget/schedule_color_picker.dart';
 import 'package:schedule_with/ui/schedule/widget/schedule_memo.dart';
 import 'package:schedule_with/widget/bottom_sheet_detail_button.dart';
 import 'package:schedule_with/widget/date_picker.dart';
+import 'package:schedule_with/widget/main_alert.dart';
 import 'package:schedule_with/widget/main_two_button.dart';
 import 'package:schedule_with/widget/time_picker.dart';
 
@@ -22,7 +23,7 @@ class AddScheduleBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: MediaQuery.of(context).size.height* 0.8,
+        height: MediaQuery.of(context).size.height* 0.75,
         width: MediaQuery.of(context).size.width,
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -122,12 +123,14 @@ class AddScheduleBottomSheet extends StatelessWidget {
                     leftText: '삭제 하기',
                     leftColor: mainBrown,
                     leftOnPressed: () {
-                      Get.back();
+                      Get.dialog(
+                          MainAlert(msg:'일정을 삭제하시겠습니까?', YesMsg:'예', NoMsg: '아니오'));
                     },
                     rightText: '수정 완료',
                     rightColor: mainOrange,
                     rightOnPressed: () {
-                      Get.back();
+                      Get.dialog(
+                          MainAlert(msg:'수정사항을 취소하시겠습니까?', YesMsg:'예', NoMsg: '아니오'));
                     }),
               ]))
         ]));
@@ -140,6 +143,7 @@ class BottomSheetTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         IconButton(
           padding: EdgeInsets.only(top: 10),
@@ -148,7 +152,7 @@ class BottomSheetTitle extends StatelessWidget {
           },
           icon: Icon(Icons.close),
         ),
-        Expanded(
+        Container(
           child: Padding(
             padding: EdgeInsets.only(top: 10),
             child: Text(

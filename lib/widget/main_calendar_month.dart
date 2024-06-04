@@ -1,6 +1,8 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schedule_with/assets/colors/color.dart';
+import 'package:schedule_with/ui/schedule/widget/calendar_change_view_button.dart';
 import 'package:schedule_with/ui/schedule/widget/schedule_bottom_sheet.dart';
 import 'package:schedule_with/ui/schedule/widget/schedule_edit_bottom_sheet.dart';
 import 'package:schedule_with/ui/schedule/widget/year_date_picker.dart';
@@ -8,6 +10,7 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 import '../domain/repository/sample_data.dart';
 
 class MainCalendarMonth extends StatefulWidget {
+
   const MainCalendarMonth({super.key});
 
   @override
@@ -18,9 +21,13 @@ class MainCalendarMonth extends StatefulWidget {
 class _MainCalendarMonthState extends State<MainCalendarMonth> {
   // 현재 달력 범위를 벗어나는 날짜 클릭시 테두리 색을 다르게 설정하기 위한 변수
   bool isCurrentMonth = true;
+  var currentView = CalendarView.month;
+
+  // 월별 -> 일별 전환시 현재 시간으로 이동
+  final DateTime _jumpToTime = DateTime.now();
 
   // 캘린더 컨트롤러
-  CalendarController _calendarController = CalendarController();
+  final CalendarController _calendarController = CalendarController();
 
   // 선택된 셀의 날짜 확인
   void _onCalendarTap(CalendarTapDetails details) {
@@ -66,7 +73,9 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
         //   child: Row(
         //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
         //     children: [
+        // 커스텀 date picker
         //       YearDatePickerButton(),
+        //       // CalendarChangeViewButton(),
         //     ],
         //   ),
         // ),
@@ -74,16 +83,19 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
           // 캘린더가 차지할 높이
           height: MediaQuery.of(context).size.height * 0.65,
           child: SfCalendar(
-            // 최초 표시형식 (월)
-            view: CalendarView.month,
+          // 최초 표시형식 (월)
+            view: currentView,
+            initialDisplayDate: _jumpToTime,
             controller: _calendarController,
             onTap: _onCalendarTap,
+
             // 임시 데이터 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 나중에 삭제 해야됨
             dataSource: getDataSource(),
             // 변경 가능한 표시형식 (월, 주)
             allowedViews: const [
               CalendarView.month,
               CalendarView.week,
+              CalendarView.schedule
             ],
             // 배경색
             backgroundColor: Colors.white,
@@ -115,15 +127,22 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
               ),
             ),
             // 달력 표시
+            cellEndPadding: 0,
             monthViewSettings: MonthViewSettings(
               numberOfWeeksInView: 6, // 나타낼 주 수
               appointmentDisplayMode: MonthAppointmentDisplayMode.appointment, // 약속 제목 표시
               appointmentDisplayCount: 3, // 셀 하나에 약속 표시 갯수
             ),
+            appointmentBuilder: buildAppointmentWidget,
             // week 설정
             timeSlotViewSettings: TimeSlotViewSettings(
+              timeRulerSize: 50,
+              timeTextStyle: TextStyle(color: grey4, fontWeight: FontWeight.bold),
+              timeIntervalHeight: 100,
+              timeIntervalWidth: 200,
+              timelineAppointmentHeight: 30,
               timeInterval: Duration(hours: 1),
-              timeFormat: 'a h',
+              timeFormat: 'a h:mm',
             ),
           ),
         ),
@@ -131,3 +150,36 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
     );
   }
 }
+
+
+// 더보기 아이콘
+Widget buildAppointmentWidget(BuildContext context, CalendarAppointmentDetails details) {
+  if (details.isMoreAppointmentRegion) {
+    return Container(
+      width: details.bounds.width,
+      height: details.bounds.height,
+      child: Center(
+        child: Icon(
+          Icons.more_horiz, // 원하는 아이콘으로 변경
+          size: 16, // 아이콘 크기 조정
+          color: Colors.red, // 아이콘 색상 조정
+        ),
+      ),
+    );
+  } else {
+    final Appointment appointment = details.appointments.first;
+    return Container(
+      decoration: BoxDecoration(
+        color: appointment.color,
+        // borderRadius: BorderRadius.circular(5),
+      ),
+      child: Center(
+        child: Text(
+          appointment.subject,
+          style: TextStyle(color: Colors.white, fontSize: 10),
+        ),
+      ),
+    );
+  }
+}
+
