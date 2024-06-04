@@ -1,38 +1,53 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_dash/flutter_dash.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_swipe_action_cell/core/cell.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:schedule_with/assets/colors/color.dart';
+import 'package:schedule_with/ui/memo/view/paymemo_item.dart';
+import '../../../widget/main_alert.dart';
+import '../widget/memo_controller.dart';
 import '../widget/pay_bankaccount_bottomsheet.dart';
 import '../widget/pay_settlement_status.dart';
 import '../widget/pay_title__field.dart';
 import '../widget/pay_usage_bottomsheet.dart';
 import 'memo_main.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: PayMemoScreen(),
-    );
-  }
-}
-
 class PayMemoScreen extends StatefulWidget {
+  final PayMemo? paymemo;
+
+  PayMemoScreen({Key? key, this.paymemo}) : super(key: key);
+
   @override
-  _MemoScreenState createState() => _MemoScreenState();
+  _PayMemoScreenState createState() => _PayMemoScreenState();
 }
 
-
-class _MemoScreenState extends State<PayMemoScreen> {
+class _PayMemoScreenState extends State<PayMemoScreen> {
+  final PayMemoController controller = Get.find<PayMemoController>();
   final TextEditingController _titleController = TextEditingController();
-  int _count = 0;
-  List<String> _usageDetails = ["사용내역1 20000원", "사용내역2 15000원", "사용내역3 5000원"];
+  int _count = 1;
+  List<String> _usageDetails = [];
   String _selectedAccount = '계좌번호를 입력해 주세요.';
+  bool _isComplete = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _titleController.text = widget.paymemo?.title ?? '';
+    _isComplete = widget.paymemo?.isCompleted ?? false;
+    _selectedAccount = widget.paymemo?.accountNumber ?? '계좌번호를 입력해 주세요.';
+    _count = widget.paymemo?.participantsCount ?? 1;
+    _usageDetails = widget.paymemo?.usageDetails ?? [];
+  }
+
+  void _handleSettlementChange(bool isComplete) {
+    setState(() {
+      _isComplete = isComplete;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,26 +59,50 @@ class _MemoScreenState extends State<PayMemoScreen> {
           backgroundColor: Colors.white,
           elevation: 0,
           leading: IconButton(
-            icon: Icon(CupertinoIcons.back),
-            onPressed: () => Navigator.pop(context),
+            icon: Icon(CupertinoIcons.back, color: grey4,),
+            onPressed: () {
+              if (_titleController.text.isNotEmpty ||
+                  _selectedAccount != '계좌번호를 입력해 주세요.' ||
+                  _count > 1 ||
+                  _usageDetails.isNotEmpty) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return MainAlert(
+                        msg: '등록사항을 취소하시겠습니까?',
+                        YesMsg: '예',
+                        NoMsg: '계속 작성',
+                      );
+                    }
+                ).then((result) {
+                  if (result == true) {
+                    Get.to(() => MemoMainScreen());
+                  }
+                });
+              } else {
+                Get.back(result: false);
+              }
+            },
           ),
-          title: Text('금액 계산', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black)),
+          title: Text('금액 계산', style: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black)),
           centerTitle: true,
           actions: <Widget>[
             TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('완료', style: TextStyle(color: mainOrange, fontWeight: FontWeight.bold, fontSize: 16)),
+              onPressed: _saveMemo,
+              child: Text('완료', style: TextStyle(color: mainOrange,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16)),
             ),
           ],
         ),
       ),
       body: Column(
         children: <Widget>[
-          Column( // Non-scrollable part
+          Column(
             children: [
-              PaySettlementStatus(),
+              PaySettlementStatus(
+                  isComplete: _isComplete, onStatusChanged: _handleSettlementChange),
               PayTitleField(titleController: _titleController),
               _buildBankFields(),
               _buildPersonCounter(),
@@ -85,20 +124,29 @@ class _MemoScreenState extends State<PayMemoScreen> {
                         builder: (BuildContext context) {
                           return Wrap(
                             children: [
-                              BottomSheetWidget(),
+                              BottomSheetWidget(
+                                onAdd: (String usage, String cost, bool isAddition) {
+                                  setState(() {
+                                    // 사용 내역과 비용을 _usageDetails 리스트에 추가
+                                    _usageDetails.add("$usage $cost원");
+                                  });
+                                },
+                              ),
                             ],
                           );
                         },
                         backgroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
+                          borderRadius: BorderRadius.vertical(top: Radius
+                              .circular(10.0)),
                         ),
                         barrierColor: grey4.withOpacity(0.5),
                       );
                     },
                     backgroundColor: mainOrange,
                     child: Icon(Icons.add, color: Colors.white),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)),
                   ),
                 ),
               ],
@@ -106,11 +154,18 @@ class _MemoScreenState extends State<PayMemoScreen> {
           ),
           Container(
             color: Colors.white,
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 _buildTotalAmount(),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Container(
+                    height: 1,
+                    color: grey2
+                  ),
+                ),
                 _buildAmountPerPerson(),
               ],
             ),
@@ -122,9 +177,10 @@ class _MemoScreenState extends State<PayMemoScreen> {
 
   Widget _buildBankFields() {
     return Padding(
-      padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 10),
+      padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 0),
       child: Container(
-        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: grey2))),
+        decoration: BoxDecoration(border: Border(bottom: BorderSide(
+            color: grey2))),
         child: Padding(
           padding: EdgeInsets.only(bottom: 15),
           child: Row(
@@ -143,23 +199,44 @@ class _MemoScreenState extends State<PayMemoScreen> {
                         isScrollControlled: true,
                         context: context,
                         builder: (BuildContext context) {
-                          return BankAccountBottomSheetWidget(onSelectAccount: (account) {
-                            setState(() {
-                              _selectedAccount = account;
-                            });
-                          });
+                          return BankAccountBottomSheetWidget(
+                              onSelectAccount: (account) {
+                                setState(() {
+                                  _selectedAccount = account;
+                                });
+                              });
                         },
                         backgroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
+                          borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(10.0)),
                         ),
                         barrierColor: grey4.withOpacity(0.5),
                       );
                     },
-                    child: Text(_selectedAccount,
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: _selectedAccount == '계좌번호를 입력해 주세요.' ? grey3 : Colors.black)
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          _selectedAccount,
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: _selectedAccount == '계좌번호를 입력해 주세요.'
+                                  ? grey3
+                                  : Colors.black
+                          ),
+                        ),
+                    InkWell(
+                      onTap: () {
+                        Clipboard.setData(ClipboardData(text: _selectedAccount));
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 5, top: 0, right: 0, bottom: 0),
+                        child: SvgPicture.asset(
+                            "lib/assets/icon/icon_copy_payaccount.svg", color: grey4),
+                          )
+                        )
+                      ],
                     ),
                   ),
                 ),
@@ -175,7 +252,8 @@ class _MemoScreenState extends State<PayMemoScreen> {
     return Padding(
       padding: EdgeInsets.only(left: 20, top: 0, right: 20, bottom: 10),
       child: Container(
-        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: grey2))),
+        decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(color: grey2))),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -186,13 +264,14 @@ class _MemoScreenState extends State<PayMemoScreen> {
                   icon: SvgPicture.asset("lib/assets/icon/icon_minus.svg"),
                   onPressed: () {
                     setState(() {
-                      if (_count > 0) _count--;
+                      if (_count > 1) _count--;
                     });
                   },
                 ),
                 Text('$_count', style: TextStyle(fontSize: 14)),
                 IconButton(
-                  icon: SvgPicture.asset("lib/assets/icon/icon_plus.svg"),
+                  icon: SvgPicture.asset(
+                      "lib/assets/icon/icon_paymemo_plus.svg"),
                   onPressed: () {
                     setState(() {
                       _count++;
@@ -209,9 +288,10 @@ class _MemoScreenState extends State<PayMemoScreen> {
 
   Widget _buildUsageFields() {
     return Padding(
-      padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 10),
+      padding: EdgeInsets.only(left: 20, top: 0, right: 20, bottom: 10),
       child: Container(
-        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white))),
+        decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(color: Colors.white))),
         child: Container(
           alignment: Alignment.centerLeft,
           child: Text('사용내역', style: TextStyle(fontSize: 14)),
@@ -227,14 +307,31 @@ class _MemoScreenState extends State<PayMemoScreen> {
         padding: EdgeInsets.only(bottom: 60),
         itemBuilder: (context, index) {
           List<String> parts = _usageDetails[index].split(' ');
-          return Padding(
-            padding: EdgeInsets.only(left: 30, top: 5, right: 20, bottom: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(parts[0], style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: mainOrange)),
-                Text(parts[1], style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: mainOrange)),
-              ],
+          var isIncome = parts[1].startsWith('-');
+          return SwipeActionCell(
+            key: ObjectKey(_usageDetails[index]),
+            backgroundColor: Colors.white,
+            trailingActions: [
+              SwipeAction(
+                title: "삭제",
+                onTap: (CompletionHandler handler) async {
+                  await handler(true);
+                  setState(() {
+                    _usageDetails.removeAt(index);
+                  });
+                },
+                color: mainBrown,
+              ),
+            ],
+            child: Padding(
+              padding: EdgeInsets.only(left: 30, top: 10, right: 20, bottom: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(parts[0], style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: isIncome ? mainOrange : mainBrown)),
+                  Text(parts[1], style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: isIncome ? mainOrange : mainBrown)),
+                ],
+              ),
             ),
           );
         },
@@ -244,16 +341,42 @@ class _MemoScreenState extends State<PayMemoScreen> {
 
   Widget _buildTotalAmount() {
     int totalAmount = calculateTotalAmount();
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Padding(
-      padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 10),
-      child: Container(
-        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: grey2))),
-        child: Row(
-          children: <Widget>[
-            Expanded(flex: 1, child: Text('총 금액', style: TextStyle(fontSize: 14))),
-            Expanded(flex: 2, child: Text('$totalAmount 원', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold), textAlign: TextAlign.right)),
-          ],
-        ),
+      padding: EdgeInsets.only(left: 20, top: 0, right: 20, bottom: 0),
+      child: Column(
+        children: <Widget>[
+          Dash(
+            direction: Axis.horizontal,
+            length: screenWidth - 40,
+            dashLength: 12,
+            dashColor: grey2,
+            dashGap: 8,
+
+          ),
+          SizedBox(height: 15),
+          Container(
+            decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white,))),
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 15),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                      flex: 1,
+                      child: Text('총 금액', style: TextStyle(fontSize: 14))
+                  ),
+                  Expanded(
+                      flex: 2,
+                      child: Text('$totalAmount 원',
+                          style: TextStyle(fontSize: 16,),
+                          textAlign: TextAlign.right)
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -261,13 +384,18 @@ class _MemoScreenState extends State<PayMemoScreen> {
   Widget _buildAmountPerPerson() {
     double perPerson = _count > 0 ? calculateTotalAmount() / _count : 0;
     return Padding(
-      padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 10),
+      padding: EdgeInsets.only(left: 20, top: 15, right: 20, bottom: 10),
       child: Container(
-        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white))),
+        decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(color: Colors.white))),
         child: Row(
           children: <Widget>[
-            Expanded(flex: 1, child: Text('인당 금액', style: TextStyle(fontSize: 14))),
-            Expanded(flex: 2, child: Text('${perPerson.toStringAsFixed(0)} 원', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), textAlign: TextAlign.right)),
+            Expanded(
+                flex: 1, child: Text('인당 금액', style: TextStyle(fontSize: 14))),
+            Expanded(flex: 2,
+                child: Text('${perPerson.toStringAsFixed(0)} 원',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.right)),
           ],
         ),
       ),
@@ -280,4 +408,46 @@ class _MemoScreenState extends State<PayMemoScreen> {
       return sum + int.parse(parts[1].replaceAll('원', ''));
     });
   }
+
+  double calculateAmountPerPerson() {
+    int total = calculateTotalAmount();
+    return _count > 0 ? total / _count : 0;
+  }
+
+  void _saveMemo() {
+    if (_titleController.text.isNotEmpty && _count > 0) {
+      String date = DateTime.now().toString();
+      int totalAmount = calculateTotalAmount();
+      int amountPerPerson = calculateAmountPerPerson().toInt();
+
+      if (widget.paymemo == null) {
+        // 새로운 PayMemo를 생성하는 경우
+        controller.addPayMemo(PayMemo(
+          date: DateTime.now().toIso8601String().split('T')[0],
+          title: _titleController.text,
+          amount: '$totalAmount원 | $amountPerPerson원',
+          isCompleted: _isComplete,
+          accountNumber: _selectedAccount,
+          participantsCount: _count,
+          usageDetails: _usageDetails,
+        ));
+      } else {
+        // 기존의 PayMemo를 업데이트하는 경우
+        int index = controller.paymemos.indexOf(widget.paymemo!);
+        controller.paymemos[index] = PayMemo(
+          date: DateTime.now().toIso8601String().split('T')[0],
+          title: _titleController.text,
+          amount: '$totalAmount원 | $amountPerPerson원',
+          isCompleted: _isComplete,
+          accountNumber: _selectedAccount,
+          participantsCount: _count,
+          usageDetails: _usageDetails,
+        );
+      }
+      Navigator.pop(context);
+    }
+  }
 }
+
+
+

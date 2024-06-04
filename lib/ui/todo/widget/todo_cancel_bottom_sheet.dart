@@ -20,27 +20,29 @@ class TodoCancelBottomSheet extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-      RichText(
-      text: TextSpan(
-      text: '수정사항을 ',
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
-        children: [
-          TextSpan(
-            text: '취소',
-            style: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold),
+          RichText(
+            text: TextSpan(
+              text: '수정사항을 ',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+              children: [
+                TextSpan(
+                  text: '취소',
+                  style: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                TextSpan(
+                  text: ' 하시겠습니까?',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                ),
+              ],
+            ),
           ),
-          TextSpan(
-            text: ' 하시겠습니까?',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-        ],
-      ),
-    ),
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop(); // Close the confirmation bottom sheet
-              onConfirm();
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                onConfirm();
+              });
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: mainBrown, // 배경색 갈색
@@ -52,8 +54,9 @@ class TodoCancelBottomSheet extends StatelessWidget {
             child: const Center(
               child: Text(
                 '예',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
               ),
+
             ),
           ),
           const SizedBox(height: 10),
@@ -72,7 +75,7 @@ class TodoCancelBottomSheet extends StatelessWidget {
             child: const Center(
               child: Text(
                 '계속 작성',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
               ),
             ),
           ),

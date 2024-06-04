@@ -3,8 +3,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:schedule_with/assets/colors/color.dart';
 import 'package:schedule_with/ui/alarm/view/alram_main.dart';
+
 import 'package:schedule_with/ui/group/view/group_freind_add.dart';
 import 'package:schedule_with/ui/group/view/group_invite.dart';
+
+import 'package:schedule_with/ui/group/view/search_friend.dart';
+
 import 'package:schedule_with/ui/home/view/home_main.dart';
 import 'package:schedule_with/ui/login/view/login_main.dart';
 import 'package:schedule_with/ui/mypage/view/my_page_main.dart';
