@@ -1,11 +1,6 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:schedule_with/assets/colors/color.dart';
-import 'package:schedule_with/ui/schedule/widget/calendar_change_view_button.dart';
-import 'package:schedule_with/ui/schedule/widget/schedule_bottom_sheet.dart';
 import 'package:schedule_with/ui/schedule/widget/schedule_edit_bottom_sheet.dart';
-import 'package:schedule_with/ui/schedule/widget/year_date_picker.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import '../domain/repository/sample_data.dart';
 

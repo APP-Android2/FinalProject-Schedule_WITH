@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:schedule_with/assets/colors/color.dart';
-import 'package:schedule_with/ui/schedule/widget/schedule_bottom_sheet.dart';
+import 'package:schedule_with/ui/schedule/widget/schedule_add_bottom_sheet.dart';
 import 'package:schedule_with/widget/main_app_bar.dart';
 import 'package:schedule_with/widget/main_tab_bar.dart';
 
@@ -21,6 +21,7 @@ class _ScheduleMainState extends State<ScheduleMain> {
           child: MainAppBar()),
       // 탭바
       body: MainTabBar(),
+      // 플로팅 버튼
       floatingActionButton: FloatingActionButton(
         onPressed: (){
           showModalBottomSheet(
@@ -32,11 +33,9 @@ class _ScheduleMainState extends State<ScheduleMain> {
               });
         },
         backgroundColor: mainOrange,
-        child: Icon(Icons.add, color: Colors.white,
-        ),
+        child: Icon(Icons.add, color: Colors.white),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       ),
-
     );
   }
 }

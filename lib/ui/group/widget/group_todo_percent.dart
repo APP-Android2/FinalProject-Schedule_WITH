@@ -1,80 +1,81 @@
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/percent_indicator.dart'; // CircularPercentIndicator가 이 패키지에 속해있을 것입니다.
 import 'package:schedule_with/assets/colors/color.dart';
+import 'package:schedule_with/ui/group/widget/group_todo_indicator.dart';
 
+class ShowGroupTodoPercent extends StatelessWidget {
+  final int itemCount;
 
-class ShowGroupTodoPersent extends StatelessWidget {
-  const ShowGroupTodoPersent({super.key});
+  const ShowGroupTodoPercent({
+    super.key,
+    required this.itemCount,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
-        initiallyExpanded: true,
-        shape: Border(
-            bottom: BorderSide(
-                color: grey2
-            )
-        ),
-        // side: BorderSide(color: grey2)),
-        leading: Container(width: 24),
-        minTileHeight: 40,
-        title: const Center(
-            child: Text(
-              '장기 일정',
-              style: TextStyle(fontSize: 14),
-            )),
-        backgroundColor: Colors.white,
-        collapsedBackgroundColor: Colors.white,
-        collapsedIconColor: grey1,
-        children: [
-          Padding(padding: EdgeInsets.all(4)),
-          SingleChildScrollView(
+      // 펼쳐진 상태로 보임
+      initiallyExpanded: true,
+      shape: Border(bottom: BorderSide(color: grey2)),
+      minTileHeight: 40,
+      title: Text(
+        '구성원 TODO(%)',
+        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+      ),
+      backgroundColor: Colors.white,
+      collapsedBackgroundColor: Colors.white,
+      collapsedIconColor: grey1,
+      children: [
+        Padding(padding: EdgeInsets.all(4)),
+        SizedBox(
+          height: 100,
+          child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.all(6),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Padding(padding: EdgeInsets.all(10)),
-                LongAppointText(title: '장기일정1'),
-                const Padding(padding: EdgeInsets.all(10)),
-                LongAppointText(title: '장기일정2'),
-                const Padding(padding: EdgeInsets.all(10)),
-                LongAppointText(title: '장기일정3'),
-                const Padding(padding: EdgeInsets.all(10)),
-                LongAppointText(title: '장기일정4'),
-                const Padding(padding: EdgeInsets.all(10)),
-                LongAppointText(title: '장기일정5'),
-                const Padding(padding: EdgeInsets.all(10)),
-              ],
+              children: List.generate(
+                itemCount,
+                    (index) => GroupTodoItem(),
+              ),
             ),
           ),
-          Padding(padding: EdgeInsets.all(4)),
-        ]);
+        ),
+        Padding(padding: EdgeInsets.all(4)),
+      ],
+    );
   }
 }
 
+// 구성원 투두 item
+class GroupTodoItem extends StatelessWidget {
+  GroupTodoItem({super.key});
 
-// 장기 일정 Text
-class LongAppointText extends StatelessWidget {
-  final String title;
+  // 오늘 투두의 총 개수
+  final int totalTodo = 10;
 
-  const LongAppointText({super.key, required this.title});
+  // 오늘 완료한 투두 개수
+  final int doneTodo = 3;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
-          color: lightPink,
-        ),
-        height: 30,
-        width: 100,
-        alignment: Alignment.center,
-        child: Padding(
-            padding: EdgeInsets.all(5),
-            child: Text(title,
-              style: TextStyle(color: Colors.white, fontSize: 12),
-            )),
-      ),
-    );
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+          Expanded(
+              child: Container(
+            // 달성률 퍼센트 인디케이터
+                width: 70,
+            child: TodoGroupIndicator(totalTodo: totalTodo, doneTodo: doneTodo),
+          )),
+          SizedBox(height: 10),
+          Container(
+            child: Text(
+              '친구이름',
+              style: TextStyle(fontSize: 12),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      );
   }
 }

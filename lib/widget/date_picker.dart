@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../assets/colors/color.dart';
-import '../assets/colors/color.dart';
-import '../ui/schedule/widget/schedule_bottom_sheet.dart';
+import 'package:schedule_with/assets/colors/color.dart';
 
 class DatePicker extends StatefulWidget {
   final Widget back_page ;
