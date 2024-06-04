@@ -32,15 +32,19 @@ class _MainAlertState extends State<MainAlert> {
             Container(
               alignment: Alignment.center,
               width: 500,
-              height: 40,
+              // height: 40,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
                 color: Colors.white,
               ),
-              child: Text(widget.msg,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+                child: Text(widget.msg,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
             ),
