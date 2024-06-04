@@ -5,8 +5,11 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:schedule_with/assets/colors/color.dart';
+import 'package:schedule_with/widget/main_bottom_navigation_bar.dart';
 import 'package:schedule_with/widget/main_button.dart';
 import 'package:schedule_with/widget/main_text_field.dart';
+
+import '../../../main.dart';
 
 class LoginJoin extends StatefulWidget {
   const LoginJoin({super.key});
@@ -69,6 +72,7 @@ class _JoinScreenState extends State<LoginJoin> {
                     labelText: "이름",
                     hintText: "이름을 입력해 주세요",
                     controller: user_name_controller,
+                    textInputAction: TextInputAction.next,
                   ),
                   Padding(padding: EdgeInsets.only(top: 15)),
                   // 아이디 입력 및 중복 버튼
@@ -81,6 +85,7 @@ class _JoinScreenState extends State<LoginJoin> {
                           labelText: "아이디",
                           hintText: "아이디를 입력해 주세요.",
                           controller: user_id_controller,
+                          textInputAction: TextInputAction.next,
                         ),
                       ),
                       Padding(padding: EdgeInsets.only(right: 10)),
@@ -93,6 +98,7 @@ class _JoinScreenState extends State<LoginJoin> {
                     labelText: "비밀번호",
                     hintText: "8자이상, 영문 대/소문자, 숫자, 특수문자 2가지 이상 조합",
                     controller: user_password_controller,
+                    textInputAction: TextInputAction.next,
                   ),
                   Padding(padding: EdgeInsets.only(top: 15)),
                   // 비밀번호 확인 입력
@@ -100,6 +106,7 @@ class _JoinScreenState extends State<LoginJoin> {
                     labelText: "비밀번호 확인",
                     hintText: "8자이상, 영문 대/소문자, 숫자, 특수문자 2가지 이상 조합",
                     controller: user_password_check_controller,
+                    textInputAction: TextInputAction.next,
                   ),
                   Padding(padding: EdgeInsets.only(top: 50)),
                   // 이메일 입력 및 코드발송 버튼
@@ -111,6 +118,7 @@ class _JoinScreenState extends State<LoginJoin> {
                           labelText: "이메일",
                           hintText: "이메일을 입력해 주세요.",
                           controller: user_email_controller,
+                          textInputAction: TextInputAction.next,
                         ),
                       ),
                       Padding(padding: EdgeInsets.only(right: 10)),
@@ -123,6 +131,7 @@ class _JoinScreenState extends State<LoginJoin> {
                     labelText: "인증 코드",
                     hintText: "인증 코드를 입력해 주세요.",
                     controller: email_sign_number_controller,
+                    textInputAction: TextInputAction.next,
                   ),
                   Padding(padding: EdgeInsets.only(top: 15)),
                   // 생년월일 입력 및 성별 선택
@@ -137,6 +146,7 @@ class _JoinScreenState extends State<LoginJoin> {
                             labelText: "생년월일",
                             hintText: "ex) 20000101",
                             controller: user_birth_controller,
+                            textInputAction: TextInputAction.done,
                           ),
                         ),
                         Padding(padding: EdgeInsets.only(right: 10)),
@@ -314,7 +324,7 @@ class _JoinScreenState extends State<LoginJoin> {
                   MainButton(
                       text: "확인",
                       onPressed: check ? () {
-                        Get.back();
+                        Get.offAll(() => MainBottomNavigationBar());
                       } : null,
                       color: mainOrange
                   ),
