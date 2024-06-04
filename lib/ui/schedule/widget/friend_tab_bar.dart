@@ -1,21 +1,22 @@
+
 import 'package:flutter/material.dart';
-import 'package:schedule_with/ui/schedule/widget/calendar_cell_custom.dart';
-import 'package:schedule_with/ui/schedule/widget/long_appoint.dart';
-import 'package:schedule_with/ui/todo/view/todo_main_screen.dart';
-import 'package:schedule_with/widget/main_calendar_day.dart';
+import 'package:schedule_with/assets/colors/color.dart';
+import 'package:schedule_with/ui/memo/view/memo_main.dart';
+import 'package:schedule_with/widget/friend_request_after.dart';
+import 'package:schedule_with/widget/friend_request_before.dart';
 import 'package:schedule_with/widget/main_calendar_month.dart';
+import 'package:schedule_with/widget/main_tab_bar.dart';
 
-import '../assets/colors/color.dart';
-import '../ui/memo/view/memo_main.dart';
+import 'calendar_cell_custom.dart';
 
-class MainTabBar extends StatefulWidget {
-  const MainTabBar({super.key});
+class FriendTabBar extends StatefulWidget {
+  const FriendTabBar({super.key});
 
   @override
-  State<MainTabBar> createState() => _MainTabBarState();
+  State<FriendTabBar> createState() => _FriendTabBarState();
 }
 
-class _MainTabBarState extends State<MainTabBar>
+class _FriendTabBarState extends State<FriendTabBar>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
@@ -37,6 +38,11 @@ class _MainTabBarState extends State<MainTabBar>
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Container(
+            width: double.infinity,
+            height: 200,
+          child: Image.asset('lib/assets/image/logo.png'),
+        ),
         TabBar(
           // 색상 설정
           controller: _tabController,
@@ -56,22 +62,24 @@ class _MainTabBarState extends State<MainTabBar>
         ),
         Expanded(
           // 각 탭바에 나타낼 View
-          child: TabBarView(
-          physics: NeverScrollableScrollPhysics(), // 스와이프 비활성화 설정
-          controller: _tabController,
-          children: [
-            // 탭1 : 캘린더
-            TabViewCalendar(),
-            // 탭2 : 투두
-            TodoMainScreen(),
-            // 탭3 : 메모
-            MemoMainScreen()
-          ],
-        ))
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                // 탭1 : 캘린더
+                TabViewCalendar(),
+                // 탭2 : 투두
+                // TodoMainScreen(),
+                FriendRequestBefore(),
+                // 탭3 : 메모
+                FriendRequestAfter()
+              ],
+            )
+        )
       ],
     );
   }
 }
+
 
 // 캘린더 탭에 보일 항목들
 class TabViewCalendar extends StatelessWidget {
@@ -79,22 +87,11 @@ class TabViewCalendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const CustomScrollView(
+    return CustomScrollView(
       slivers: [
-        // 커스텀 스크롤뷰 사용을 위해 위젯을 Sliver 타입으로 변경
         SliverToBoxAdapter(
-          // 월간, 주간 일정
           child: MainCalendarMonth(),
         ),
-        SliverToBoxAdapter(
-          // 상세 일정
-          child: ShowLongAppoint(),
-        ),
-        SliverToBoxAdapter(
-          // 일간 일정
-          child: MainCalendarDay(),
-        )
-      ],
-    );
+    ]);
   }
 }
