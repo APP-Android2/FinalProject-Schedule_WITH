@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:get/get.dart';
 import 'package:schedule_with/assets/colors/color.dart';
 import '../widget/todo_controller.dart';
 import '../widget/calendar_widget.dart';
@@ -22,7 +21,7 @@ class _TodoMainScreenState extends State<TodoMainScreen> with SingleTickerProvid
 
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
-  final TodoController _todoController = Get.put(TodoController());
+  final TodoController _todoController = TodoController();
 
   @override
   void initState() {
@@ -111,6 +110,12 @@ class _TodoMainScreenState extends State<TodoMainScreen> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
+    List<TodoItemData> todosForSelectedDate = [];
+    if (selectedDate != null) {
+      String dateString = DateFormat('yyyy-MM-dd').format(selectedDate!);
+      todosForSelectedDate = _todoController.getTodoItemsForDate(dateString);
+    }
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Column(
@@ -136,59 +141,46 @@ class _TodoMainScreenState extends State<TodoMainScreen> with SingleTickerProvid
                   ),
                   Row(
                     children: [
-                      Obx(() {
-                        double completionRate = selectedDate != null
-                            ? _todoController.calculateCompletionRate(DateFormat('yyyy-MM-dd').format(selectedDate!))
-                            : 0.0;
-                        return Text(
-                          ' ${(completionRate * 100).toStringAsFixed(0)}%',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: mainOrange),
-                        );
-                      }),
+                      Text(
+                        ' ${(selectedDate != null ? _todoController.calculateCompletionRate(DateFormat('yyyy-MM-dd').format(selectedDate!)) * 100 : 0).toStringAsFixed(0)}%',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: mainOrange),
+                      ),
                     ],
                   ),
                 ],
               ),
             ),
           Expanded(
-            child: Obx(() {
-              List<TodoItemData> todosForSelectedDate = [];
-              if (selectedDate != null) {
-                String dateString = DateFormat('yyyy-MM-dd').format(selectedDate!);
-                todosForSelectedDate = _todoController.getTodoItemsForDate(dateString);
-              }
-
-              return ListView.builder(
-                itemCount: todosForSelectedDate.length,
-                itemBuilder: (context, index) {
-                  TodoItemData todoItem = todosForSelectedDate[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2.0), // 상하 간격 조정
-                    child: ListTile(
-                      contentPadding: EdgeInsets.only(left: 0, right: 16.0), // ListTile의 패딩 조정
-                      leading: Checkbox(
-                        value: todoItem.isCompleted,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            todoItem.isCompleted = value ?? false;
-                            _todoController.updateTodoItem(todoItem.date, todoItem);
-                          });
-                        },
-                        activeColor: mainOrange, // 체크박스 색상
-                        side: BorderSide(color: mainOrange), // 체크박스 테두리 색상
-                      ),
-                      title: Text(
-                        todoItem.content,
-                        style: TextStyle(fontSize: 14), // 텍스트 크기 조정
-                      ),
-                      onTap: () {
-                        onTodoEdit(todoItem); // TODO 편집 기능 추가
+            child: ListView.builder(
+              itemCount: todosForSelectedDate.length,
+              itemBuilder: (context, index) {
+                TodoItemData todoItem = todosForSelectedDate[index];
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2.0), // 상하 간격 조정
+                  child: ListTile(
+                    contentPadding: EdgeInsets.only(left: 0, right: 16.0), // ListTile의 패딩 조정
+                    leading: Checkbox(
+                      value: todoItem.isCompleted,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          todoItem.isCompleted = value ?? false;
+                          _todoController.updateTodoItem(todoItem.date, todoItem);
+                        });
                       },
+                      activeColor: mainOrange, // 체크박스 색상
+                      side: BorderSide(color: mainOrange), // 체크박스 테두리 색상
                     ),
-                  );
-                },
-              );
-            }),
+                    title: Text(
+                      todoItem.content,
+                      style: TextStyle(fontSize: 14), // 텍스트 크기 조정
+                    ),
+                    onTap: () {
+                      onTodoEdit(todoItem); // TODO 편집 기능 추가
+                    },
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ),
