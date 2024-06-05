@@ -1,7 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:intl/intl.dart';
 import 'package:schedule_with/assets/colors/color.dart';
+import 'package:schedule_with/ui/todo/widget/todo_controller.dart';
+import 'package:schedule_with/widget/main_button.dart';
 import '../../../widget/date_picker.dart';
+import '../../schedule/widget/schedule_add_bottom_sheet.dart';
 
 class TodoAddBottomSheet extends StatefulWidget {
   final TextEditingController dateController;
@@ -20,8 +26,10 @@ class TodoAddBottomSheet extends StatefulWidget {
 }
 
 class _TodoAddBottomSheetState extends State<TodoAddBottomSheet> {
+  final TodoController _todoController = TodoController();
   late TextEditingController _contentController;
   String selectedDate = '';
+  DateTime? selectedDate2;
 
   @override
   void initState() {
@@ -63,23 +71,39 @@ class _TodoAddBottomSheetState extends State<TodoAddBottomSheet> {
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
             ),
           ),
           child: Column(
             children: [
               // Custom BottomSheetTitle widget with aligned elements
-              BottomSheetTitle(title: '       TODO 추가', closeIcon: true),
+              BottomSheetTitle(),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        const SizedBox(height: 10.0),
                         GestureDetector(
                           onTap: () {
-                            _openSelectDateBottomSheet(context);
+                            Get.back(); // Close first
+                            Get.bottomSheet(
+                                DatePicker(
+                                  back_page: TodoAddBottomSheet(
+                                    dateController: widget.dateController,
+                                    contentController: widget.contentController,
+                                    onSave: () {
+                                      String dateString = DateFormat('yyyy-MM-dd').format(selectedDate2!);
+                                      _todoController.addTodoItem(dateString, _contentController.text);
+                                      _contentController.clear();
+                                      Navigator.of(context).pop();
+                                      setState(() {}); // 상태를 새로고침하여 UI 업데이트
+                                    },
+                                  ),
+                                  title: '날짜',
+                                ));
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -119,26 +143,13 @@ class _TodoAddBottomSheetState extends State<TodoAddBottomSheet> {
                           ],
                         ),
                         Spacer(),
-                        ElevatedButton(
-                          onPressed: widget.onSave,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: mainOrange,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                          ),
-                          child: const Center(
-                            child: Text(
-                              '확인',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: CupertinoColors.white,
-                              ),
-                            ),
-                          ),
-                        ),
+                        MainButton(
+                            text: "확인",
+                            onPressed: () {
+                              Get.back();
+                            },
+                            color: mainOrange
+                        )
                       ]),
                 ),
               ),
@@ -152,39 +163,31 @@ class _TodoAddBottomSheetState extends State<TodoAddBottomSheet> {
 
 // 바텀 시트 제목 설정
 class BottomSheetTitle extends StatelessWidget {
-  final String title;
-  final bool closeIcon;
-
-  const BottomSheetTitle({
-    Key? key,
-    required this.title,
-    this.closeIcon = false,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(top: 10),
-            child: Text(
-              title,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        SizedBox(width: 50),
+        Container(
+          alignment: Alignment.center,
+          height: 45,
+          child:
+          Text(
+            "TODO 추가",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold
             ),
           ),
         ),
-        if (closeIcon)
-          IconButton(
-            padding: EdgeInsets.only(top: 10),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: Icon(Icons.close),
-            alignment: Alignment.topRight,
-          ),
+        IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: Icon(Icons.close),
+        ),
       ],
     );
   }

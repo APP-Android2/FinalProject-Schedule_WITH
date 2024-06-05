@@ -8,24 +8,25 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../assets/colors/color.dart';
+import 'friend_profile_item.dart';
 
-class GroupProfile{
-  String ProfileImage = '';
+class FriendProfile{
+  String ProfileImage;
   String UserName;
 
-  GroupProfile({this.ProfileImage = '', required this.UserName});
+  FriendProfile({this.ProfileImage ='', required this.UserName});
 }
 
-class GroupDetailItem extends StatefulWidget {
-  final GroupProfile groupProfile;
+class FriendProfileItem extends StatefulWidget {
+  final FriendProfile friendProfile;
 
-  const GroupDetailItem({Key? key, required this.groupProfile}) : super(key: key);
+  const FriendProfileItem({Key? key, required this.friendProfile}) : super(key: key);
 
   @override
-  State<GroupDetailItem> createState() => _GroupDetailItemState();
+  State<FriendProfileItem> createState() => _FriendProfileItemState();
 }
 
-class _GroupDetailItemState extends State<GroupDetailItem> {
+class _FriendProfileItemState extends State<FriendProfileItem> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -48,29 +49,22 @@ class _GroupDetailItemState extends State<GroupDetailItem> {
                       border: Border.all(color: grey2,width: 0.5)
                   ),
                   child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: widget.groupProfile.ProfileImage == "" ? Icon(CupertinoIcons.person_fill, color: mainBrown.withOpacity(0.5))
-                          : Image.asset(widget.groupProfile.ProfileImage,fit: BoxFit.cover,)
+                    borderRadius: BorderRadius.circular(20),
+                    child: widget.friendProfile.ProfileImage == "" ? Icon(CupertinoIcons.person_fill, color: mainBrown.withOpacity(0.5))
+                        : Image.asset(widget.friendProfile.ProfileImage,fit: BoxFit.cover,)
                   ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(widget.groupProfile.UserName,
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                    Text(widget.groupProfile.UserName,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: grey3,
-                      ),
-                    ),
-                  ],
-                )
+                Text(widget.friendProfile.UserName)
               ],
             ),
+            // 친구요청 버튼
+            // FriendAddMiniButton(
+            //     text: "그룹초대",
+            //     onPressed: () {
+            //
+            //     },
+            //     color: mainOrange
+            // )
           ],
         ),
       ),

@@ -42,9 +42,19 @@ class _MyPageMainState extends State<MyPageMain> {
                   // 프로필 사진 + 닉네임 설정
                   Row(
                     children: [
-                      SvgPicture.asset(
-                          "lib/assets/icon/icon_profile.svg",
-                          color: genderMale
+                      Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.white,
+                              border: Border.all(color: grey2,width: 0.5)
+                          ),
+                          margin: EdgeInsets.only(bottom: 5),
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: SvgPicture.asset("lib/assets/icon/icon_profile.svg", color: genderMale)
+                          )
                       ),
                       Padding(padding: EdgeInsets.only(right: 10)),
                       Text("닉네임",style: TextStyle(fontSize: 16))

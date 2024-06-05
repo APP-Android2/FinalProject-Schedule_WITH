@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:schedule_with/assets/colors/color.dart';
 import 'package:schedule_with/ui/home/widget/icon_and_text.dart';
 import 'package:schedule_with/widget/main_app_bar.dart';
@@ -312,36 +313,41 @@ class _HomeMainState extends State<HomeMain> {
 
 // 그룹 항목들의 리스트 아이템
 Widget GroupListItem() {
-  return Container(
-    margin: EdgeInsets.symmetric(horizontal: 5), // 아이템 간의 간격을 설정
-    child: Column(
-      children: [
-        // 그룹 프사 설정
-        Container(
-            width: 55,
-            height: 55,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: grey1,
-                border: Border.all(color: grey2,width: 0.5)
-            ),
-            margin: EdgeInsets.only(bottom: 5),
-            child: SvgPicture.asset(
-              "lib/assets/icon/icon_plus.svg",
-              width: 15,
-              height: 15,
-              fit: BoxFit.scaleDown,
-            )
-        ),
-        // "그룹추가" 텍스트 출력
-        Text(
-          "그룹 추가",
-          style: TextStyle(
-            color: grey4,
-            fontSize: 12,
+  return InkWell(
+    onTap: () {
+      Get.toNamed('/groupInvite');
+    },
+    child: Container(
+      margin: EdgeInsets.symmetric(horizontal: 5), // 아이템 간의 간격을 설정
+      child: Column(
+        children: [
+          // 그룹 프사 설정
+          Container(
+              width: 55,
+              height: 55,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: grey1,
+                  border: Border.all(color: grey2,width: 0.5)
+              ),
+              margin: EdgeInsets.only(bottom: 5),
+              child: SvgPicture.asset(
+                "lib/assets/icon/icon_plus.svg",
+                width: 15,
+                height: 15,
+                fit: BoxFit.scaleDown,
+              )
           ),
-        ),
-      ],
+          // "그룹추가" 텍스트 출력
+          Text(
+            "그룹 추가",
+            style: TextStyle(
+              color: grey4,
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ),
     ),
   );
 }

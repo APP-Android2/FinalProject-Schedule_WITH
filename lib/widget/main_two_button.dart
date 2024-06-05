@@ -24,7 +24,7 @@ class MainTwoButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+        padding: EdgeInsets.fromLTRB(16, 20, 16, 20),
         child: Row(
           children: [
             Expanded(

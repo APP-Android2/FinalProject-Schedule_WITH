@@ -2,6 +2,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:schedule_with/assets/colors/color.dart';
 import 'package:schedule_with/ui/group/widget/search_bar.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -19,7 +21,28 @@ class _SearchFriendState extends State<SearchFriend> {
     return Scaffold(
       backgroundColor: grey1,
       appBar: PreferredSize(
-          preferredSize: Size.fromHeight(50), child: SearchFriendAppbar()),
+        preferredSize: Size.fromHeight(50),
+        child: AppBar(
+            backgroundColor: Colors.white,
+            // 뒤로가기 버튼
+            leading: IconButton(
+              padding: EdgeInsets.zero,
+              icon: Icon(CupertinoIcons.back,color: grey4),
+              onPressed: () {
+                Get.back();
+              },
+            ),
+            // 타이틀
+            centerTitle: true,
+            title: Container(
+              padding: EdgeInsets.only(bottom: 8),
+              child: Text(
+                "친구 검색",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            )
+        ),
+      ),
       body: bodyContent(),
     );
   }

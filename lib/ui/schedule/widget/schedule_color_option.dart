@@ -16,10 +16,10 @@ class DisplayColor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 45,
-      width: 90,
+      height: 30,
+      width: 30,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderRadius: BorderRadius.all(Radius.circular(5)),
           color: colorName
       ),
     );
@@ -42,7 +42,7 @@ class ColorOption extends StatelessWidget {
       height: 45,
       width: 90,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderRadius: BorderRadius.all(Radius.circular(5)),
           color: colorName
       ),
       child: MaterialButton(
