@@ -41,9 +41,11 @@ class _TodoMainScreenState extends State<TodoMainScreen> {
           children: [
             // 화면에서 캘린더가 차지할 크기 (0.60이하 overflow)
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.7,
+              height: 215,
+            //   height: MediaQuery.of(context).size.height * 0.7,
               // 달성률 캘린더
-              child: CalendarCellCustom(),
+              // child:
+            child: CalendarCellCustom(),
             ),
             // 투두 리스트 넣을 부분
             _buildTodoList(),

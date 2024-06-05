@@ -78,13 +78,14 @@ class _CalendarCellCustomState extends State<CalendarCellCustom> {
         headerDateFormat: 'yyyy년 MM월',
         showDatePickerButton: true,
         // showNavigationArrow: true,
-        allowViewNavigation: true,
-        allowedViews: [
-          CalendarView.month,
-          CalendarView.timelineMonth,
-        ],
+        // allowViewNavigation: true,
+        // allowedViews: [
+        //   CalendarView.month,
+        //   // CalendarView.timelineMonth,
+        // ],
         monthViewSettings: MonthViewSettings(
-          // numberOfWeeksInView: 5
+          // 캘린더에 몇 주 표시할지
+          numberOfWeeksInView: 2
           // showTrailingAndLeadingDates: false
         ),
         timeSlotViewSettings: TimeSlotViewSettings(),
@@ -145,7 +146,7 @@ class CustomMonthCell extends StatelessWidget {
     return
       Column(children: [
         Container(
-          height: 80,
+          height: 70,
           // 셀 테두리 색상 설정
           decoration: BoxDecoration(
             border: Border.all(
@@ -157,7 +158,7 @@ class CustomMonthCell extends StatelessWidget {
           ),
           child: SizedBox(
             // 달력 셀 높이
-            //   height: 95,
+              height: 10,
               child: Column(
                 children: [
                   // 날짜 텍스트 위 여백
@@ -173,7 +174,7 @@ class CustomMonthCell extends StatelessWidget {
                   Container(
                     height: 30,
                     alignment: Alignment.center,
-                    // // 현재 달만 indicator 보이도록 함
+                    // 현재 달만 indicator 보이도록 함
                     child: isCurrentMonthCell
                         ? MyTodoIndicator(totalTodo: 10, doneTodo: 8)
                         : SizedBox(),
