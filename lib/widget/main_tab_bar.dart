@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:schedule_with/ui/schedule/widget/calendar_cell_custom.dart';
 import 'package:schedule_with/ui/schedule/widget/long_appoint.dart';
+import 'package:schedule_with/ui/schedule/widget/schedule_add_bottom_sheet.dart';
 import 'package:schedule_with/ui/todo/view/todo_main_screen.dart';
 import 'package:schedule_with/widget/main_calendar_day.dart';
 import 'package:schedule_with/widget/main_calendar_month.dart';
@@ -79,22 +80,32 @@ class TabViewCalendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const CustomScrollView(
-      slivers: [
-        // 커스텀 스크롤뷰 사용을 위해 위젯을 Sliver 타입으로 변경
-        SliverToBoxAdapter(
-          // 월간, 주간 일정
-          child: MainCalendarMonth(),
-        ),
-        SliverToBoxAdapter(
-          // 상세 일정
-          child: ShowLongAppoint(),
-        ),
-        SliverToBoxAdapter(
-          // 일간 일정
-          child: MainCalendarDay(),
-        )
-      ],
+    return Scaffold(
+      body: SingleChildScrollView(
+          child: Column(
+              children: [
+                // 월간, 주간 일정
+                MainCalendarMonth(),
+                // 장기 일정
+                ShowLongAppoint(),
+                //
+                MainCalendarDay(),
+              ])
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){
+          showModalBottomSheet(
+            // 바텀 시트 높이 지정하려면 isScrollControlled: true,
+              isScrollControlled: true,
+              context: context,
+              builder: (BuildContext context){
+                return AddScheduleBottomSheet();
+              });
+        },
+        backgroundColor: mainOrange,
+        child: Icon(Icons.add, color: Colors.white),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      ),
     );
   }
 }

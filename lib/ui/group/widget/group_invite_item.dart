@@ -53,7 +53,7 @@ class _GroupInviteItemState extends State<GroupInviteItem> {
             ],
           ),
           // 친구요청 버튼
-x          FriendAddMiniButton(
+            FriendAddMiniButton(
               text: "그룹초대",
               onPressed: () {
 

@@ -104,7 +104,7 @@ class _MyPageInfoModifyState extends State<MyPageInfoModify> {
               // 프로필 배경 및 프로필 사진 및 이름 + 수정 아이콘 설정
               Expanded(
                   flex: 3,
-                  child: MainProfile(controller: nickname,)
+                  child: MainProfile()
               ),
               // 개인 정보 내용들 및 탈퇴하기 버튼
               Expanded(

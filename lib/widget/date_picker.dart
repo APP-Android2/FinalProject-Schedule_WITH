@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schedule_with/ui/alarm/view/alarm_detail.dart';
-import '../ui/schedule/widget/add_schedule_bottom_sheet.dart';
 import 'package:schedule_with/assets/colors/color.dart';
 
 class DatePicker extends StatefulWidget {
