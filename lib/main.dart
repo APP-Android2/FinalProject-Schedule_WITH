@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
@@ -25,10 +26,16 @@ import 'package:schedule_with/ui/mypage/view/my_page_setting.dart';
 import 'package:schedule_with/ui/notification/view/notification_main.dart';
 import 'package:schedule_with/ui/notification/view/notification_request_detail.dart';
 import 'package:schedule_with/widget/main_bottom_navigation_bar.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 
+Future<void> main() async {
 
-void main() {
+  // 파이어 베이스 사용시 화면이 안나오는 문제 해결
+  WidgetsFlutterBinding.ensureInitialized();
+  // Firestore 초기 설정
+  await Firebase.initializeApp();
   runApp(ScheduleWith());
 }
 
@@ -53,7 +60,7 @@ class _ScheduleWithState extends State<ScheduleWith> {
         Locale('ko', ''), // Korean, no country code
       ],
       // 요일을 한국어로 변경하기 위한 작업
-      locale: const Locale('ko'),
+      locale: const Locale('ko', ''),
       // 우상단 디버그 표시 제거
       debugShowCheckedModeBanner: false,
       // 테마
