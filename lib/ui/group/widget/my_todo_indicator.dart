@@ -31,7 +31,7 @@ class MyTodoIndicator extends StatelessWidget {
 
     return CircularPercentIndicator(
       animation: true,
-      radius: 20.0,
+      radius: 15.0,
       lineWidth: 2.0,
       percent: percent,
       backgroundColor: Colors.white,

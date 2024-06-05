@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,7 +12,7 @@ class Invite{
   String ProfileImage;
   String UserName;
 
-  Invite({required this.ProfileImage, required this.UserName});
+  Invite({this.ProfileImage='', required this.UserName});
 }
 
 class GroupInviteItem extends StatefulWidget {
@@ -44,16 +45,16 @@ class _GroupInviteItemState extends State<GroupInviteItem> {
                     border: Border.all(color: grey2,width: 0.5)
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: widget.invite.ProfileImage == "" ? SvgPicture.asset("lib/assets/icon/icon_plus.svg", width: 15, height: 15, fit: BoxFit.scaleDown,)
-                      : Image.asset(widget.invite.ProfileImage,fit: BoxFit.cover,)
+                    borderRadius: BorderRadius.circular(20),
+                    child: widget.invite.ProfileImage == "" ? Icon(CupertinoIcons.person_fill, color: mainBrown.withOpacity(0.5))
+                        : Image.asset(widget.invite.ProfileImage,fit: BoxFit.cover,)
                 ),
               ),
               Text(widget.invite.UserName)
             ],
           ),
           // 친구요청 버튼
-            FriendAddMiniButton(
+          FriendAddMiniButton(
               text: "그룹초대",
               onPressed: () {
 

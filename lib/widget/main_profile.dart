@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -11,7 +12,7 @@ import '../ui/mypage/widget/nick_name_controller.dart';
 
 class MainProfile extends StatefulWidget {
 
-  // const MainProfile({super.key});
+  const MainProfile({super.key});
 
   @override
   State<MainProfile> createState() => _MainProfileState();
@@ -72,12 +73,12 @@ class _MainProfileState extends State<MainProfile> {
               Get.toNamed('/myPageBackgroundPhotoDetail', arguments: _backgroundImage);
             },
             child: Container(
-              width: double.infinity,
-              height: double.infinity,
-              color: grey2,
-              // child 로 배경 이미지 설정
-              child: _backgroundImage == null ? Image.asset("lib/assets/image/image2.png",fit: BoxFit.cover)
-                  : Image.file(File(_backgroundImage!.path),fit: BoxFit.cover)
+                width: double.infinity,
+                height: double.infinity,
+                color: grey2,
+                // child 로 배경 이미지 설정
+                child: _backgroundImage == null ? Image.asset("lib/assets/image/image2.png",fit: BoxFit.cover)
+                    : Image.file(File(_backgroundImage!.path),fit: BoxFit.cover)
             ),
           ),
         ),
@@ -97,15 +98,14 @@ class _MainProfileState extends State<MainProfile> {
                       width: 70,
                       height: 70,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(25),
                           color: Colors.white,
                           border: Border.all(color: grey2,width: 0.5)
                       ),
                       margin: EdgeInsets.only(bottom: 5),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: _profileImage == null ? SvgPicture.asset("lib/assets/icon/icon_profile.svg", color: genderMale)
-                            : Image.file(File(_profileImage!.path),fit: BoxFit.cover,)
+                          child: _profileImage == null ? Icon(CupertinoIcons.person_fill, color: mainBrown.withOpacity(0.5))
+                              : Image.file(File(_profileImage!.path),fit: BoxFit.cover,)
                       )
                   ),
                 ),
@@ -129,7 +129,7 @@ class _MainProfileState extends State<MainProfile> {
                             width: 100,
                             height: 25,
                           )
-                          : Text(_textEditingController.text,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),);
+                              : Text(_textEditingController.text,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),);
                         }),
                         // 수정 아이콘
                         Obx((){

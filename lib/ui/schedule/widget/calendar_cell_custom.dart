@@ -70,6 +70,7 @@ class _CalendarCellCustomState extends State<CalendarCellCustom> {
         onTap: _onCalendarTap,
         // controller: _calendarController,
         view: CalendarView.month,
+        viewHeaderHeight: -1,
         cellBorderColor: grey1,
         backgroundColor: Colors.transparent,
         todayHighlightColor: mainOrange,
@@ -83,6 +84,7 @@ class _CalendarCellCustomState extends State<CalendarCellCustom> {
           CalendarView.timelineMonth,
         ],
         monthViewSettings: MonthViewSettings(
+          // numberOfWeeksInView: 5
           // showTrailingAndLeadingDates: false
         ),
         timeSlotViewSettings: TimeSlotViewSettings(),
@@ -142,42 +144,44 @@ class CustomMonthCell extends StatelessWidget {
 
     return
       Column(children: [
-      Container(
-        // 셀 테두리 색상 설정
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: isSelectedDate && !isCurrentMonthSelected
-                ? Colors.transparent
-                : grey2,
-            width: 0.5,
+        Container(
+          height: 80,
+          // 셀 테두리 색상 설정
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: isSelectedDate && !isCurrentMonthSelected
+                  ? Colors.transparent
+                  : grey2,
+              width: 0.6,
+            ),
           ),
-        ),
-        child: SizedBox(
-          // 달력 셀 높이
-            height: 90,
-            child: Column(
-              children: [
-                SizedBox(height: 10),
-                Text(
-                  details.date.day.toString(),
-                  style: TextStyle(
-                    color: isCurrentMonthCell ? Colors.black87 : grey4,
+          child: SizedBox(
+            // 달력 셀 높이
+            //   height: 95,
+              child: Column(
+                children: [
+                  // 날짜 텍스트 위 여백
+                  SizedBox(height: 5),
+                  Text(
+                    details.date.day.toString(),
+                    style: TextStyle(
+                      color: isCurrentMonthCell ? Colors.black87 : grey4,
+                    ),
                   ),
-                ),
-                SizedBox(height: 4),
-                // 셀 내부에 들어갈 내용
-                Container(
-                  height: 50,
-                  alignment: Alignment.center,
-                  // // 현재 달만 indicator 보이도록 함
-                  child: isCurrentMonthCell
-                      ? MyTodoIndicator(totalTodo: 10, doneTodo: 10)
-                      : SizedBox(),
-                )
-              ],
-            )),
-      )
-    ]);
+                  SizedBox(height: 4),
+                  // 셀 내부에 들어갈 내용
+                  Container(
+                    height: 30,
+                    alignment: Alignment.center,
+                    // // 현재 달만 indicator 보이도록 함
+                    child: isCurrentMonthCell
+                        ? MyTodoIndicator(totalTodo: 10, doneTodo: 8)
+                        : SizedBox(),
+                  )
+                ],
+              )),
+        )
+      ]);
   }
 }
 

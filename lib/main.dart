@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:schedule_with/ui/group/view/group_detail.dart';
 import 'package:schedule_with/ui/group/view/group_freind_add.dart';
+import 'package:schedule_with/ui/group/view/group_invite.dart';
 import 'package:schedule_with/ui/group/view/group_menu.dart';
 import 'package:schedule_with/ui/group/view/group_search_friend.dart';
 import 'package:schedule_with/ui/home/view/home_main.dart';
@@ -101,7 +102,8 @@ class _ScheduleWithState extends State<ScheduleWith> {
         GetPage(name: '/myPageBackgroundPhotoDetail', page: () => MyPageBackgroundPhotoDetail()),
         GetPage(name: '/myPageProfilePhotoDetail', page: () => MyPageProfilePhotoDetail()),
         GetPage(name: '/groupSearchFriend', page: () => SearchFriend()),
-        GetPage(name: '/groupFriendAdd', page: () => GroupFreindAdd())
+        GetPage(name: '/groupFriendAdd', page: () => GroupFreindAdd()),
+        GetPage(name: '/groupInvite', page: () => GroupInvite())
       ],
     );
   }
