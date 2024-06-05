@@ -124,12 +124,12 @@ class _MainProfileState extends State<MainProfile> {
                               decoration: InputDecoration(border: InputBorder.none,isDense: true),
                               style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,decorationThickness: 0),
                               autofocus: true,
-                              controller: widget.controller,
+                              controller: _textEditingController,
                             ),
                             width: 100,
                             height: 25,
                           )
-                          : Text(widget.controller.text,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),);
+                          : Text(_textEditingController.text,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),);
                         }),
                         // 수정 아이콘
                         Obx((){

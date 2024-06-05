@@ -3,18 +3,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:schedule_with/assets/colors/color.dart';
 import 'package:schedule_with/ui/group/view/group_main.dart';
-import 'package:schedule_with/ui/alarm/view/alram_main.dart';
-
-import 'package:schedule_with/ui/group/view/group_freind_add.dart';
-import 'package:schedule_with/ui/group/view/group_invite.dart';
-
-import 'package:schedule_with/ui/group/view/search_friend.dart';
 
 import 'package:schedule_with/ui/home/view/home_main.dart';
-import 'package:schedule_with/ui/login/view/login_main.dart';
 import 'package:schedule_with/ui/mypage/view/my_page_main.dart';
 import 'package:schedule_with/ui/schedule/view/schedule_main.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
+
+import '../ui/alarm/view/alarm_main.dart';
 
 class BottomNavigationBarController extends GetxController {
   var tabIndex = 2.obs;
@@ -90,8 +85,6 @@ class _MainBottomNavigationBar extends State<MainBottomNavigationBar>{
                   title: Text("더보기"),
                   selectedColor: mainBrown
               ),
-
-
             ],
           ),
         ),

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:schedule_with/assets/colors/color.dart';
 import 'package:schedule_with/widget/main_two_button.dart';
-import '../../../widget/main_button.dart';
-import '../view/ex.dart';
 
 class BottomSheetWidget extends StatefulWidget {
   final Function(String usage, String cost, bool isAddition) onAdd;

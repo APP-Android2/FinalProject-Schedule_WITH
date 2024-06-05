@@ -21,21 +21,6 @@ class _ScheduleMainState extends State<ScheduleMain> {
           child: MainAppBar()),
       // 탭바
       body: MainTabBar(),
-      // 플로팅 버튼
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          showModalBottomSheet(
-            // 바텀 시트 높이 지정하려면 isScrollControlled: true,
-              isScrollControlled: true,
-              context: context,
-              builder: (BuildContext context){
-                return AddScheduleBottomSheet();
-              });
-        },
-        backgroundColor: mainOrange,
-        child: Icon(Icons.add, color: Colors.white),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-      ),
     );
   }
 }
