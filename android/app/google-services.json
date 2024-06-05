@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "84568806524",
+    "project_id": "schedulewith-7fd9a",
+    "storage_bucket": "schedulewith-7fd9a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:84568806524:android:b87ebffe033d9a254ae5f9",
+        "android_client_info": {
+          "package_name": "co.kr.schedule_with.schedule_with"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIwh21ZCMri6CeohqdNKG6wIS5LFzw_HA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
