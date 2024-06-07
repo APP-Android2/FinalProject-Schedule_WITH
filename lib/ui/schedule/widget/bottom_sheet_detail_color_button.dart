@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:schedule_with/assets/colors/color.dart';
-import 'package:schedule_with/ui/schedule/widget/schedule_color_option.dart';
+import 'package:schedule_with/ui/schedule/controller/schedule_controller.dart';
+import 'package:schedule_with/ui/schedule/widget/schedule_color_user_selected.dart';
 
 class BottomSheetDetailColorButton extends StatelessWidget {
+  final ScheduleController scheduleController = Get.find<ScheduleController>();
 
 
   final String titleText;
   // 사용자의 선택에 따라 업데이트 할 번수
-  final Rx<Color> detailColor;
+  final RxString detailColor;
   final VoidCallback? onTap;
 
 
-  const BottomSheetDetailColorButton({
+  BottomSheetDetailColorButton({
     required this.titleText,
     required this.detailColor,
     this.onTap,
@@ -44,7 +48,7 @@ class BottomSheetDetailColorButton extends StatelessWidget {
                     ),
                   ),
                   // controller 값 변경시 UI 업데이트
-                  Obx(() => DisplayColor(colorName: detailColor.value))]
+                  Obx(() => UserSelectedColor(colorName: scheduleController.color.value))]
                 )
               ),
             ),
