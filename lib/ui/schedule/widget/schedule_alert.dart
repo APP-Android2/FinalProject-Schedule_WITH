@@ -60,8 +60,8 @@ class _ScheduleAlertState extends State<ScheduleAlert> {
             ),
             child: MaterialButton(
               onPressed: () {
-                  Get.offAll(ScheduleMain());
-                Get.back(result: false);
+                // 파이어베이스에서 해당 스케줄 데이터 삭제 되어야 함
+                Get.offAll(ScheduleMain());
               },
               child: Text(widget.YesMsg,
                 style: TextStyle(

@@ -50,6 +50,7 @@ class AddScheduleBottomSheet extends StatelessWidget {
           child: Column(children: [
             // 바텀시트 제목
             BottomSheetTitle(),
+            Divider(),
             Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: Column(children: [
@@ -153,7 +154,7 @@ class AddScheduleBottomSheet extends StatelessWidget {
                   onPressed: () {
                     Get.back();
                     Get.snackbar(
-                        '일정 추가 완료',
+                        '등록 완료',
                         '스케줄이 등록되었습니다',
                         duration: Duration(seconds: 1));
                   },
@@ -171,49 +172,29 @@ class BottomSheetTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        SizedBox(width: 50),
-        Container(
-          alignment: Alignment.center,
-          height: 45,
-          child:
-          Text(
-            "스케줄 추가",
-            style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold
+    return Container(
+        padding: EdgeInsets.only(top: 10),
+        width: double.infinity,
+        height: 45,
+        child:
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          // leading 빈공간 여백
+          SizedBox(width: 50),
+          Container(
+            alignment: Alignment.center,
+            height: 45,
+            child: Text(
+              "스케줄 추가",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
-        ),
-        IconButton(
-          onPressed: () {
-            Get.dialog(
-                ScheduleAlert(msg: '작성을 취소하시겠습니까?' , YesMsg: '예', NoMsg: "아니오")
-            );
-          },
-          icon: Icon(Icons.close),
-        ),
-      ],
-    );
-  }
-}
-
-
-// 다이얼로그 호출 부분
-void showScheduleAlert(BuildContext context) async {
-  final result = await Get.dialog<String>(
-    SchedulePublicAlert(
-      msg: '메시지',
-      showAll: '전체공개',
-      showTitle: '일부공개',
-      showNothing: '비공개',
-    ),
-  );
-
-  if (result != null) {
-    final scheduleController = Get.find<ScheduleController>();
-    scheduleController.public.value = result;
+          IconButton(
+            onPressed: () {
+              Get.dialog(ScheduleAlert(
+                  msg: '작성을 취소하시겠습니까?', YesMsg: '예', NoMsg: "아니오"));
+            },
+            icon: Icon(Icons.close),
+          ),
+        ]));
   }
 }

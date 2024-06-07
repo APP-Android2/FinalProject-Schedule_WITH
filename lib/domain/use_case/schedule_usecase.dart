@@ -1,4 +1,4 @@
-import 'package:schedule_with/domain/repository/schedule/schedule_repository.dart';
+import 'package:schedule_with/domain/repository/schedule_repository.dart';
 import 'package:schedule_with/entity/schedule_tbl.dart';
 
 // 비즈니스 로직:

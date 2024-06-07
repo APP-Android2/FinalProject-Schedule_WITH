@@ -90,7 +90,6 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
             allowedViews: const [
               CalendarView.month,
               CalendarView.week,
-              CalendarView.schedule
             ],
             // 배경색
             backgroundColor: Colors.white,

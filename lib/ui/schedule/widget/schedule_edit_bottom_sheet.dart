@@ -5,6 +5,7 @@ import 'package:schedule_with/ui/schedule/controller/schedule_controller.dart';
 import 'package:schedule_with/ui/schedule/widget/bottom_sheet_detail_color_button.dart';
 import 'package:schedule_with/ui/schedule/widget/bottom_sheet_detail_switch_button.dart';
 import 'package:schedule_with/ui/schedule/widget/schedule_add_bottom_sheet.dart';
+import 'package:schedule_with/ui/schedule/widget/schedule_alert.dart';
 import 'package:schedule_with/ui/schedule/widget/schedule_color_picker.dart';
 import 'package:schedule_with/ui/schedule/widget/schedule_date_picker_end_dt.dart';
 import 'package:schedule_with/ui/schedule/widget/schedule_date_picker_start_dt.dart';
@@ -47,8 +48,11 @@ class EditScheduleBottomSheet extends StatelessWidget {
                 children: [
                   // 일정 타이틀
                   ScheduleMemo(
-                      titleController: scheduleController.titleEditingController,
-                      hintText: '스케줄 타이틀을 입력해주세요.', minLines: 1, maxLines: 1),
+                      titleController:
+                          scheduleController.titleEditingController,
+                      hintText: '스케줄 타이틀을 입력해주세요.',
+                      minLines: 1,
+                      maxLines: 1),
                   // 시작날짜 선택 버튼
                   BottomSheetDetailStartDate(
                       titleText: '시작 날짜',
@@ -115,7 +119,8 @@ class EditScheduleBottomSheet extends StatelessWidget {
                   // 색상 선택
                   BottomSheetDetailColorButton(
                       titleText: '색상',
-                      detailColor: RxString(scheduleController.colorString.value),
+                      detailColor:
+                          RxString(scheduleController.colorString.value),
                       onTap: () {
                         Get.dialog(
                             barrierDismissible: false,
@@ -131,19 +136,28 @@ class EditScheduleBottomSheet extends StatelessWidget {
                   ),
                   // 메모 입력
                   ScheduleMemo(
-                      titleController: scheduleController.contentEditingController,
-                      hintText: '추가 메모 사항이 있으시다면 입력해 주세요.', minLines: 3, maxLines: 5),
+                      titleController:
+                          scheduleController.contentEditingController,
+                      hintText: '추가 메모 사항이 있으시다면 입력해 주세요.',
+                      minLines: 3,
+                      maxLines: 5),
                   // 삭제하기, 수정하기 버튼
                   MainTwoButton(
                       leftText: '삭제 하기',
                       leftColor: mainBrown,
                       leftOnPressed: () {
-                        Get.back();
+                        Get.dialog(
+                            ScheduleAlert(msg: '삭제 시 복구 되지 않습니다', NoMsg: '삭제취소', YesMsg: '삭제'));
                       },
                       rightText: '수정 완료',
                       rightColor: mainOrange,
                       rightOnPressed: () {
+                        // 파이어베이스 데이터 수정 하는 코드 드가야됨
                         Get.back();
+                        Get.snackbar(
+                            '수정 완료',
+                            '스케줄이 수정 되었습니다',
+                            duration: Duration(seconds: 1));
                       }),
                 ],
               ),
