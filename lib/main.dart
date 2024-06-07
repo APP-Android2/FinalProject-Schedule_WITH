@@ -27,6 +27,7 @@ import 'package:schedule_with/ui/notification/view/notification_main.dart';
 import 'package:schedule_with/ui/notification/view/notification_request_detail.dart';
 import 'package:schedule_with/widget/main_bottom_navigation_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'dependencies.dart';
 import 'firebase_options.dart';
 
 
@@ -36,6 +37,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Firestore 초기 설정
   await Firebase.initializeApp();
+
+  // 의존성
+  setupDependencies();
+
   runApp(ScheduleWith());
 }
 

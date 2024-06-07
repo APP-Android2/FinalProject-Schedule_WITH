@@ -11,14 +11,14 @@ import 'package:schedule_with/ui/schedule/widget/schedule_memo.dart';
 import 'package:schedule_with/widget/bottom_sheet_detail_button.dart';
 import 'package:schedule_with/widget/date_picker.dart';
 import 'package:schedule_with/widget/main_alert.dart';
+import 'package:schedule_with/widget/main_button.dart';
 import 'package:schedule_with/widget/main_two_button.dart';
 import 'package:schedule_with/widget/time_picker.dart';
 
 // 스케쥴 추가 바텀 시트 위젯
 class AddScheduleBottomSheet extends StatelessWidget {
-  final ScheduleController scheduleController = Get.put(ScheduleController());
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _contentController = TextEditingController();
+  // 컨트롤러 사용 선언
+  final ScheduleController scheduleController = Get.find<ScheduleController>();
 
   @override
   Widget build(BuildContext context) {
@@ -42,12 +42,12 @@ class AddScheduleBottomSheet extends StatelessWidget {
                 child: Column(children: [
                   // 타이틀 입력부분
                   ScheduleMemo(
-                    titleController: _titleController,
+                    titleController: scheduleController.textEditingController,
                     hintText: '스케줄 타이틀을 입력해주세요.'),
                   // 시작날짜 선택 버튼
                   BottomSheetDetailTextButton(
                       titleText: '시작 날짜',
-                      detailText: RxString(DateFormat('yyyy-MM-dd').format(scheduleController.selectedDateTime.value)),
+                      detailText: RxString(DateFormat('yyyy-MM-dd').format(scheduleController.startDt.value)),
                       detailTextColor: grey4,
                       onTap: () {
                         Get.back(); // Close first
@@ -59,7 +59,7 @@ class AddScheduleBottomSheet extends StatelessWidget {
                   // 마침날짜 선택 버튼
                   BottomSheetDetailTextButton(
                       titleText: '마침 날짜',
-                      detailText: scheduleController.selectedDateTime,
+                      detailText: RxString(DateFormat('yyyy-MM-dd').format(scheduleController.endDt.value)),
                       detailTextColor: grey4,
                       onTap: () {
                         // scheduleController.test('gsd');
@@ -72,7 +72,7 @@ class AddScheduleBottomSheet extends StatelessWidget {
                   // 시작 시간 선택 버튼
                   BottomSheetDetailTextButton(
                       titleText: '시작 시간',
-                      detailText: scheduleController.selectedDateTime,
+                      detailText: RxString(DateFormat('a hh:mm').format(scheduleController.startDt.value)),
                       detailTextColor: grey4,
                       onTap: () {
                         // scheduleController.test('gsd');
@@ -83,7 +83,7 @@ class AddScheduleBottomSheet extends StatelessWidget {
                   // 마침 시간 선택 버튼
                   BottomSheetDetailTextButton(
                       titleText: '마침 시간',
-                      detailText: scheduleController.selectedDateTime,
+                      detailText: RxString(DateFormat('a hh:mm').format(scheduleController.endDt.value)),
                       detailTextColor: grey4,
                       onTap: () {
                         Get.back();
@@ -91,23 +91,23 @@ class AddScheduleBottomSheet extends StatelessWidget {
                             back_page: AddScheduleBottomSheet(), title: '시간'));
                       }),
                   // 공개 여부 선택
-                  BottomSheetDetailTextButton(
-                      titleText: '공개 여부',
-                      detailTextColor: grey4,
-                      detailText: scheduleController.visibility,
-                      onTap: () {
-                        Get.dialog(
-                            barrierDismissible: false,
-                            ScheduleAlert(
-                                msg: "공개여부 설정",
-                                showAll: "전체공개",
-                                showTitle: "일부공개",
-                                showNothing: "비공개"));
-                      }),
+                  // BottomSheetDetailTextButton(
+                  //     titleText: '공개 여부',
+                  //     detailTextColor: grey4,
+                  //     detailText: RxString(scheduleController.public.value),
+                  //     onTap: () {
+                  //       Get.dialog(
+                  //           barrierDismissible: false,
+                  //           ScheduleAlert(
+                  //               msg: "공개여부 설정",
+                  //               showAll: "전체공개",
+                  //               showTitle: "일부공개",
+                  //               showNothing: "비공개"));
+                  //     }),
                   // 색상 선택
                   BottomSheetDetailColorButton(
                       titleText: '색상',
-                      detailColor: scheduleController.selectedColor,
+                      detailColor: RxString(scheduleController.colorString.value),
                       onTap: () {
                         Get.dialog(
                             barrierDismissible: false,
@@ -117,26 +117,36 @@ class AddScheduleBottomSheet extends StatelessWidget {
                   BottomSheetDetailSwitchButton(titleText: '알람에 추가'),
                   // 메모 입력
                   ScheduleMemo(
-                    titleController: _contentController,
+                    titleController: scheduleController.textEditingController,
                     hintText: '추가 메모 사항이 있으시다면 입력해 주세요.'),
-
                 ])
             ),
             Spacer(),
-            // 삭제하기, 수정하기 버튼
-            MainTwoButton(
-                leftText: '삭제 하기',
-                leftColor: mainBrown,
-                leftOnPressed: () {
-                  Get.dialog(
-                      MainAlert(msg:'일정을 삭제하시겠습니까?', YesMsg:'예', NoMsg: '아니오'));
+            // 등록하기 버튼
+            MainButton(
+                text: '등록하기',
+                onPressed: () {
+                  Get.back();
+                  Get.snackbar(
+                      '일정 추가 완료',
+                      '스케줄이 등록되었습니다',
+                      duration: Duration(seconds: 1));
                 },
-                rightText: '수정 완료',
-                rightColor: mainOrange,
-                rightOnPressed: () {
-                  Get.dialog(
-                      MainAlert(msg:'수정사항을 취소하시겠습니까?', YesMsg:'예', NoMsg: '아니오'));
-                }),
+                color: mainOrange),
+            Padding(padding: EdgeInsets.only(bottom: 30))
+            // MainTwoButton(
+            //     leftText: '삭제 하기',
+            //     leftColor: mainBrown,
+            //     leftOnPressed: () {
+            //       Get.dialog(
+            //           MainAlert(msg:'일정을 삭제하시겠습니까?', YesMsg:'예', NoMsg: '아니오'));
+            //     },
+            //     rightText: '수정 완료',
+            //     rightColor: mainOrange,
+            //     rightOnPressed: () {
+            //       Get.dialog(
+            //           MainAlert(msg:'수정사항을 취소하시겠습니까?', YesMsg:'예', NoMsg: '아니오'));
+            //     }),
 
           ])),
     );
