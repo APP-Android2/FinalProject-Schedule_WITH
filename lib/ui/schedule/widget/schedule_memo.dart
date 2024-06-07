@@ -4,11 +4,15 @@ import 'package:schedule_with/assets/colors/color.dart';
 class ScheduleMemo extends StatelessWidget {
   final TextEditingController titleController;
   final String hintText;
+  final int minLines;
+  final int maxLines;
 
   const ScheduleMemo({
     Key? key,
     required this.titleController,
     required this.hintText,
+    required this.minLines,
+    required this.maxLines
   }) : super(key: key);
 
   @override
@@ -20,6 +24,9 @@ class ScheduleMemo extends StatelessWidget {
         child: TextField(
           controller: titleController,
           textAlign: TextAlign.left,
+          style: TextStyle(color: mainBrown),
+          minLines: minLines,
+          maxLines: maxLines,
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: TextStyle(fontSize: 16, color: grey3),
