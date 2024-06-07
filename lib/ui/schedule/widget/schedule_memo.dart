@@ -24,7 +24,7 @@ class ScheduleMemo extends StatelessWidget {
         child: TextField(
           controller: titleController,
           textAlign: TextAlign.left,
-          style: TextStyle(color: mainBrown),
+          style: TextStyle(color: grey4),
           minLines: minLines,
           maxLines: maxLines,
           decoration: InputDecoration(

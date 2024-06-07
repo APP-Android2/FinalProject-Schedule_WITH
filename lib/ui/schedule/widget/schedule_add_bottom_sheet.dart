@@ -17,7 +17,6 @@ import 'package:schedule_with/ui/schedule/widget/schedule_memo.dart';
 import 'package:schedule_with/ui/schedule/widget/schedule_public_alert.dart';
 import 'package:schedule_with/ui/schedule/widget/schedule_time_picker_end_tm.dart';
 import 'package:schedule_with/ui/schedule/widget/schedule_time_picker_start_tm.dart';
-import 'package:schedule_with/widget/bottom_sheet_detail_button.dart';
 import 'package:schedule_with/widget/main_button.dart';
 
 import 'bottom_sheet_detail_end_date.dart';
