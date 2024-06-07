@@ -1,121 +1,96 @@
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import 'package:schedule_with/assets/colors/color.dart';
-// import 'package:schedule_with/ui/schedule/controller/schedule_controller.dart';
-//
-// class ScheduleAlert extends StatefulWidget {
-//
-//   // final title;
-//   final msg;
-//   final showAll;
-//   final showTitle;
-//   final showNothing;
-//
-//   const ScheduleAlert({super.key,
-//     this.msg,
-//     this.showAll,
-//     this.showTitle,
-//     this.showNothing
-//   });
-//
-//   @override
-//   State<ScheduleAlert> createState() => _MainAlertState();
-// }
-//
-// class _MainAlertState extends State<ScheduleAlert> {
-//   final ScheduleController scheduleController = Get.find<ScheduleController>();
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Center(
-//       child: Dialog(
-//         backgroundColor: Colors.white,
-//         child:
-//         Column(
-//           mainAxisSize: MainAxisSize.min,
-//           children: [
-//             Container(
-//               alignment: Alignment.center,
-//               width: 500,
-//               height: 40,
-//               decoration: BoxDecoration(
-//                 borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-//                 border: Border(),
-//                 color: Colors.white,
-//               ),
-//               child: Text(widget.msg,),
-//             ),
-//             Container(
-//               height: 45,
-//               width: double.infinity,
-//               decoration: BoxDecoration(
-//                   color: mainOrange
-//               ),
-//               child: MaterialButton(
-//                 onPressed: () {
-//                   // 선택한 값으로 업데이트
-//                   scheduleController.isLoading
-//                   scheduleController.settingVisibility(widget.showAll);
-//                   print('공개여부선택 >> 전체공개');
-//                   Get.back();
-//                 },
-//                 child: Text(widget.showAll,
-//                   style: TextStyle(
-//                     fontSize: 16,
-//                     color: Colors.white,
-//                     fontWeight: FontWeight.bold,
-//                   ),
-//                 ),
-//               ),
-//             ),
-//             // SizedBox(height: 10,),
-//             Container(
-//               height: 45,
-//               width: double.infinity,
-//               decoration: BoxDecoration(
-//                   color: grey1
-//               ),
-//               child: MaterialButton(
-//                 onPressed: () {
-//                   scheduleController.settingVisibility(widget.showTitle);
-//                   print('공개여부선택 >> 일부공개');
-//                   Get.back();
-//                 },
-//                 child: Text(widget.showTitle,
-//                   style: TextStyle(
-//                     fontSize: 16,
-//                     color: mainBrown,
-//                     fontWeight: FontWeight.bold,
-//                   ),
-//                 ),
-//               ),
-//             ),
-//             Container(
-//               height: 45,
-//               width: double.infinity,
-//               decoration: BoxDecoration(
-//                   borderRadius: BorderRadius.vertical(bottom: Radius.circular(10)),
-//                   color: grey1
-//               ),
-//               child: MaterialButton(
-//                 onPressed: () {
-//                   scheduleController.settingVisibility(widget.showNothing);
-//                   print('공개여부선택 >> 비공개');
-//                   Get.back(result: "비공개");
-//                 },
-//                 child: Text(widget.showNothing,
-//                   style: TextStyle(
-//                     fontSize: 16,
-//                     color: mainBrown,
-//                     fontWeight: FontWeight.bold,
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//
-//       ),
-//     );
-//   }
-// }
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:schedule_with/assets/colors/color.dart';
+import 'package:schedule_with/ui/schedule/controller/schedule_controller.dart';
+
+class SchedulePublicAlert extends StatefulWidget {
+  // final title;
+  final msg;
+  final showAll;
+  final showTitle;
+  final showNothing;
+
+  const SchedulePublicAlert(
+      {super.key, this.msg, this.showAll, this.showTitle, this.showNothing});
+
+  @override
+  State<SchedulePublicAlert> createState() => _MainAlertState();
+}
+
+class _MainAlertState extends State<SchedulePublicAlert> {
+  final ScheduleController scheduleController = Get.find<ScheduleController>();
+
+  @override
+  Widget build(BuildContext context) {
+      return GestureDetector(
+        child: Dialog(
+          backgroundColor: Colors.white,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // 제목
+              Container(
+                alignment: Alignment.center,
+                width: 500,
+                height: 40,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+                  border: Border(),
+                  color: Colors.white,
+                ),
+                child: Text(
+                  widget.msg,
+                ),
+              ),
+              // 공개 버튼들
+              _buildPublicButton('전체 공개', scheduleController.showAll, () {
+                _updatePublicState('전체 공개', scheduleController.showAll);
+              }),
+              _buildPublicButton('일부 공개', scheduleController.showTitle, () {
+                _updatePublicState('일부 공개', scheduleController.showTitle);
+              }),
+              _buildPublicButton('비공개', scheduleController.showNothing, () {
+                _updatePublicState('비공개', scheduleController.showNothing);
+              }),
+            ],
+          ),
+        ),
+      );
+    }
+
+
+
+    Widget _buildPublicButton(String text, RxBool isActive, VoidCallback onTap) {
+    return InkWell(
+      child: Obx(() =>
+          Container(
+            height: 45,
+            width: double.infinity,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                borderRadius: text == '비공개'
+                    ? BorderRadius.vertical(bottom: Radius.circular(10))
+                    : null,
+                color: isActive.value ? mainOrange : grey1),
+            child: Text(
+              text,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: isActive.value ? Colors.white : mainBrown),
+            ),
+          )),
+      onTap: onTap,
+    );
+  }
+
+  void _updatePublicState(String publicState, RxBool activeState) {
+    scheduleController.public.value = publicState;
+    scheduleController.showAll.value = false;
+    scheduleController.showTitle.value = false;
+    scheduleController.showNothing.value = false;
+    activeState.toggle();
+    Get.back();
+  }
+}
