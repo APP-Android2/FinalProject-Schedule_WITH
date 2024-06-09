@@ -34,6 +34,9 @@ class AddScheduleBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 필드 초기화
+    scheduleController.resetFields();
+
     return Obx(() {
     return SingleChildScrollView(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),

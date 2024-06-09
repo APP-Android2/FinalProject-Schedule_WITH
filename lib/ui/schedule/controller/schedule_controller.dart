@@ -97,6 +97,16 @@ class ScheduleController extends GetxController {
     fetchCalendarDataSource();
   }
 
+  // 바텀시트 열 때마다 필드값 초기화
+  void resetFields() {
+    titleEditingController.clear();
+    contentEditingController.clear();
+    public.value = '전체 공개';
+    color.value = apricot;
+    isAlarm.value = false;
+  }
+
+
   void updateStartDt(DateTime newDate){
     selectedStartDt.value = newDate;
   }
