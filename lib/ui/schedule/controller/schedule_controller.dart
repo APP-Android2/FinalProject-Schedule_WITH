@@ -25,7 +25,7 @@ class ScheduleController extends GetxController {
     id: '',
     idx: 0,
     title: '',
-    color: '',
+    color: lightPink,
     startDt: DateTime.now(),
     endDt: DateTime.now(),
     startTime: DateTime.now(),
@@ -70,7 +70,7 @@ class ScheduleController extends GetxController {
   var showNothing = false.obs;
 
   // RxString 형태로 색상을 관리
-  var colorString = "0xFFFF9E9E".obs;
+  // var colorString = "0xFFFF9E9E".obs;
   // Rx<Color> 형태로 색상을 관리
   var color = lightPink.obs;
 
@@ -144,7 +144,7 @@ class ScheduleController extends GetxController {
       id: '',
       idx: schedules.length, // 새로운 인덱스 설정
       title: titleEditingController.text,
-      color: colorString.value,
+      color: color.value,
       startDt: selectedStartDt.value,
       endDt: selectedEndDt.value,
       startTime: selectedStartTm.value ?? DateTime.now(),

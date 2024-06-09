@@ -119,8 +119,7 @@ class EditScheduleBottomSheet extends StatelessWidget {
                   // 색상 선택
                   BottomSheetDetailColorButton(
                       titleText: '색상',
-                      detailColor:
-                          RxString(scheduleController.colorString.value),
+                      detailColor: scheduleController.color,
                       onTap: () {
                         Get.dialog(
                             barrierDismissible: false,

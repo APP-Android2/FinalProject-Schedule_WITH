@@ -124,7 +124,7 @@ class AddScheduleBottomSheet extends StatelessWidget {
                   // 색상 선택
                   BottomSheetDetailColorButton(
                       titleText: '색상',
-                      detailColor: RxString(scheduleController.colorString.value),
+                      detailColor: scheduleController.color,
                       onTap: () {
                         Get.dialog(
                             barrierDismissible: false,
@@ -158,7 +158,8 @@ class AddScheduleBottomSheet extends StatelessWidget {
                     Get.snackbar(
                         '등록 완료',
                         '스케줄이 등록되었습니다',
-                        duration: Duration(seconds: 1));
+                        duration: Duration(seconds: 1),
+                    snackPosition: SnackPosition.BOTTOM);
                   },
                   color: mainOrange),
             ),

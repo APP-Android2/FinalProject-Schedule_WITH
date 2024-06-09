@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:schedule_with/assets/colors/color.dart';
 
 // lib/entity/schedule_tbl.dart
 // 파일명 = 파이어베이스 컬렉션명_tbl
@@ -7,6 +10,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 // fireStore -> Repository -> Entity
 // 데이터 가져올 때 : 레포지토리에 정의한 readSchedules 메서드를 실행한 값이 Schedule 객체에 담긴다.
 // 데이터 전달할 때 : 레포지토리에 정의한 addSchedule 메서드를 통해 새로운 Schedule 객체를 Firestore에 추가 한다.
+
+Color colorFromString(String colorString) {
+  return colorMap[colorString] ?? Color(0xFFFF9E9E); // 기본값은 lightPink
+}
+String colorToString(Color color) {
+  return colorMap.entries.firstWhere((entry) => entry.value == color, orElse: () => MapEntry('lightPink', Color(0xFFFF9E9E))).key;
+}
+
 
 class Schedule {
   // 변수 선언
@@ -22,7 +33,7 @@ class Schedule {
   final DateTime? regDt; // 등록일
   final DateTime? modDt; // 수정일
   final String content; // 메모
-  final String color; // 일정 색상
+  final Color color; // 일정 색상
   final int? userIdx;
   final int? groupIdx;
   final int? alarmIdx;
@@ -55,7 +66,7 @@ class Schedule {
     required String id,
     required int idx,
     required String title,
-    String? color,
+    Color? color,
     DateTime? startDt,
     DateTime? endDt,
     DateTime? startTime,
@@ -73,7 +84,7 @@ class Schedule {
     return Schedule._(
       id: id,
       idx: idx,
-      color: color ?? 'lightPink',
+      color: color ?? colorMap['lightPink']!,
       title: title,
       startDt: startDt ?? DateTime.now(),
       endDt: endDt ?? DateTime.now(),
@@ -98,7 +109,7 @@ class Schedule {
     return Schedule(
       id: 'RGM6jPniQI1bwW4tqS6I', // schedule 컬렉션의 Firestore 문서 ID
       idx: doc['idx'],
-      color: doc['color'],
+      color: colorFromString(doc['color']),
       title: doc['title'],
       startDt: (doc['start_dt'] as Timestamp).toDate(),
       endDt: (doc['end_dt'] as Timestamp).toDate(),
@@ -121,7 +132,7 @@ class Schedule {
   Map<String, dynamic> toDocument() {
     return {
       'idx': idx,
-      'color': color,
+      'color': colorToString(color),
       'title': title,
       'start_dt': Timestamp.fromDate(startDt),
       'end_dt': Timestamp.fromDate(endDt),

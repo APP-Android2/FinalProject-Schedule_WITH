@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:schedule_with/assets/colors/color.dart';
 import 'package:schedule_with/ui/schedule/widget/schedule_color_palette_detail.dart';
 
 
@@ -16,11 +17,11 @@ class ScheduleColorPalette extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(width: 12, height: 12),
-                ScheduleColorPaletteDetail(colorName: Color(0xFFFF9E9E)),
+                ScheduleColorPaletteDetail(colorName: lightPink),
                 SizedBox(width: 12, height: 12),
-                ScheduleColorPaletteDetail(colorName: Color(0xFFFFD39E)),
+                ScheduleColorPaletteDetail(colorName: apricot),
                 SizedBox(width: 12, height: 12),
-                ScheduleColorPaletteDetail(colorName: Color(0xFFFFFB94)),
+                ScheduleColorPaletteDetail(colorName: lemon),
                 SizedBox(width: 12, height: 12)
               ]
           ),
@@ -29,11 +30,11 @@ class ScheduleColorPalette extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(width: 12, height: 12),
-                ScheduleColorPaletteDetail(colorName: Color(0xFFA5FB97)),
+                ScheduleColorPaletteDetail(colorName: neonGreen),
                 SizedBox(width: 12, height: 12),
-                ScheduleColorPaletteDetail(colorName: Color(0xFF9EDCFF)),
+                ScheduleColorPaletteDetail(colorName: lightBlue),
                 SizedBox(width: 12, height: 12),
-                ScheduleColorPaletteDetail(colorName: Color(0xFF84A6FF)),
+                ScheduleColorPaletteDetail(colorName: navyBlue),
                 SizedBox(width: 12, height: 12)
               ]
           )
@@ -42,11 +43,11 @@ class ScheduleColorPalette extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(width: 12, height: 12),
-                ScheduleColorPaletteDetail(colorName: Color(0xFFC99EFF)),
+                ScheduleColorPaletteDetail(colorName: lightPurple),
                 SizedBox(width: 12, height: 12),
-                ScheduleColorPaletteDetail(colorName: Color(0xFFFFB6DD)),
+                ScheduleColorPaletteDetail(colorName: lightPink),
                 SizedBox(width: 12, height: 12),
-                ScheduleColorPaletteDetail(colorName: Color(0xFFC2C2C2)),
+                ScheduleColorPaletteDetail(colorName: lightGrey),
                 SizedBox(width: 12, height: 12)
               ]
           )

@@ -55,7 +55,9 @@ class ScheduleUseCase {
         startTime: schedule.startDt,
         endTime: schedule.endDt,
         subject: schedule.title,
-        color: mainOrange // 각 색깔 적용 되도록 수정 필요
+        color: schedule.color
+
+      // 각 색깔 적용 되도록 수정 필요
     );
   }
 
