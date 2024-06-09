@@ -10,7 +10,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Schedule {
   // 변수 선언
-
   final String id; // 파이어베이스 문서 ID
   final int idx;
   final String title;
@@ -24,9 +23,9 @@ class Schedule {
   final DateTime? modDt; // 수정일
   final String content; // 메모
   final String color; // 일정 색상
-  final int userIdx;
-  final int groupIdx;
-  final int alarmIdx;
+  final int? userIdx;
+  final int? groupIdx;
+  final int? alarmIdx;
 
   // Private constructor
   // 외부에서 해당 생성자 직접 호출 불가 = 클래스 생성 방법 통제 가능 = 팩토리 메서드
@@ -45,9 +44,9 @@ class Schedule {
     this.regDt,
     this.modDt,
     required this.content,
-    required this.userIdx,
-    required this.groupIdx,
-    required this.alarmIdx,
+    this.userIdx,
+    this.groupIdx,
+    this.alarmIdx,
   });
 
   // 팩토리 메서드
@@ -82,12 +81,12 @@ class Schedule {
       endTime: endTime ?? DateTime.now(),
       status: status ?? 'Y',
       public: public ?? 'Y',
-      regDt: regDt, // 기본 값을 Null 로 설정
-      modDt: modDt, // 기본 값을 Null 로 설정
+      regDt: regDt, // 등록일. 기본 값을 Null 로 설정
+      modDt: modDt, // 수정일. 기본 값을 Null 로 설정
       content: content ?? '',
-      userIdx: userIdx ?? 0,
-      groupIdx: groupIdx ?? 0,
-      alarmIdx: alarmIdx ?? 0,
+      userIdx: userIdx,
+      groupIdx: groupIdx,
+      alarmIdx: alarmIdx,
     );
   }
 
@@ -97,7 +96,7 @@ class Schedule {
   // [Firestore에서 불러온 맵 형식 데이터] -> [Schedule 객체] 형식으로 변환합니다.
   factory Schedule.fromDocument(String id, Map<String, dynamic> doc) {
     return Schedule(
-      id: id, // Firestore 문서 ID
+      id: 'RGM6jPniQI1bwW4tqS6I', // schedule 컬렉션의 Firestore 문서 ID
       idx: doc['idx'],
       color: doc['color'],
       title: doc['title'],
@@ -139,12 +138,3 @@ class Schedule {
     };
   }
 }
-
-
-// 추가 설명
-// Firestore -> Entity  (Schedule 객체로 변환 하는 과정 상세
-// 1. Firestore 에서 특정 문서를 가져오면 DocumentSnapShot 객체로 반환됨
-// 2. DocumentSnapShot에 접근해서 문서의 데이터를 Map<String, dynamic> 형식으로 가져옴
-//  Map<String, Dynamic> 형식으로 가져오는 이유 : <필드명, 필드값> 을 가져 오는 건데, 필드명은 String 형식 고정이지만 필드값은 다양한 형태를 가짐.
-//  dynamic 은 모든 변수 타입을 허용하기 때문에 dynamic 형식으로 가져 오는 것.
-// 3. fromDocument 메서드를 사용하여 데이터 타입을 Schedule 객체에 맞도록

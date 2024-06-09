@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:schedule_with/entity/schedule_tbl.dart';
 
-// lib/repositories/schedule_repository.dart
 // 파이어베이스 컬렉션에 접근
 // CRUD
 
@@ -12,50 +11,52 @@ class ScheduleRepository {
 
   // .add
   // 문서 생성: 자동 생성된 ID를 사용
-  // 생성된 문서의 ID를 나중에 사용할 수 있도록 합니다.
   Future<void> createSchedule(Schedule schedule) async {
-    // await _firestore.collection('schedule').add(schedule);
+    await _firestore.collection('schedule').add(schedule.toDocument());
   }
 
   // .snapshots().map
-  // 문서 읽기: 자동 생성된 ID를 포함하여 읽음
-  // readSchedules 메서드는 Firestore 컬렉션의 스냅샷을 스트림 형태로 반환합니다.
-  // 각 문서는 Schedule.fromDocument 메서드를 통해 Schedule 객체로 변환되며, 이 과정에서 문서의 ID도 함께 사용됩니다.
-  Stream<List<Schedule>> readSchedules() {
+  // 문서 읽어 오기
+  // 컬렉션에 있는 모든 문서의 리스트를 가져옴
+  Stream<List<Schedule>> getAllSchedules() {
+    // snapshots() : QuerySnapshot 스트림 반환.
+    // 이 스트림은 컬렉션의 현재 상태와 이후 모든 변경 사항을 포함한다.
+    // map((snapshot) => ...) : 스트림의 각 QuerySnapshot을 처리하여 원하는 형태로 변환.
     return _firestore.collection('schedule').snapshots().map((snapshot) {
+      // snapshot.docs : 스트림의 각 QuerySnapshot을 변환하여 DocumentSnapshot 리스트를 가져옵니다.
+      // 각 DocumentSnapshot을 Schedule 객체로 변환하기 위해 map 함수를 사용
       return snapshot.docs.map((doc) {
+        // 각 문서의 데이터를 Schedule 객체로 변환
         return Schedule.fromDocument(doc.id, doc.data());
+        // toList() : 변환된 Schedule 객체들을 리스트로 묶어 반환
       }).toList();
     });
   }
 
+
+
   // .update
-  // 문서 업데이트: ID를 통해 특정 문서 업데이트
-  // 이 ID는 생성 시 저장된 ID입니다.
+  // 문서의 필드값 업데이트
   Future<void> updateSchedule(Schedule schedule) async {
     await _firestore.collection('schedule').doc(schedule.id).update(schedule.toDocument());
   }
 
-  // .delete
-  // 문서 삭제: ID를 통해 특정 문서 삭제
-  Future<void> deleteSchedule(String id) async {
-    await _firestore.collection('schedule').doc(id).delete();
-  }
-
-  // 모든 일정 읽기
-  // 컬렉션의 모든 문서를 읽어 Schedule 객체 리스트로 변환
-  Stream<List<Schedule>> getAllSchedules() {
-    return _firestore.collection('schedule').snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return Schedule.fromDocument(doc.id, doc.data());
-      }).toList();
-    });
+  // .set
+  // 엔티티를 매개변수로 받음
+  // schedule 엔티티에 정의해놓은 toDocument 메서드로 map 형태로 변환해줌
+  void setSchedule(Schedule schedule) async {
+    try {
+      await _firestore.collection('schedules').doc(schedule.id).set(schedule.toDocument());
+      print("Document successfully set with merge!");
+    } catch (e) {
+      print("Error setting document: $e");
+    }
   }
 
   // 특정 idx에 해당하는 color 값만 가져오기
   Stream<String> fetchColorByIdx(String idx) {
     return _firestore
-        .collection('schedule').where('Idx', isEqualTo: idx)
+        .collection('schedule').where('idx', isEqualTo: idx)
         .snapshots()
         .map((snapshot) {
       if (snapshot.docs.isNotEmpty) {
@@ -66,4 +67,6 @@ class ScheduleRepository {
     });
   }
 }
+
+
 

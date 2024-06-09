@@ -152,6 +152,8 @@ class AddScheduleBottomSheet extends StatelessWidget {
               child: MainButton(
                   text: '등록하기',
                   onPressed: () {
+                    // 입력받은 데이터를 Entity 저장
+                    scheduleController.addSchedule();
                     Get.back();
                     Get.snackbar(
                         '등록 완료',
