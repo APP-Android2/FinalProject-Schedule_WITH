@@ -33,10 +33,11 @@ class _HomeMainState extends State<HomeMain> {
     return MaterialApp(
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate
       ],
       supportedLocales: [
-        const Locale("ko","KO")
+        const Locale("ko","KR")
       ],
       debugShowCheckedModeBanner: false,
       home: Scaffold(
