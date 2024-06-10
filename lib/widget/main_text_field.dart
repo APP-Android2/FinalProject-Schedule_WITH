@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:schedule_with/assets/colors/color.dart';
 
@@ -6,6 +8,9 @@ class MainTextField extends StatelessWidget {
   final String hintText;
   final TextEditingController controller;
   final TextInputAction textInputAction;
+  final FocusNode focusNode;
+  final TextInputType textInputType;
+  final bool obscureText;
 
   const MainTextField({
     Key? key,
@@ -13,6 +18,9 @@ class MainTextField extends StatelessWidget {
     required this.hintText,
     required this.controller,
     required this.textInputAction,
+    required this.focusNode,
+    required this.textInputType,
+    required this.obscureText,
   }) : super(key: key);
 
   @override
@@ -20,6 +28,8 @@ class MainTextField extends StatelessWidget {
     return SizedBox(
       height: 45,
       child: TextField(
+        keyboardType: textInputType,
+        obscureText: obscureText,
         textInputAction: textInputAction,
         onSubmitted: (_) => FocusScope.of(context).nextFocus,
         controller: controller,
@@ -54,6 +64,8 @@ class MainTextField extends StatelessWidget {
           labelText: labelText,
           hintText: hintText,
         ),
+        focusNode: focusNode,
+
       ),
     );
   }

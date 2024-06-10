@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:schedule_with/assets/colors/color.dart';
 import 'package:schedule_with/ui/schedule/widget/schedule_edit_bottom_sheet.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import '../domain/repository/sample_data.dart';
+
 
 class MainCalendarMonth extends StatefulWidget {
 
@@ -85,7 +85,6 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
             onTap: _onCalendarTap,
 
             // 임시 데이터 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 나중에 삭제 해야됨
-            dataSource: getDataSource(),
             // 변경 가능한 표시형식 (월, 주)
             allowedViews: const [
               CalendarView.month,

@@ -12,6 +12,9 @@ class LoginFindSuccessId extends StatefulWidget {
 }
 
 class _LoginFindSuccessIdState extends State<LoginFindSuccessId> {
+
+  String userId = Get.arguments;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +49,7 @@ class _LoginFindSuccessIdState extends State<LoginFindSuccessId> {
                               fontSize: 20,
                               fontWeight: FontWeight.bold
                           ),
-                          child: Text("qwer${1234}")
+                          child: Text(userId)
                       ),
                       // "입니다" 출력
                       DefaultTextStyle(
