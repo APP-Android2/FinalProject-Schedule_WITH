@@ -1,10 +1,15 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:schedule_with/assets/colors/color.dart';
+import 'package:schedule_with/domain/repository/user_repository.dart';
 import 'package:schedule_with/ui/mypage/widget/my_page_divider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../entity/user_tbl.dart';
 import '../../../widget/main_alert.dart';
 import '../../../widget/main_app_bar.dart';
 
@@ -19,6 +24,22 @@ class _MyPageMainState extends State<MyPageMain> {
   Future<bool> _getId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('id') != null;
+  }
+
+  UserRepository userRepository = UserRepository();
+  Users? users;
+
+  @override
+  void initState(){
+    // TODO: implement initState
+    super.initState();
+    _initializeUser();
+  }
+
+  Future<void> _initializeUser() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    users = await userRepository.getUserInfoUseId(prefs.getString('id')!);
+    setState(() {}); // 사용자 정보를 가져온 후 UI를 업데이트하기 위해 setState 호출
   }
 
   @override
@@ -45,7 +66,13 @@ class _MyPageMainState extends State<MyPageMain> {
                 // 프로필 사진 + 닉네임 + 상세내용 보기 아이콘 + 화면이동 설정
                 InkWell(
                   onTap: () async {
-                    hasId ? Get.toNamed('/myPageInfoModify') : Get.toNamed('/login');
+                    if (hasId) {
+                      Get.toNamed('/myPageInfoModify')?.then((_) {
+                        _initializeUser();
+                      });
+                    } else {
+                      Get.toNamed('/login');
+                    }
                   },
                   // 프로필 사진 + 닉네임 + 상세내용 보기 아이콘 설정
                   child: Container(
@@ -66,9 +93,12 @@ class _MyPageMainState extends State<MyPageMain> {
                                 margin: EdgeInsets.only(bottom: 5),
                                 child: ClipRRect(
                                     borderRadius: BorderRadius.circular(20),
-                                    child: SvgPicture.asset("lib/assets/icon/icon_profile.svg", color: genderMale))),
+                                    child: users?.profile_img == null ? Icon(CupertinoIcons.person_fill, color: mainBrown.withOpacity(0.5))
+                                        : Image.file(File(users!.profile_img!),fit: BoxFit.cover,)
+                                )
+                            ),
                             Padding(padding: EdgeInsets.only(right: 10)),
-                            Text("닉네임", style: TextStyle(fontSize: 16))
+                            Text("${users?.name}", style: TextStyle(fontSize: 16))
                           ],
                         ),
                         // 상세내용 아이콘 설정
@@ -190,3 +220,5 @@ class _MyPageMainState extends State<MyPageMain> {
     );
   }
 }
+
+

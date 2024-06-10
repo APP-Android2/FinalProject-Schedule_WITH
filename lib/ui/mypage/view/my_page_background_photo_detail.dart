@@ -17,7 +17,7 @@ class MyPageBackgroundPhotoDetail extends StatefulWidget {
 
 class _MyPageBackgroundPhotoDetailState extends State<MyPageBackgroundPhotoDetail> {
 
-  final XFile? _image = Get.arguments;
+  final String? _image = Get.arguments;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,7 @@ class _MyPageBackgroundPhotoDetailState extends State<MyPageBackgroundPhotoDetai
         color: Colors.black,
         // child 로 배경 이미지 설정
         child: _image == null ? Image.asset("lib/assets/image/image2.png",fit: BoxFit.fitWidth,)
-            : Image.file(File(_image.path),fit: BoxFit.fitWidth)
+            : Image.file(File(_image),fit: BoxFit.fitWidth)
       ),
     );
   }
