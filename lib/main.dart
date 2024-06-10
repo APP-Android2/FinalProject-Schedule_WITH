@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
+import 'package:schedule_with/dependencies.dart';
 import 'package:schedule_with/ui/group/view/group_detail.dart';
 import 'package:schedule_with/ui/group/view/group_freind_add.dart';
 import 'package:schedule_with/ui/group/view/group_invite.dart';
@@ -36,6 +37,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Firestore 초기 설정
   await Firebase.initializeApp();
+
+  setupDependencies();
 
   UserRepository userRepository = UserRepository();
   // 앱 실행전 로컬파일에 유저의 server_id가 존재하지 않는다면, 새로운 유저이므로, 새로운 idx값과 새로운 server_id를 부여한다.
