@@ -6,7 +6,7 @@ import 'package:schedule_with/ui/schedule/widget/schedule_edit_bottom_sheet.dart
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 // GetX 컨트롤러
-class CalendarController extends GetxController {
+class CustomCalendarController extends GetxController {
   var currentMonth = DateTime.now().month.obs;
   var selectedDate = DateTime.now().obs;
 
@@ -27,15 +27,15 @@ class CalendarCellCustom extends StatefulWidget {
 }
 
 class _CalendarCellCustomState extends State<CalendarCellCustom> {
-  // GetX Controller 초기화
-  final CalendarController calendarControllerGetX =
-  Get.put(CalendarController());
+
+  final CustomCalendarController customCalendarController = Get.find<CustomCalendarController>();
+
 
   // 현재 표시되는 날짜 (보이는 날짜의 중간)
   void _onViewChanged(ViewChangedDetails details) {
     DateTime displayDate =
     details.visibleDates[details.visibleDates.length ~/ 2];
-    calendarControllerGetX.updateMonth(displayDate.month);
+    customCalendarController.updateMonth(displayDate.month);
   }
 
   // 선택된 셀의 날짜 확인
@@ -78,13 +78,14 @@ class _CalendarCellCustomState extends State<CalendarCellCustom> {
         headerDateFormat: 'yyyy년 MM월',
         showDatePickerButton: true,
         // showNavigationArrow: true,
-        allowViewNavigation: true,
-        allowedViews: [
-          CalendarView.month,
-          CalendarView.timelineMonth,
-        ],
+        // allowViewNavigation: true,
+        // allowedViews: [
+        //   CalendarView.month,
+        //   // CalendarView.timelineMonth,
+        // ],
         monthViewSettings: MonthViewSettings(
-          // numberOfWeeksInView: 5
+          // 캘린더에 몇 주 표시할지
+          numberOfWeeksInView: 2
           // showTrailingAndLeadingDates: false
         ),
         timeSlotViewSettings: TimeSlotViewSettings(),
@@ -111,8 +112,8 @@ class _CalendarCellCustomState extends State<CalendarCellCustom> {
           return Obx(() {
             return CustomMonthCell(
               details: details,
-              currentMonth: calendarControllerGetX.currentMonth.value,
-              selectedDate: calendarControllerGetX.selectedDate.value,
+              currentMonth: customCalendarController.currentMonth.value,
+              selectedDate: customCalendarController.selectedDate.value,
             );
           });
         },
@@ -145,7 +146,7 @@ class CustomMonthCell extends StatelessWidget {
     return
       Column(children: [
         Container(
-          height: 80,
+          height: 70,
           // 셀 테두리 색상 설정
           decoration: BoxDecoration(
             border: Border.all(
@@ -157,7 +158,7 @@ class CustomMonthCell extends StatelessWidget {
           ),
           child: SizedBox(
             // 달력 셀 높이
-            //   height: 95,
+              height: 10,
               child: Column(
                 children: [
                   // 날짜 텍스트 위 여백
@@ -173,7 +174,7 @@ class CustomMonthCell extends StatelessWidget {
                   Container(
                     height: 30,
                     alignment: Alignment.center,
-                    // // 현재 달만 indicator 보이도록 함
+                    // 현재 달만 indicator 보이도록 함
                     child: isCurrentMonthCell
                         ? MyTodoIndicator(totalTodo: 10, doneTodo: 8)
                         : SizedBox(),

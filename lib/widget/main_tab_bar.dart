@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:schedule_with/ui/schedule/widget/calendar_cell_custom.dart';
 import 'package:schedule_with/ui/schedule/widget/long_appoint.dart';
 import 'package:schedule_with/ui/schedule/widget/schedule_add_bottom_sheet.dart';
 import 'package:schedule_with/ui/todo/view/todo_main_screen.dart';
