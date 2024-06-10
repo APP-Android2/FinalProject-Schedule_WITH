@@ -4,11 +4,19 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:schedule_with/assets/colors/color.dart';
+import 'package:schedule_with/domain/repository/user_repository.dart';
+import 'package:schedule_with/ui/login/view/login_main.dart';
+import 'package:schedule_with/ui/login/widget/mini_button.dart';
+import 'package:schedule_with/ui/login/widget/password_check_text_field.dart';
+import 'package:schedule_with/ui/login/widget/password_text_field.dart';
 import 'package:schedule_with/widget/main_bottom_navigation_bar.dart';
 import 'package:schedule_with/widget/main_button.dart';
 import 'package:schedule_with/widget/main_text_field.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../entity/user_tbl.dart';
 import '../../../main.dart';
 
 class LoginJoin extends StatefulWidget {
@@ -19,6 +27,7 @@ class LoginJoin extends StatefulWidget {
 }
 
 class _JoinScreenState extends State<LoginJoin> {
+  // textField controller 변수 설정
   var user_name_controller = TextEditingController();
   var user_id_controller = TextEditingController();
   var user_password_controller = TextEditingController();
@@ -26,10 +35,27 @@ class _JoinScreenState extends State<LoginJoin> {
   var user_email_controller = TextEditingController();
   var email_sign_number_controller = TextEditingController();
   var user_birth_controller = TextEditingController();
+  // 포커스 노드 변수 설정
+  FocusNode user_id_focus = FocusNode();
+  FocusNode user_name_focus = FocusNode();
+  FocusNode user_password_focus = FocusNode();
+  FocusNode user_password_check_focus = FocusNode();
+  FocusNode user_email_focus = FocusNode();
+  FocusNode email_sign_number_focus = FocusNode();
+  FocusNode user_birth_focus = FocusNode();
   // 성별 기본 세팅 리스트
   List<bool> isSelected = [true, false];
   // 약관 동의 체크 여부
   bool check = false;
+
+  // 성별 체크 상태 초기 설정 (남)
+  String gender = "남";
+
+  late Users user;
+
+  UserRepository userRepository = UserRepository();
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +99,9 @@ class _JoinScreenState extends State<LoginJoin> {
                     hintText: "이름을 입력해 주세요",
                     controller: user_name_controller,
                     textInputAction: TextInputAction.next,
+                    focusNode: user_name_focus,
+                    textInputType: TextInputType.text,
+                    obscureText: false,
                   ),
                   Padding(padding: EdgeInsets.only(top: 15)),
                   // 아이디 입력 및 중복 버튼
@@ -86,27 +115,119 @@ class _JoinScreenState extends State<LoginJoin> {
                           hintText: "아이디를 입력해 주세요.",
                           controller: user_id_controller,
                           textInputAction: TextInputAction.next,
+                          focusNode: user_id_focus,
+                          textInputType: TextInputType.text,
+                          obscureText: false,
                         ),
                       ),
                       Padding(padding: EdgeInsets.only(right: 10)),
-                      miniButton("중복확인", mainOrange),
+                      MiniButton(
+                          text: "중복확인",
+                          onPressed: () async {
+
+                            print("check : ${user_id_controller.text}");
+
+                            // 중복확인을 해준다.
+                            var check = await userRepository.doubleCheckId(user_id_controller.text);
+
+                            // 중복되지 않는다면..
+                            if(check){
+                              // 사용가능하다는 스낵바 노출
+                              Get.snackbar(
+                                duration: Duration(seconds: 2),
+                                // Title
+                                "",
+                                // Message
+                                "",
+                                // Title커스텀 Title이 있을 시 TitleText를 이용을 함
+                                titleText: SizedBox.shrink(),
+                                // Message커스텀 Message가 있을 시 MessageText를 이용함
+                                messageText: RichText(
+                                    textAlign: TextAlign.center,
+                                    text: TextSpan(
+                                        children:[
+                                          TextSpan(text: "사용가능한\n",style: TextStyle(color: Colors.white,fontSize: 16)),
+                                          TextSpan(text: " 아이디",style: TextStyle(color: mainOrange,fontSize: 16)),
+                                          TextSpan(text: "입니다.",style: TextStyle(color: Colors.white,fontSize: 16))
+                                        ]
+                                    )
+                                ),
+                                // 스낵바 위치
+                                snackPosition: SnackPosition.BOTTOM,
+                                // 스낵바를 중앙에 배치하기 위해 margin 설정
+                                margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 2),
+                                // 스낵바 너비 설정
+                                maxWidth: 300,
+                                // 스낵바 배경의 투명도를 설정
+                                backgroundColor: Colors.black.withOpacity(0.5),
+                                // 스낵바가 나타날 때 애니메이션
+                                forwardAnimationCurve: Curves.easeOutCirc,
+                                // 스낵바가 사라질 때 애니메이션
+                                reverseAnimationCurve: Curves.easeOutCirc,
+                              );
+                            }
+                            else{
+                              // 중복된다는 스낵바 노출
+                              Get.snackbar(
+                                duration: Duration(seconds: 2),
+                                // Title
+                                "",
+                                // Message
+                                "",
+                                // Title커스텀 Title이 있을 시 TitleText를 이용을 함
+                                titleText: SizedBox.shrink(),
+                                // Message커스텀 Message가 있을 시 MessageText를 이용함
+                                messageText: RichText(
+                                    textAlign: TextAlign.center,
+                                    text: TextSpan(
+                                        children:[
+                                          TextSpan(text: "중복된\n",style: TextStyle(color: Colors.white,fontSize: 16)),
+                                          TextSpan(text: " 아이디",style: TextStyle(color: mainOrange,fontSize: 16)),
+                                          TextSpan(text: "입니다.",style: TextStyle(color: Colors.white,fontSize: 16))
+                                        ]
+                                    )
+                                ),
+                                // 스낵바 위치
+                                snackPosition: SnackPosition.BOTTOM,
+                                // 스낵바를 중앙에 배치하기 위해 margin 설정
+                                margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 2),
+                                // 스낵바 너비 설정
+                                maxWidth: 300,
+                                // 스낵바 배경의 투명도를 설정
+                                backgroundColor: Colors.black.withOpacity(0.5),
+                                // 스낵바가 나타날 때 애니메이션
+                                forwardAnimationCurve: Curves.easeOutCirc,
+                                // 스낵바가 사라질 때 애니메이션
+                                reverseAnimationCurve: Curves.easeOutCirc,
+                              );
+                              // 다시 작성을 위해 필드를 비워준다.
+                              user_id_controller.text = "";
+                              // 아이디 필드에 포커스를 준다.
+                              FocusScope.of(context).requestFocus(user_id_focus);
+                            }
+                          },
+                          color: mainOrange
+                      )
                     ],
                   ),
                   Padding(padding: EdgeInsets.only(top: 15)),
                   // 비밀번호 입력
-                  MainTextField(
+                  PasswordTextField(
                     labelText: "비밀번호",
                     hintText: "8자이상, 영문 대/소문자, 숫자, 특수문자 2가지 이상 조합",
                     controller: user_password_controller,
                     textInputAction: TextInputAction.next,
+                    focusNode: user_password_focus,
                   ),
                   Padding(padding: EdgeInsets.only(top: 15)),
                   // 비밀번호 확인 입력
-                  MainTextField(
+                  PasswordCheckTextField(
                     labelText: "비밀번호 확인",
                     hintText: "8자이상, 영문 대/소문자, 숫자, 특수문자 2가지 이상 조합",
                     controller: user_password_check_controller,
                     textInputAction: TextInputAction.next,
+                    focusNode: user_password_check_focus,
+                    check_controller: user_password_controller,
                   ),
                   Padding(padding: EdgeInsets.only(top: 50)),
                   // 이메일 입력 및 코드발송 버튼
@@ -119,10 +240,19 @@ class _JoinScreenState extends State<LoginJoin> {
                           hintText: "이메일을 입력해 주세요.",
                           controller: user_email_controller,
                           textInputAction: TextInputAction.next,
+                          focusNode: user_email_focus,
+                          textInputType: TextInputType.emailAddress,
+                          obscureText: false,
                         ),
                       ),
                       Padding(padding: EdgeInsets.only(right: 10)),
-                      miniButton("코드 발송", mainOrange),
+                      MiniButton(
+                          text: "코드 발송",
+                          onPressed: () {
+
+                          },
+                          color: mainOrange
+                      )
                     ],
                   ),
                   Padding(padding: EdgeInsets.only(top: 15)),
@@ -132,6 +262,9 @@ class _JoinScreenState extends State<LoginJoin> {
                     hintText: "인증 코드를 입력해 주세요.",
                     controller: email_sign_number_controller,
                     textInputAction: TextInputAction.next,
+                    focusNode: email_sign_number_focus,
+                    textInputType: TextInputType.text,
+                    obscureText: false,
                   ),
                   Padding(padding: EdgeInsets.only(top: 15)),
                   // 생년월일 입력 및 성별 선택
@@ -147,6 +280,9 @@ class _JoinScreenState extends State<LoginJoin> {
                             hintText: "ex) 20000101",
                             controller: user_birth_controller,
                             textInputAction: TextInputAction.done,
+                            focusNode: user_birth_focus,
+                            textInputType: TextInputType.number,
+                            obscureText: false,
                           ),
                         ),
                         Padding(padding: EdgeInsets.only(right: 10)),
@@ -189,11 +325,15 @@ class _JoinScreenState extends State<LoginJoin> {
                                 onPressed: (index) {
                                   setState(() {
                                     if (index == 0) {
+                                      // 남자 클릭시
                                       isSelected[0] = true;
                                       isSelected[1] = false;
+                                      gender = "남";
                                     } else {
+                                      // 여자 클릭시
                                       isSelected[0] = false;
                                       isSelected[1] = true;
+                                      gender = "여";
                                     }
                                   });
                                 },
@@ -323,8 +463,374 @@ class _JoinScreenState extends State<LoginJoin> {
                   // 확인 버튼
                   MainButton(
                       text: "확인",
-                      onPressed: check ? () {
-                        Get.offAll(() => MainBottomNavigationBar());
+                      onPressed: check ? () async {
+
+                        // 아이디 중복확인을 해준다.
+                        var check1 = await userRepository.doubleCheckId(user_id_controller.text);
+
+                        // 이메일 중복확인을 해준다.
+                        var check2 = await userRepository.doubleCheckEmail(user_email_controller.text);
+
+                        // 이름 유효성 검사를 해준다.
+                        if(user_name_controller.text == ""){
+                          // 스낵바 노출
+                          Get.snackbar(
+                            duration: Duration(seconds: 2),
+                            // Title
+                            "",
+                            // Message
+                            "",
+                            // Title커스텀 Title이 있을 시 TitleText를 이용을 함
+                            titleText: SizedBox.shrink(),
+                            // Message커스텀 Message가 있을 시 MessageText를 이용함
+                            messageText: RichText(
+                                textAlign: TextAlign.center,
+                                text: TextSpan(
+                                    children:[
+                                      TextSpan(text: "이름",style: TextStyle(color: mainOrange,fontSize: 16)),
+                                      TextSpan(text: "을\n",style: TextStyle(color: Colors.white,fontSize: 16)),
+                                      TextSpan(text: "작성해 주세요.",style: TextStyle(color: Colors.white,fontSize: 16))
+                                    ]
+                                )
+                            ),
+                            // 스낵바 위치
+                            snackPosition: SnackPosition.BOTTOM,
+                            // 스낵바를 중앙에 배치하기 위해 margin 설정
+                            margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 2),
+                            // 스낵바 너비 설정
+                            maxWidth: 300,
+                            // 스낵바 배경의 투명도를 설정
+                            backgroundColor: Colors.black.withOpacity(0.5),
+                            // 스낵바가 나타날 때 애니메이션
+                            forwardAnimationCurve: Curves.easeOutCirc,
+                            // 스낵바가 사라질 때 애니메이션
+                            reverseAnimationCurve: Curves.easeOutCirc,
+                          );
+                        }
+                        else{
+                          // 아이디 유효성 검사를 해준다.
+                          if(user_id_controller.text == ""){
+                            // 스낵바 노출
+                            Get.snackbar(
+                              duration: Duration(seconds: 2),
+                              // Title
+                              "",
+                              // Message
+                              "",
+                              // Title커스텀 Title이 있을 시 TitleText를 이용을 함
+                              titleText: SizedBox.shrink(),
+                              // Message커스텀 Message가 있을 시 MessageText를 이용함
+                              messageText: RichText(
+                                  textAlign: TextAlign.center,
+                                  text: TextSpan(
+                                      children:[
+                                        TextSpan(text: " 아이디",style: TextStyle(color: mainOrange,fontSize: 16)),
+                                        TextSpan(text: "를\n",style: TextStyle(color: Colors.white,fontSize: 16)),
+                                        TextSpan(text: "작성해 주세요.",style: TextStyle(color: Colors.white,fontSize: 16))
+                                      ]
+                                  )
+                              ),
+                              // 스낵바 위치
+                              snackPosition: SnackPosition.BOTTOM,
+                              // 스낵바를 중앙에 배치하기 위해 margin 설정
+                              margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 2),
+                              // 스낵바 너비 설정
+                              maxWidth: 300,
+                              // 스낵바 배경의 투명도를 설정
+                              backgroundColor: Colors.black.withOpacity(0.5),
+                              // 스낵바가 나타날 때 애니메이션
+                              forwardAnimationCurve: Curves.easeOutCirc,
+                              // 스낵바가 사라질 때 애니메이션
+                              reverseAnimationCurve: Curves.easeOutCirc,
+                            );
+
+                          }
+                          // 아이디가 중복된다면
+                          else if(!check1){
+                            // 중복된다는 스낵바 노출
+                            Get.snackbar(
+                              duration: Duration(seconds: 2),
+                              // Title
+                              "",
+                              // Message
+                              "",
+                              // Title커스텀 Title이 있을 시 TitleText를 이용을 함
+                              titleText: SizedBox.shrink(),
+                              // Message커스텀 Message가 있을 시 MessageText를 이용함
+                              messageText: RichText(
+                                  textAlign: TextAlign.center,
+                                  text: TextSpan(
+                                      children:[
+                                        TextSpan(text: "중복된\n",style: TextStyle(color: Colors.white,fontSize: 16)),
+                                        TextSpan(text: " 아이디",style: TextStyle(color: mainOrange,fontSize: 16)),
+                                        TextSpan(text: "입니다.",style: TextStyle(color: Colors.white,fontSize: 16))
+                                      ]
+                                  )
+                              ),
+                              // 스낵바 위치
+                              snackPosition: SnackPosition.BOTTOM,
+                              // 스낵바를 중앙에 배치하기 위해 margin 설정
+                              margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 2),
+                              // 스낵바 너비 설정
+                              maxWidth: 300,
+                              // 스낵바 배경의 투명도를 설정
+                              backgroundColor: Colors.black.withOpacity(0.5),
+                              // 스낵바가 나타날 때 애니메이션
+                              forwardAnimationCurve: Curves.easeOutCirc,
+                              // 스낵바가 사라질 때 애니메이션
+                              reverseAnimationCurve: Curves.easeOutCirc,
+                            );
+                          }
+                          else{
+                            // 비밀번호 유효성 검사를 해준다.
+                            if(PasswordErrorSingleton().passwordError != null || user_password_controller.text == ""
+                                || CheckPasswordErrorSingleton().passwordError != null || user_password_check_controller.text == ""){
+                              // 스낵바 노출
+                              Get.snackbar(
+                                duration: Duration(seconds: 2),
+                                // Title
+                                "",
+                                // Message
+                                "",
+                                // Title커스텀 Title이 있을 시 TitleText를 이용을 함
+                                titleText: SizedBox.shrink(),
+                                // Message커스텀 Message가 있을 시 MessageText를 이용함
+                                messageText: RichText(
+                                    textAlign: TextAlign.center,
+                                    text: TextSpan(
+                                        children:[
+                                          TextSpan(text: " 비밀번호",style: TextStyle(color: mainOrange,fontSize: 16)),
+                                          TextSpan(text: "가\n",style: TextStyle(color: Colors.white,fontSize: 16)),
+                                          TextSpan(text: "맞지 않습니다.",style: TextStyle(color: Colors.white,fontSize: 16))
+                                        ]
+                                    )
+                                ),
+                                // 스낵바 위치
+                                snackPosition: SnackPosition.BOTTOM,
+                                // 스낵바를 중앙에 배치하기 위해 margin 설정
+                                margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 2),
+                                // 스낵바 너비 설정
+                                maxWidth: 300,
+                                // 스낵바 배경의 투명도를 설정
+                                backgroundColor: Colors.black.withOpacity(0.5),
+                                // 스낵바가 나타날 때 애니메이션
+                                forwardAnimationCurve: Curves.easeOutCirc,
+                                // 스낵바가 사라질 때 애니메이션
+                                reverseAnimationCurve: Curves.easeOutCirc,
+                              );
+                            }
+                            else{
+                              // 이메일로 받은 코드와 동일한지 인증코드 유효성 검사를 해준다.
+                              if(user_email_controller.text == ""){
+                                // 스낵바 노출
+                                Get.snackbar(
+                                  duration: Duration(seconds: 2),
+                                  // Title
+                                  "",
+                                  // Message
+                                  "",
+                                  // Title커스텀 Title이 있을 시 TitleText를 이용을 함
+                                  titleText: SizedBox.shrink(),
+                                  // Message커스텀 Message가 있을 시 MessageText를 이용함
+                                  messageText: RichText(
+                                      textAlign: TextAlign.center,
+                                      text: TextSpan(
+                                          children:[
+                                            TextSpan(text: " 이메일",style: TextStyle(color: mainOrange,fontSize: 16)),
+                                            TextSpan(text: "을\n",style: TextStyle(color: Colors.white,fontSize: 16)),
+                                            TextSpan(text: "작성해 주세요.",style: TextStyle(color: Colors.white,fontSize: 16))
+                                          ]
+                                      )
+                                  ),
+                                  // 스낵바 위치
+                                  snackPosition: SnackPosition.BOTTOM,
+                                  // 스낵바를 중앙에 배치하기 위해 margin 설정
+                                  margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 2),
+                                  // 스낵바 너비 설정
+                                  maxWidth: 300,
+                                  // 스낵바 배경의 투명도를 설정
+                                  backgroundColor: Colors.black.withOpacity(0.5),
+                                  // 스낵바가 나타날 때 애니메이션
+                                  forwardAnimationCurve: Curves.easeOutCirc,
+                                  // 스낵바가 사라질 때 애니메이션
+                                  reverseAnimationCurve: Curves.easeOutCirc,
+                                );
+                              }
+                              // 이메일이 중복된다면
+                              else if(!check2){
+                                // 중복된다는 스낵바 노출
+                                Get.snackbar(
+                                  duration: Duration(seconds: 2),
+                                  // Title
+                                  "",
+                                  // Message
+                                  "",
+                                  // Title커스텀 Title이 있을 시 TitleText를 이용을 함
+                                  titleText: SizedBox.shrink(),
+                                  // Message커스텀 Message가 있을 시 MessageText를 이용함
+                                  messageText: RichText(
+                                      textAlign: TextAlign.center,
+                                      text: TextSpan(
+                                          children:[
+                                            TextSpan(text: "중복된\n",style: TextStyle(color: Colors.white,fontSize: 16)),
+                                            TextSpan(text: " 이메일",style: TextStyle(color: mainOrange,fontSize: 16)),
+                                            TextSpan(text: "입니다.",style: TextStyle(color: Colors.white,fontSize: 16))
+                                          ]
+                                      )
+                                  ),
+                                  // 스낵바 위치
+                                  snackPosition: SnackPosition.BOTTOM,
+                                  // 스낵바를 중앙에 배치하기 위해 margin 설정
+                                  margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 2),
+                                  // 스낵바 너비 설정
+                                  maxWidth: 300,
+                                  // 스낵바 배경의 투명도를 설정
+                                  backgroundColor: Colors.black.withOpacity(0.5),
+                                  // 스낵바가 나타날 때 애니메이션
+                                  forwardAnimationCurve: Curves.easeOutCirc,
+                                  // 스낵바가 사라질 때 애니메이션
+                                  reverseAnimationCurve: Curves.easeOutCirc,
+                                );
+                              }
+                              else{
+                                // 생년월일 유효성 검사를 해준다.
+                                if(user_birth_controller.text == ""){
+                                  // 스낵바 노출
+                                  Get.snackbar(
+                                    duration: Duration(seconds: 2),
+                                    // Title
+                                    "",
+                                    // Message
+                                    "",
+                                    // Title커스텀 Title이 있을 시 TitleText를 이용을 함
+                                    titleText: SizedBox.shrink(),
+                                    // Message커스텀 Message가 있을 시 MessageText를 이용함
+                                    messageText: RichText(
+                                        textAlign: TextAlign.center,
+                                        text: TextSpan(
+                                            children:[
+                                              TextSpan(text: " 생년월일",style: TextStyle(color: mainOrange,fontSize: 16)),
+                                              TextSpan(text: "을\n",style: TextStyle(color: Colors.white,fontSize: 16)),
+                                              TextSpan(text: "작성해 주세요.",style: TextStyle(color: Colors.white,fontSize: 16))
+                                            ]
+                                        )
+                                    ),
+                                    // 스낵바 위치
+                                    snackPosition: SnackPosition.BOTTOM,
+                                    // 스낵바를 중앙에 배치하기 위해 margin 설정
+                                    margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 2),
+                                    // 스낵바 너비 설정
+                                    maxWidth: 300,
+                                    // 스낵바 배경의 투명도를 설정
+                                    backgroundColor: Colors.black.withOpacity(0.5),
+                                    // 스낵바가 나타날 때 애니메이션
+                                    forwardAnimationCurve: Curves.easeOutCirc,
+                                    // 스낵바가 사라질 때 애니메이션
+                                    reverseAnimationCurve: Curves.easeOutCirc,
+                                  );
+                                }
+                                else if(user_birth_controller.text.length != 8){
+                                  // 스낵바 노출
+                                  Get.snackbar(
+                                    duration: Duration(seconds: 2),
+                                    // Title
+                                    "",
+                                    // Message
+                                    "",
+                                    // Title커스텀 Title이 있을 시 TitleText를 이용을 함
+                                    titleText: SizedBox.shrink(),
+                                    // Message커스텀 Message가 있을 시 MessageText를 이용함
+                                    messageText: RichText(
+                                        textAlign: TextAlign.center,
+                                        text: TextSpan(
+                                            children:[
+                                              TextSpan(text: " 생년월일",style: TextStyle(color: mainOrange,fontSize: 16)),
+                                              TextSpan(text: "을\n",style: TextStyle(color: Colors.white,fontSize: 16)),
+                                              TextSpan(text: "올바르게 작성해 주세요.",style: TextStyle(color: Colors.white,fontSize: 16))
+                                            ]
+                                        )
+                                    ),
+                                    // 스낵바 위치
+                                    snackPosition: SnackPosition.BOTTOM,
+                                    // 스낵바를 중앙에 배치하기 위해 margin 설정
+                                    margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 2),
+                                    // 스낵바 너비 설정
+                                    maxWidth: 300,
+                                    // 스낵바 배경의 투명도를 설정
+                                    backgroundColor: Colors.black.withOpacity(0.5),
+                                    // 스낵바가 나타날 때 애니메이션
+                                    forwardAnimationCurve: Curves.easeOutCirc,
+                                    // 스낵바가 사라질 때 애니메이션
+                                    reverseAnimationCurve: Curves.easeOutCirc,
+                                  );
+                                }
+                                else{
+                                  // 회원가입 되었다는 스낵바 노출
+                                  Get.snackbar(
+                                    duration: Duration(seconds: 2),
+                                    // Title
+                                    "",
+                                    // Message
+                                    "",
+                                    // Title커스텀 Title이 있을 시 TitleText를 이용을 함
+                                    titleText: SizedBox.shrink(),
+                                    // Message커스텀 Message가 있을 시 MessageText를 이용함
+                                    messageText: RichText(
+                                        textAlign: TextAlign.center,
+                                        text: TextSpan(
+                                            children:[
+                                              TextSpan(text: "회원가입이\n",style: TextStyle(color: Colors.white,fontSize: 16)),
+                                              TextSpan(text: " 완료",style: TextStyle(color: mainOrange,fontSize: 16)),
+                                              TextSpan(text: "되셨습니다.",style: TextStyle(color: Colors.white,fontSize: 16))
+                                            ]
+                                        )
+                                    ),
+                                    // 스낵바 위치
+                                    snackPosition: SnackPosition.BOTTOM,
+                                    // 스낵바를 중앙에 배치하기 위해 margin 설정
+                                    margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 2),
+                                    // 스낵바 너비 설정
+                                    maxWidth: 300,
+                                    // 스낵바 배경의 투명도를 설정
+                                    backgroundColor: Colors.black.withOpacity(0.5),
+                                    // 스낵바가 나타날 때 애니메이션
+                                    forwardAnimationCurve: Curves.easeOutCirc,
+                                    // 스낵바가 사라질 때 애니메이션
+                                    reverseAnimationCurve: Curves.easeOutCirc,
+                                  );
+
+                                  // 로컬파일에 저장한 user_idx와 비회원id를 가져온다.
+                                  final SharedPreferences prefs = await SharedPreferences.getInstance();
+                                  int? idx = prefs.getInt('idx');
+                                  String? server_id = prefs.getString('server_id');
+
+                                  // 회원가입 정보를 가져온다.
+                                  user = Users(
+                                      idx: idx!,
+                                      name: user_name_controller.text,
+                                      login_fail_cnt: 0,
+                                      server_id: server_id!,
+                                      profile_img: null,
+                                      back_img: null,
+                                      id: user_id_controller.text,
+                                      pw: user_password_controller.text,
+                                      email: user_email_controller.text,
+                                      birth: user_birth_controller.text,
+                                      gender: gender,
+                                      status: "Y",
+                                      reg_dt: DateTime.now(),
+                                      mod_dt: DateTime.now()
+                                  );
+
+                                  // 유저 정보를 업데이트한다.
+                                  await userRepository.updateUserInfo(user, idx);
+
+                                  Get.offAll(() => LoginMain());
+                                }
+                              }
+                            }
+                          }
+                        }
                       } : null,
                       color: mainOrange
                   ),
@@ -334,37 +840,7 @@ class _JoinScreenState extends State<LoginJoin> {
             ),
           )
         ],
-
       ),
     );
   }
-}
-// 중복확인 및 코드 발송 버튼 위젯
-Widget miniButton(String text, Color color){
-  return SizedBox(
-    height: 45,
-    width: 100,
-    child: TextButton(
-      onPressed: () {
-
-      },
-      child: Text(
-        text,
-        style: TextStyle(
-            color: Colors.white,
-            fontSize: 14,
-            fontWeight: FontWeight.bold
-        ), // 텍스트 색상
-      ),
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(color), // 배경색 설정
-        padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 10)), // 패딩 설정
-        shape: MaterialStateProperty.all(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-          ),
-        ),
-      ),
-    ),
-  );
 }

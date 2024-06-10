@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:schedule_with/assets/colors/color.dart';
 import 'package:schedule_with/ui/login/view/login_main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MainAlert extends StatefulWidget {
   final msg;
@@ -20,6 +21,7 @@ class MainAlert extends StatefulWidget {
 }
 
 class _MainAlertState extends State<MainAlert> {
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -58,10 +60,16 @@ class _MainAlertState extends State<MainAlert> {
                 color: mainBrown
             ),
             child: MaterialButton(
-              onPressed: () {
+              onPressed: () async {
                 print('WarningYesNo >> false');
-                if(widget.msg == "로그아웃 하시겠습니까?")
+                if(widget.msg == "로그아웃 하시겠습니까?") {
+                  final SharedPreferences prefs = await SharedPreferences.getInstance();
+                  prefs.remove('server_id');
+                  prefs.remove('idx');
+                  prefs.remove('status');
+                  prefs.remove('id');
                   Get.offAll(LoginMain());
+                }
                 Get.back(result: false);
               },
               child: Text(widget.YesMsg,
