@@ -6,7 +6,7 @@ import 'package:schedule_with/ui/schedule/widget/schedule_edit_bottom_sheet.dart
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 // GetX 컨트롤러
-class CalendarController extends GetxController {
+class CustomCalendarController extends GetxController {
   var currentMonth = DateTime.now().month.obs;
   var selectedDate = DateTime.now().obs;
 
@@ -27,15 +27,15 @@ class CalendarCellCustom extends StatefulWidget {
 }
 
 class _CalendarCellCustomState extends State<CalendarCellCustom> {
-  // GetX Controller 초기화
-  final CalendarController calendarControllerGetX =
-  Get.put(CalendarController());
+
+  final CustomCalendarController customCalendarController = Get.find<CustomCalendarController>();
+
 
   // 현재 표시되는 날짜 (보이는 날짜의 중간)
   void _onViewChanged(ViewChangedDetails details) {
     DateTime displayDate =
     details.visibleDates[details.visibleDates.length ~/ 2];
-    calendarControllerGetX.updateMonth(displayDate.month);
+    customCalendarController.updateMonth(displayDate.month);
   }
 
   // 선택된 셀의 날짜 확인
@@ -112,8 +112,8 @@ class _CalendarCellCustomState extends State<CalendarCellCustom> {
           return Obx(() {
             return CustomMonthCell(
               details: details,
-              currentMonth: calendarControllerGetX.currentMonth.value,
-              selectedDate: calendarControllerGetX.selectedDate.value,
+              currentMonth: customCalendarController.currentMonth.value,
+              selectedDate: customCalendarController.selectedDate.value,
             );
           });
         },

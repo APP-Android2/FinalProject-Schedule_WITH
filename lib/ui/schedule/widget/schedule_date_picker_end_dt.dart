@@ -83,7 +83,7 @@ class _ScheduleDatePickerEndDt extends State<ScheduleDatePickerEndDt> {
                   ),
                 ),
                 child: CupertinoDatePicker(
-                  initialDateTime: DateTime.now(),
+                  initialDateTime: scheduleController.selectedEndDt.value,
                   maximumYear: 2300,
                   minimumYear: 2000,
                   mode: CupertinoDatePickerMode.date,

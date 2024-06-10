@@ -32,7 +32,7 @@ class ScheduleColorPalette extends StatelessWidget {
                 SizedBox(width: 12, height: 12),
                 ScheduleColorPaletteDetail(colorName: neonGreen),
                 SizedBox(width: 12, height: 12),
-                ScheduleColorPaletteDetail(colorName: lightBlue),
+                ScheduleColorPaletteDetail(colorName: customBlue),
                 SizedBox(width: 12, height: 12),
                 ScheduleColorPaletteDetail(colorName: navyBlue),
                 SizedBox(width: 12, height: 12)
@@ -45,7 +45,7 @@ class ScheduleColorPalette extends StatelessWidget {
                 SizedBox(width: 12, height: 12),
                 ScheduleColorPaletteDetail(colorName: lightPurple),
                 SizedBox(width: 12, height: 12),
-                ScheduleColorPaletteDetail(colorName: lightPink),
+                ScheduleColorPaletteDetail(colorName: customPink),
                 SizedBox(width: 12, height: 12),
                 ScheduleColorPaletteDetail(colorName: lightGrey),
                 SizedBox(width: 12, height: 12)

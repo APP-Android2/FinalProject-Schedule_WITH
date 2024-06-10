@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:schedule_with/assets/colors/color.dart';
 import 'package:schedule_with/ui/schedule/controller/schedule_controller.dart';
-import 'package:schedule_with/ui/schedule/widget/schedule_color_user_selected.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class BottomSheetDetailStartDate extends StatelessWidget {
-  final ScheduleController scheduleController = Get.find<ScheduleController>();
+  final ScheduleController _scheduleController = Get.find<ScheduleController>();
   final DateFormat formatter = DateFormat('yyyy-MM-dd');
 
   final String titleText;
@@ -49,7 +48,7 @@ class BottomSheetDetailStartDate extends StatelessWidget {
                     // 스케줄 추가 바텀시트 UI에 나타나는 값
                     // controller 값 변경시 UI 업데이트 되는 부분
                     Obx(() => Text(
-                        '${formatter.format(scheduleController.selectedStartDt.value)}',
+                        '${formatter.format(_scheduleController.selectedStartDt.value)}',
                         style: TextStyle(fontSize: 16, color: detailTextColor)))
                   ])),
         ),

@@ -5,6 +5,8 @@ import 'package:schedule_with/assets/colors/color.dart';
 import 'package:schedule_with/data/data_source/schedule_data_source.dart';
 import 'package:schedule_with/domain/use_case/schedule_usecase.dart';
 import 'package:schedule_with/entity/schedule_tbl.dart';
+import 'package:schedule_with/ui/schedule/widget/calendar_cell_custom.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class ScheduleController extends GetxController {
 
@@ -102,15 +104,16 @@ class ScheduleController extends GetxController {
     titleEditingController.clear();
     contentEditingController.clear();
     public.value = '전체 공개';
-    color.value = apricot;
+    color.value = lightPink;
     isAlarm.value = false;
   }
 
-
+  // 캘린더에서 날짜 선택 시 해당 날짜로 시작 날짜 업데이트
   void updateStartDt(DateTime newDate){
     selectedStartDt.value = newDate;
   }
 
+  // 캘린더에서 날짜 선택 시 해당 날짜로 마침 날짜 업데이트
   void updateEndDt(DateTime newDate){
     selectedEndDt.value = newDate;
   }

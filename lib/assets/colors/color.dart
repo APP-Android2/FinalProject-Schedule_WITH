@@ -22,10 +22,10 @@ const Color lightPink = Color(0xFFFF9E9E);
 const Color apricot = Color(0xFFFFD39E);
 const Color lemon = Color(0xFFFFFB94);
 const Color neonGreen = Color(0xFFA5FB97);
-const Color lightBlue = Color(0xFF9EDCFF);
+const Color customBlue = Color(0xFF9EDCFF);
 const Color navyBlue = Color(0xFF84A6FF);
 const Color lightPurple = Color(0xFFC99EFF);
-const Color pink = Color(0xFFFFB6DD);
+const Color customPink = Color(0xFFFFB6DD);
 const Color lightGrey = Color(0xFFC2C2C2);
 
 // 색상 이름을 문자열로 매핑
@@ -34,9 +34,9 @@ final Map<String, Color> colorMap = {
   'apricot': apricot,
   'lemon': lemon,
   'neonGreen': neonGreen,
-  'lightBlue': lightBlue,
+  'customBlue': customBlue,
   'navyBlue': navyBlue,
   'lightPurple': lightPurple,
-  'pink': pink,
+  'customPink': customPink,
   'lightGrey': lightGrey,
 };
