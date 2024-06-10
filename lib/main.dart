@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
@@ -7,7 +6,6 @@ import 'package:schedule_with/ui/group/view/group_freind_add.dart';
 import 'package:schedule_with/ui/group/view/group_invite.dart';
 import 'package:schedule_with/ui/group/view/group_menu.dart';
 import 'package:schedule_with/ui/group/view/group_search_friend.dart';
-import 'package:schedule_with/ui/home/view/home_main.dart';
 import 'package:schedule_with/ui/login/view/login_find_fail_id.dart';
 import 'package:schedule_with/ui/login/view/login_find_id_password.dart';
 import 'package:schedule_with/ui/login/view/login_find_success_id.dart';
@@ -28,7 +26,6 @@ import 'package:schedule_with/ui/notification/view/notification_request_detail.d
 import 'package:schedule_with/widget/main_bottom_navigation_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'dependencies.dart';
-import 'firebase_options.dart';
 
 
 Future<void> main() async {

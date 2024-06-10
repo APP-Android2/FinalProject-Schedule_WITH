@@ -106,11 +106,12 @@ class Schedule {
   // doc = Firestore 에서 불러온 맵 형식 데이터
   // [Firestore에서 불러온 맵 형식 데이터] -> [Schedule 객체] 형식으로 변환합니다.
   factory Schedule.fromDocument(String id, Map<String, dynamic> doc) {
+    print('엔티티의 FromDocument 메서드');
     return Schedule(
-      id: 'RGM6jPniQI1bwW4tqS6I', // schedule 컬렉션의 Firestore 문서 ID
+      id: id, // schedule 컬렉션의 Firestore 문서 ID
       idx: doc['idx'],
       color: colorFromString(doc['color']),
-      title: doc['title'],
+      title: doc['title'] ?? '',
       startDt: (doc['start_dt'] as Timestamp).toDate(),
       endDt: (doc['end_dt'] as Timestamp).toDate(),
       startTime: (doc['start_time'] as Timestamp).toDate(),

@@ -19,6 +19,7 @@ class ScheduleRepository {
   // 문서 읽어 오기
   // 컬렉션에 있는 모든 문서의 리스트를 가져옴
   Stream<List<Schedule>> getAllSchedules() {
+    print('레포지토리');
     // snapshots() : QuerySnapshot 스트림 반환.
     // 이 스트림은 컬렉션의 현재 상태와 이후 모든 변경 사항을 포함한다.
     // map((snapshot) => ...) : 스트림의 각 QuerySnapshot을 처리하여 원하는 형태로 변환.
@@ -30,6 +31,7 @@ class ScheduleRepository {
         return Schedule.fromDocument(doc.id, doc.data());
         // toList() : 변환된 Schedule 객체들을 리스트로 묶어 반환
       }).toList();
+
     });
   }
 

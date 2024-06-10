@@ -33,6 +33,7 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
     super.initState();
     _scheduleController.onInit();
     _scheduleController.fetchSchedules();
+    print('캘린더 초기화');
   }
 
   // 선택된 셀의 날짜 확인
@@ -95,7 +96,6 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
                 child: SfCalendar(
                   // dataSource가 변경될 때 캘린더를 자동으로 업데이트
                   dataSource: _scheduleController.dataSource,
-                  // 캘린더에 나타낼 데이터
                   // 최초 표시형식 (월)
                   view: currentView,
                   initialSelectedDate: _jumpToTime,
@@ -166,7 +166,7 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
   }
 }
 
-// 약속 3개 이상 더보기 아이콘
+// 시계 아이콘 넣어지나?
 Widget buildAppointmentWidget(
     BuildContext context, CalendarAppointmentDetails details) {
   if (details.isMoreAppointmentRegion) {
@@ -175,7 +175,7 @@ Widget buildAppointmentWidget(
       height: details.bounds.height,
       child: Center(
         child: Icon(
-          Icons.more_horiz, // 원하는 아이콘으로 변경
+          Icons.more_horiz, // 더보기 아이콘
           size: 16, // 아이콘 크기 조정
           color: mainBrown, // 아이콘 색상 조정
         ),
@@ -184,16 +184,63 @@ Widget buildAppointmentWidget(
   } else {
     final Appointment appointment = details.appointments.first;
     return Container(
+      width: details.bounds.width,
+      height: details.bounds.height,
       decoration: BoxDecoration(
         color: appointment.color,
         // borderRadius: BorderRadius.circular(5),
       ),
-      child: Center(
-        child: Text(
-          appointment.subject,
-          style: TextStyle(color: Colors.white, fontSize: 10),
-        ),
-      ),
+        child: Stack(
+            children: [
+              Positioned(
+                top: 1,
+                left: 1,
+                  child: Icon(Icons.access_alarm,size: 12,
+                  color: mainBrown)),
+              Positioned(
+                top: 1,
+                left: 15,
+                  // 스케줄 텍스트 색상
+                  child: Text(
+                      appointment.subject,
+                      style: TextStyle(color: mainBrown, fontSize: 10),
+                      overflow: TextOverflow.fade))]
+        )
     );
   }
 }
+
+
+//
+// // 약속 3개 이상 더보기 아이콘
+// Widget buildAppointmentWidget(
+//     BuildContext context, CalendarAppointmentDetails details) {
+//   if (details.isMoreAppointmentRegion) {
+//     return Container(
+//       width: details.bounds.width,
+//       height: details.bounds.height,
+//       child: Center(
+//         child: Icon(
+//           Icons.more_horiz, // 원하는 아이콘으로 변경
+//           size: 16, // 아이콘 크기 조정
+//           color: mainBrown, // 아이콘 색상 조정
+//         ),
+//       ),
+//     );
+//   } else {
+//     final Appointment appointment = details.appointments.first;
+//     return Container(
+//       decoration: BoxDecoration(
+//         color: appointment.color,
+//         // borderRadius: BorderRadius.circular(5),
+//       ),
+//       child: Center(
+//         child: Text(
+//           appointment.subject,
+//           // 스케줄 텍스트 색상
+//           style: TextStyle(color: Colors.black, fontSize: 10),
+//         ),
+//       ),
+//     );
+//   }
+// }

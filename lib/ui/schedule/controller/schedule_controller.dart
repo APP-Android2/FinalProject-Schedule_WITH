@@ -45,7 +45,7 @@ class ScheduleController extends GetxController {
 
   // Schedule 객체의 리스트를 저장하는 변수
   // obs = 데이터가 변경 될 때 이를 자동으로 감지하여 UI 업데이트
-  var schedules = <Schedule>[];
+  var schedules = <Schedule>[].obs;
 
   // 데이터를 로드하는 동안 true
   var isLoading = true.obs;
@@ -128,15 +128,31 @@ class ScheduleController extends GetxController {
 
   // 서버에서 데이터를 가져와 로컬 상태를 갱신함
   void fetchSchedules() async {
+    print(isLoading.value);
     isLoading.value = true;
     scheduleUseCase.readSchedules().listen((scheduleList) {
-      schedules = scheduleList;
+      schedules.value = scheduleList; // RxList 업데이트
       isLoading.value = false;
+      print('Schedules updated: ${schedules.length}');
     }, onError: (error) {
       // 오류 처리
       isLoading.value = false;
+      print('Error fetching schedules: $error');
     });
   }
+
+  // // 서버에서 데이터를 가져와 로컬 상태를 갱신함
+  // void fetchSchedules() async {
+  //   print(isLoading.value);
+  //   isLoading.value = true;
+  //   scheduleUseCase.readSchedules().listen((scheduleList) {
+  //     schedules = scheduleList;
+  //     isLoading.value = false;
+  //   }, onError: (error) {
+  //     // 오류 처리
+  //     isLoading.value = false;
+  //   });
+  // }
 
 
   // 데이터가 갱신될 때만 업데이트

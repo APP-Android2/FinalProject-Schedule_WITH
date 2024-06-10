@@ -33,6 +33,7 @@ class ScheduleUseCase {
   // repository의 readSchedules 메서드를 호출하여 Firestore의 일정 데이터를 스트림 형태로 반환 합니다.
   // 반환 타입은 Stream<List<Schedule>>으로, 일정 목록의 스트림을 반환 합니다.
   Stream<List<Schedule>> readSchedules() {
+    print('유스케이스의 readSchedule 메서드');
     return repository.getAllSchedules();
   }
 
@@ -56,8 +57,6 @@ class ScheduleUseCase {
         endTime: schedule.endDt,
         subject: schedule.title,
         color: schedule.color
-
-      // 각 색깔 적용 되도록 수정 필요
     );
   }
 
