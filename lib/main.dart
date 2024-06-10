@@ -26,10 +26,11 @@ import 'package:schedule_with/ui/notification/view/notification_request_detail.d
 import 'package:schedule_with/widget/main_bottom_navigation_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'dependencies.dart';
+import 'domain/repository/user_repository.dart';
+import 'firebase_options.dart';
 
 
 Future<void> main() async {
-
   // 파이어 베이스 사용시 화면이 안나오는 문제 해결
   WidgetsFlutterBinding.ensureInitialized();
   // Firestore 초기 설정
@@ -39,16 +40,24 @@ Future<void> main() async {
   setupDependencies();
 
   runApp(ScheduleWith());
+  UserRepository userRepository = UserRepository();
+  // 앱 실행전 로컬파일에 유저의 server_id가 존재하지 않는다면, 새로운 유저이므로, 새로운 idx값과 새로운 server_id를 부여한다.
+  var check = await userRepository.isNewUser();
+
+  runApp(ScheduleWith(check: check,));
 }
 
 class ScheduleWith extends StatefulWidget {
-  const ScheduleWith({super.key});
+  final bool check;
+
+  const ScheduleWith({super.key, required this.check});
 
   @override
   State<ScheduleWith> createState() => _ScheduleWithState();
 }
 
 class _ScheduleWithState extends State<ScheduleWith> {
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -87,7 +96,7 @@ class _ScheduleWithState extends State<ScheduleWith> {
 
       ),
 
-      home: MainBottomNavigationBar(),
+      home: widget.check ? MainBottomNavigationBar() : LoginMain(),
 
       // Name을 지정하여 페이지 이동
       getPages: [

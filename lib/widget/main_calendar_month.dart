@@ -167,6 +167,62 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
                     timeFormat: 'a h:mm',
                   ),
                 ),
+        // Container(
+        //   width: double.infinity,
+        //   height: 40,
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     children: [
+        // 커스텀 date picker
+        //       YearDatePickerButton(),
+        //       // CalendarChangeViewButton(),
+        //     ],
+        //   ),
+        // ),
+        SizedBox(
+          // 캘린더가 차지할 높이
+          height: MediaQuery.of(context).size.height * 0.65,
+          child: SfCalendar(
+          // 최초 표시형식 (월)
+            view: currentView,
+            initialDisplayDate: _jumpToTime,
+            controller: _calendarController,
+            onTap: _onCalendarTap,
+
+            // 임시 데이터 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 나중에 삭제 해야됨
+            // 변경 가능한 표시형식 (월, 주)
+            allowedViews: const [
+              CalendarView.month,
+              CalendarView.week,
+              CalendarView.schedule
+            ],
+            // 배경색
+            backgroundColor: Colors.white,
+            // 오늘 날짜 강조색
+            todayHighlightColor: mainOrange,
+            todayTextStyle: TextStyle(color: Colors.white),
+            // 연월 고르는 버튼 활성화
+            showDatePickerButton: true,
+            // 오늘 날짜로 돌아가는 버튼
+            showTodayButton: true,
+            cellBorderColor: grey3,
+            // 달력 헤더 스타일 설정
+            headerDateFormat: 'yyyy년 MM월',
+            headerHeight: 50,
+            headerStyle: const CalendarHeaderStyle(
+              backgroundColor: Colors.white,
+              textStyle: TextStyle(
+                fontSize: 14,
+                // fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+            // 특정 날짜 선택시 셀 스타일 설정
+            selectionDecoration: BoxDecoration(
+              color: Colors.transparent,
+              border: Border.all(
+                color: isCurrentMonth ? mainOrange : Colors.transparent,
+                width: 2,
               ),
             );
           },

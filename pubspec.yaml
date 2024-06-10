@@ -59,6 +59,8 @@ dependencies:
   firebase_storage: ^12.0.0
   shared_preferences: ^2.1.0
   syncfusion_flutter_core: ^25.2.7
+  shared_preferences: ^2.2.3
+  english_words: ^4.0.0
 
 
 
