@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:schedule_with/ui/todo/widget/todo_item_data.dart';
 import '../../../assets/colors/color.dart';
-import 'todo_controller.dart';
-import '../view/todo_main_screen.dart';
 
 class TodoSharePage extends StatelessWidget {
   final List<TodoItemData> todosForSelectedDate;

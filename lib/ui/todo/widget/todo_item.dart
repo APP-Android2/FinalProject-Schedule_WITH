@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'todo_controller.dart';
+import 'package:schedule_with/ui/todo/widget/todo_item_data.dart';
 
 class TodoItem extends StatelessWidget {
   final TodoItemData todoItemData;

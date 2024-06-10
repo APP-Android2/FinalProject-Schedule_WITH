@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schedule_with/assets/colors/color.dart';
-import 'todo_controller.dart';
+import 'package:schedule_with/ui/todo/widget/todo_item_data.dart';
 import 'todo_share_with_list.dart';
 import 'todo_share_without_list.dart';
-import '../view/todo_main_screen.dart';
 
 class SelectShareOption extends StatelessWidget {
   final List<TodoItemData> todosForSelectedDate;

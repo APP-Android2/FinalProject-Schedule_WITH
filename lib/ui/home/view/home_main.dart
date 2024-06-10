@@ -8,6 +8,13 @@ import 'package:schedule_with/ui/home/widget/icon_and_text.dart';
 import 'package:schedule_with/widget/main_app_bar.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+import '../../../domain/repository/memo_repository.dart';
+import '../../../domain/repository/schedule_repository.dart';
+import '../../../domain/use_case/memo_use_case.dart';
+import '../../../domain/use_case/schedule_use_case.dart';
+import '../../../entity/schedule_tbl.dart';
+import '../controller/home_memo_controller.dart';
+import '../controller/home_schedule_controller.dart';
 
 class HomeMain extends StatefulWidget {
   const HomeMain({super.key});
@@ -17,7 +24,6 @@ class HomeMain extends StatefulWidget {
 }
 
 class _HomeMainState extends State<HomeMain> {
-
   var adImages = [
     Image.asset("lib/assets/image/logo.png"),
     Image.asset("lib/assets/image/logo.png"),
@@ -29,6 +35,18 @@ class _HomeMainState extends State<HomeMain> {
   var imagePosition = 0;
 
   @override
+  void initState() {
+    super.initState();
+    final scheduleRepository = ScheduleRepository();
+    final scheduleUseCase = ScheduleUseCase(scheduleRepository);
+    Get.put(HomeScheduleController(scheduleUseCase: scheduleUseCase));
+
+    final memoRepository = MemoRepository();
+    final memoUseCase = MemoUseCase(memoRepository);
+    Get.put(HomeMemoController(memoUseCase: memoUseCase));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       localizationsDelegates: [
@@ -36,43 +54,36 @@ class _HomeMainState extends State<HomeMain> {
         GlobalWidgetsLocalizations.delegate
       ],
       supportedLocales: [
-        const Locale("ko","KO")
+        const Locale("ko", "KO")
       ],
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        // 화면 배경색 설정
         backgroundColor: Colors.white,
-        // 상단 툴바
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(50),
           child: MainAppBar(),
         ),
-        // 홈화면에 보여줄 부분
         body: SingleChildScrollView(
           child: Column(
             children: [
               // 그룹
               Container(
-                // 그룹View의 여백 설정
                 margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                // 그룹View의 그림자 및 radius 설정
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.7),
-                        spreadRadius: 0,
-                        blurRadius: 8.0,
-                        offset: Offset(0, 5), // changes position of shadow
-                      )
-                    ]
+                  borderRadius: BorderRadius.circular(15),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.7),
+                      spreadRadius: 0,
+                      blurRadius: 8.0,
+                      offset: Offset(0, 5),
+                    )
+                  ],
                 ),
-                // 그룹 내용
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 아이콘 및 "그룹" 텍스트 출력
                     Container(
                       child: IconAndText(
                         iconRoute: 'lib/assets/icon/icon_group_outline.svg',
@@ -82,14 +93,11 @@ class _HomeMainState extends State<HomeMain> {
                       color: Colors.transparent,
                       padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
                     ),
-                    // 그룹 초대 및 그룹들 리스트
                     Container(
-                      height: 100, // 원하는 높이 설정
+                      height: 100,
                       padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
                       child: ListView.builder(
-                        // 가로 스크롤
                         scrollDirection: Axis.horizontal,
-                        // 보여질 항목의 개수
                         itemCount: 1,
                         itemBuilder: (context, index) {
                           return GroupListItem();
@@ -103,16 +111,16 @@ class _HomeMainState extends State<HomeMain> {
               Container(
                 margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.7),
-                        spreadRadius: 0,
-                        blurRadius: 8.0,
-                        offset: Offset(0, 5), // changes position of shadow
-                      )
-                    ]
+                  borderRadius: BorderRadius.circular(15),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.7),
+                      spreadRadius: 0,
+                      blurRadius: 8.0,
+                      offset: Offset(0, 5),
+                    )
+                  ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,29 +134,38 @@ class _HomeMainState extends State<HomeMain> {
                       padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
                     ),
                     Container(
-                        margin: EdgeInsets.fromLTRB(15, 0, 15, 15),
-                        child: Row(
+                      margin: EdgeInsets.fromLTRB(15, 0, 15, 15),
+                      child: Obx(() {
+                        final memoController = Get.find<HomeMemoController>();
+                        if (memoController.memos.isEmpty) {
+                          return Text(
+                            "등록된 메모가 없습니다.",
+                            style: TextStyle(color: grey3),
+                          );
+                        }
+                        final memo = memoController.memos.first;
+                        return Row(
                           children: [
                             Expanded(
-                                flex: 3,
-                                child: Container(
-                                  margin: EdgeInsets.only(right: 10),
-                                  child: Text(
-                                    "메모내용입니다.메모내용입니다.메모내용입니다.메모내용입니다.메모내용입니다.메모내용입니다.메모내용입니다.메모내용입니다.메모내용입니다.메모내용입니다.메모내용입니다.메모내용입니다.메모내용입니다.메모내용입니다.메모내용입니다.메모내용입니다.메모내용입니다.메모내용입니다.메모내용입니다.",
-                                    maxLines: 4,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontSize: 12
-                                    ),
-                                  ),
-                                )
+                              flex: 3,
+                              child: Container(
+                                margin: EdgeInsets.only(right: 10),
+                                child: Text(
+                                  memo.content,
+                                  maxLines: 4,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ),
                             ),
-                            Expanded(
-                              flex: 1,
-                              child: Image.asset("lib/assets/image/logo.png"),
-                            )
+                            if (memo.title.isNotEmpty) // 이미지가 있다면 이미지 표시
+                              Expanded(
+                                flex: 1,
+                                child: Image.network(memo.title), // title 필드를 이미지 URL로 사용
+                              ),
                           ],
-                        )
+                        );
+                      }),
                     ),
                   ],
                 ),
@@ -157,16 +174,16 @@ class _HomeMainState extends State<HomeMain> {
               Container(
                 margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.7),
-                        spreadRadius: 0,
-                        blurRadius: 8.0,
-                        offset: Offset(0, 5), // changes position of shadow
-                      )
-                    ]
+                  borderRadius: BorderRadius.circular(15),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.7),
+                      spreadRadius: 0,
+                      blurRadius: 8.0,
+                      offset: Offset(0, 5),
+                    )
+                  ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,7 +201,7 @@ class _HomeMainState extends State<HomeMain> {
                             "lib/assets/icon/icon_plus2.svg",
                             width: 17,
                             height: 17,
-                          )
+                          ),
                         ],
                       ),
                       color: Colors.transparent,
@@ -194,13 +211,11 @@ class _HomeMainState extends State<HomeMain> {
                       padding: EdgeInsets.fromLTRB(10, 10, 10, 20),
                       child: Center(
                         child: Text(
-                            "등록된 TODO 리스트가 없습니다.",
-                          style: TextStyle(
-                            color: grey3,
-                          ),
+                          "등록된 TODO 리스트가 없습니다.",
+                          style: TextStyle(color: grey3),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -208,101 +223,127 @@ class _HomeMainState extends State<HomeMain> {
               Container(
                 margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.7),
-                        spreadRadius: 0,
-                        blurRadius: 8.0,
-                        offset: Offset(0, 5), // changes position of shadow
-                      )
-                    ]
+                  borderRadius: BorderRadius.circular(15),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.7),
+                      spreadRadius: 0,
+                      blurRadius: 8.0,
+                      offset: Offset(0, 5),
+                    )
+                  ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                        color: Colors.transparent,
-                        padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
-                        child: Column(
-                          children: [
-                            IconAndText(
-                              iconRoute: 'lib/assets/icon/icon_calender_outline.svg',
-                              text: "오늘의 스케쥴",
-                              height: 16,
-                            ),
-                            Padding(padding: EdgeInsets.only(top: 10)),
-                            Container(
-                              height: 500,
-                              child: SfCalendar(
-                                view: CalendarView.day,
-                                headerHeight: 0,
-                                viewHeaderHeight: 0,
-                                backgroundColor: Colors.white,
-                                showCurrentTimeIndicator: false,
-                                viewNavigationMode: ViewNavigationMode.none,
-                                timeSlotViewSettings: TimeSlotViewSettings(
+                      color: Colors.transparent,
+                      padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
+                      child: Column(
+                        children: [
+                          IconAndText(
+                            iconRoute: 'lib/assets/icon/icon_calender_outline.svg',
+                            text: "오늘의 스케쥴",
+                            height: 16,
+                          ),
+                          Padding(padding: EdgeInsets.only(top: 10)),
+                          Container(
+                            height: 500,
+                            child: Obx(() {
+                              final scheduleController = Get.find<HomeScheduleController>();
+                              if (scheduleController.schedules.isEmpty) {
+                                return SfCalendar(
+                                  view: CalendarView.day,
+                                  headerHeight: 0,
+                                  viewHeaderHeight: 0,
+                                  backgroundColor: Colors.white,
+                                  showCurrentTimeIndicator: false,
+                                  viewNavigationMode: ViewNavigationMode.none,
+                                  timeSlotViewSettings: TimeSlotViewSettings(
                                     startHour: 5,
                                     endHour: 24,
                                     timeFormat: 'a HH:mm',
-                                    timeRulerSize: 70
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-
+                                    timeRulerSize: 70,
+                                  ),
+                                );
+                              }
+                              return Stack(
+                                children: [
+                                  SfCalendar(
+                                    view: CalendarView.day,
+                                    headerHeight: 0,
+                                    viewHeaderHeight: 0,
+                                    backgroundColor: Colors.white,
+                                    showCurrentTimeIndicator: false,
+                                    viewNavigationMode: ViewNavigationMode.none,
+                                    timeSlotViewSettings: TimeSlotViewSettings(
+                                      startHour: 5,
+                                      endHour: 24,
+                                      timeFormat: 'a HH:mm',
+                                      timeRulerSize: 70,
+                                    ),
+                                  ),
+                                  Positioned.fill(
+                                    child: CustomPaint(
+                                      painter: ScheduleBarPainter(scheduleController.schedules),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
               // 광고
               Container(
-                  margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.7),
-                          spreadRadius: 0,
-                          blurRadius: 8.0,
-                          offset: Offset(0, 5), // changes position of shadow
-                        )
-                      ]
-                  ),
-                  child: Column(
-                    children: [
-                      CarouselSlider(
-                        items: adImages,
-                        options: CarouselOptions(
-                          viewportFraction: 1.0,
-                          autoPlay: true,
-                          autoPlayInterval: Duration(seconds: 5),
-                          onPageChanged: (index, reason) {
-                            setState(() {
-                              imagePosition = index;
-                            });
-                          },
-                        ),
+                margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.7),
+                      spreadRadius: 0,
+                      blurRadius: 8.0,
+                      offset: Offset(0, 5),
+                    )
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    CarouselSlider(
+                      items: adImages,
+                      options: CarouselOptions(
+                        viewportFraction: 1.0,
+                        autoPlay: true,
+                        autoPlayInterval: Duration(seconds: 5),
+                        onPageChanged: (index, reason) {
+                          setState(() {
+                            imagePosition = index;
+                          });
+                        },
                       ),
-                      AnimatedSmoothIndicator(
-                        activeIndex: imagePosition,
-                        count: adImages.length,
-                        effect: JumpingDotEffect(
-                            dotWidth: 5,
-                            dotHeight: 5,
-                            dotColor: grey3,
-                            paintStyle: PaintingStyle.fill,
-                            activeDotColor: mainOrange
-                        ),
+                    ),
+                    AnimatedSmoothIndicator(
+                      activeIndex: imagePosition,
+                      count: adImages.length,
+                      effect: JumpingDotEffect(
+                        dotWidth: 5,
+                        dotHeight: 5,
+                        dotColor: grey3,
+                        paintStyle: PaintingStyle.fill,
+                        activeDotColor: mainOrange,
                       ),
-                      Padding(padding: EdgeInsets.only(top: 7))
-                    ],
-                  )
+                    ),
+                    Padding(padding: EdgeInsets.only(top: 7)),
+                  ],
+                ),
               ),
-
             ],
           ),
         ),
@@ -318,27 +359,25 @@ Widget GroupListItem() {
       Get.toNamed('/groupInvite');
     },
     child: Container(
-      margin: EdgeInsets.symmetric(horizontal: 5), // 아이템 간의 간격을 설정
+      margin: EdgeInsets.symmetric(horizontal: 5),
       child: Column(
         children: [
-          // 그룹 프사 설정
           Container(
-              width: 55,
-              height: 55,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: grey1,
-                  border: Border.all(color: grey2,width: 0.5)
-              ),
-              margin: EdgeInsets.only(bottom: 5),
-              child: SvgPicture.asset(
-                "lib/assets/icon/icon_plus.svg",
-                width: 15,
-                height: 15,
-                fit: BoxFit.scaleDown,
-              )
+            width: 55,
+            height: 55,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: grey1,
+              border: Border.all(color: grey2, width: 0.5),
+            ),
+            margin: EdgeInsets.only(bottom: 5),
+            child: SvgPicture.asset(
+              "lib/assets/icon/icon_plus.svg",
+              width: 15,
+              height: 15,
+              fit: BoxFit.scaleDown,
+            ),
           ),
-          // "그룹추가" 텍스트 출력
           Text(
             "그룹 추가",
             style: TextStyle(
@@ -350,4 +389,50 @@ Widget GroupListItem() {
       ),
     ),
   );
+}
+
+class ScheduleDataSource extends CalendarDataSource {
+  ScheduleDataSource(List<Schedule> schedules) {
+    appointments = schedules.map((schedule) {
+      return Appointment(
+        startTime: schedule.startDt!,
+        endTime: schedule.endDt!,
+        subject: schedule.title ?? '',
+        color: Color(int.parse('0xff${schedule.color ?? 'ffffff'}')),
+      );
+    }).toList();
+  }
+}
+
+class ScheduleBarPainter extends CustomPainter {
+  final List<Schedule> schedules;
+
+  ScheduleBarPainter(this.schedules);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..style = PaintingStyle.fill;
+
+    final double hourHeight = size.height / 19; // 5AM ~ 24PM
+
+    for (var schedule in schedules) {
+      final startHour = schedule.startDt!.hour - 5;
+      final endHour = schedule.endDt!.hour - 5;
+      final top = startHour * hourHeight;
+      final height = (endHour - startHour) * hourHeight;
+
+      paint.color = Color(int.parse('0xff${schedule.color ?? 'ffffff'}'));
+
+      canvas.drawRect(
+        Rect.fromLTWH(0, top, size.width, height),
+        paint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
+  }
 }
