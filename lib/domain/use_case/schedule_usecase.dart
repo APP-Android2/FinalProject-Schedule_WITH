@@ -49,6 +49,12 @@ class ScheduleUseCase {
 
   }
 
+  // 스케줄 컬렉션에서 user idx가 일치하는 문서만 가져오는 함수
+  Stream<Schedule> fetchScheduleByUserIdx(int userIdx){
+    return repository.fetchScheduleByUserIdx(userIdx);
+
+  }
+
   // schedule 객체를 받아서 Appointment 객체로 변환하는 메소드
   // SfCalendar 에 일정을 띄우려면 appointment 객체여야 함
   Appointment convertScheduleToAppointment(Schedule schedule) {

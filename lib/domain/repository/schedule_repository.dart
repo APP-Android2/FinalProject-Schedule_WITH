@@ -68,6 +68,29 @@ class ScheduleRepository {
       }
     });
   }
+
+  // user idx가 일치하는 문서 정보만 가져오기
+  Stream<Schedule> fetchScheduleByUserIdx(int userIdx) {
+    return _firestore
+        .collection('schedule').where('user_idx', isEqualTo: userIdx)
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.docs.isNotEmpty) {
+        // doc = QueryDocumentSnapshot 객체 (문서 1개)
+        var doc = snapshot.docs.first;
+        // doc.id = 가져온 문서의 id
+        // doc.data() = 해당 문서에서 실제 데이터를 가져오는 메서드
+        // fireStore 데이터로부터 schedule 객체를 생성하는 팩토리 메서드
+
+        print('레포지토리 fetchScheduleByUserIdx의 ${doc.id}');
+
+        return Schedule.fromDocument(doc.id, doc.data());
+      } else {
+        // 문서가 없는 경우 예외를 던짐
+        throw Exception('No document found with userIdx: $userIdx');
+      }
+    });
+  }
 }
 
 

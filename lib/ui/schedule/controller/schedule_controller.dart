@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schedule_with/assets/colors/color.dart';
@@ -34,12 +35,12 @@ class ScheduleController extends GetxController {
     endTime: DateTime.now(),
     status: '',
     public: '',
-    regDt: DateTime.now(),
-    modDt: DateTime.now(),
+    regDt: null,
+    modDt: null,
     content: '',
     userIdx: 0,
-    groupIdx: 0,
-    alarmIdx: 0,
+    groupIdx: null,
+    alarmIdx: null,
   );
 
 
@@ -76,8 +77,15 @@ class ScheduleController extends GetxController {
   // Rx<Color> 형태로 색상을 관리
   var color = lightPink.obs;
 
+  // 그룹 일정이면 group idx 값이 있음
+  var groupIdx = null.obs;
+  // 알람에 추가 되었 다면 부여된 알람 인덱스
+  var alarmIdx = null.obs;
   // 알람에 추가 여부
-  var isAlarm = false.obs;
+  var alarmStatus = false.obs;
+
+  // 유저 구분
+  var userIdx = 0.obs;
 
   // Y: 정상, D: 삭제
   var status = 'Y'.obs;
@@ -105,7 +113,7 @@ class ScheduleController extends GetxController {
     contentEditingController.clear();
     public.value = '전체 공개';
     color.value = lightPink;
-    isAlarm.value = false;
+    alarmIdx.value = null;
   }
 
   // 캘린더에서 날짜 선택 시 해당 날짜로 시작 날짜 업데이트
@@ -141,19 +149,6 @@ class ScheduleController extends GetxController {
     });
   }
 
-  // // 서버에서 데이터를 가져와 로컬 상태를 갱신함
-  // void fetchSchedules() async {
-  //   print(isLoading.value);
-  //   isLoading.value = true;
-  //   scheduleUseCase.readSchedules().listen((scheduleList) {
-  //     schedules = scheduleList;
-  //     isLoading.value = false;
-  //   }, onError: (error) {
-  //     // 오류 처리
-  //     isLoading.value = false;
-  //   });
-  // }
-
 
   // 데이터가 갱신될 때만 업데이트
   void fetchCalendarDataSource() async {
@@ -183,9 +178,9 @@ class ScheduleController extends GetxController {
       regDt: DateTime.now(),
       modDt: DateTime.now(),
       content: contentEditingController.text,
-      userIdx: 0, // 필요에 따라 설정
-      groupIdx: 0, // 필요에 따라 설정
-      alarmIdx: 0, // 필요에 따라 설정
+      userIdx: userIdx.value,
+      groupIdx: groupIdx.value,
+      alarmIdx: alarmIdx.value,
     );
 
     try {

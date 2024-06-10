@@ -138,7 +138,7 @@ class AddScheduleBottomSheet extends StatelessWidget {
                   BottomSheetDetailSwitchButton(
                     titleText: '알람에 추가',
                     onTap: () {
-                      scheduleController.isAlarm.toggle();
+
                       // 추후 알람에 추가되는 로직 넣어야 됨
                     },
                   ),

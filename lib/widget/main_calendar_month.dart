@@ -17,16 +17,20 @@ class MainCalendarMonth extends StatefulWidget {
 class _MainCalendarMonthState extends State<MainCalendarMonth> {
   // 스케줄 컨트롤러
   final ScheduleController _scheduleController = Get.find<ScheduleController>();
-
   // 캘린더 컨트롤러
   final CalendarController _calendarController = CalendarController();
+  // 월별 -> 일별 전환시 현재 시간으로 이동
+  final DateTime _jumpToTime = DateTime.now();
 
   // 현재 달력 범위를 벗어나는 날짜 클릭시 테두리 색을 다르게 설정하기 위한 변수
   bool isCurrentMonth = true;
   var currentView = CalendarView.month;
 
-  // 월별 -> 일별 전환시 현재 시간으로 이동
-  final DateTime _jumpToTime = DateTime.now();
+  // 알람 설정 여부에 따라 스케쥴 타이틀 앞에 아이콘 표시
+  var isAlarm = false;
+
+  // 스케줄 인덱스를 가져와서,, 그 인덱스가 null 이 아니면 보여야 되는거잖아
+
 
   @override
   void initState() {
@@ -35,6 +39,12 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
     _scheduleController.fetchSchedules();
     print('캘린더 초기화');
   }
+
+  // 해당 날짜 선택
+  // 해당 날짜의 일정 확인
+  // 일정에 alarm index 값에 따라 아이콘 출력
+  //  - index 가 Null 이라면 아이콘 없음
+  //  - index 가 Null 이 아니라면 아이콘 띄움
 
   // 선택된 셀의 날짜 확인
   void _onCalendarTap(CalendarTapDetails details) {
