@@ -144,6 +144,7 @@ class _HomeMainState extends State<HomeMain> {
                       margin: EdgeInsets.fromLTRB(15, 0, 15, 15),
                       child: Obx(() {
                         final memoController = Get.find<HomeMemoController>();
+                        print('Memos in UI: ${memoController.memos}');
                         if (memoController.memos.isEmpty) {
                           return Text(
                             "등록된 메모가 없습니다.",
@@ -218,6 +219,7 @@ class _HomeMainState extends State<HomeMain> {
                       margin: EdgeInsets.fromLTRB(15, 0, 15, 15),
                       child: Obx(() {
                         final todoController = Get.find<HomeTodoController>();
+                        print('Todos in UI: ${todoController.todos}');
                         if (todoController.todos.isEmpty) {
                           return Text(
                             "등록된 TODO 리스트가 없습니다.",
@@ -287,6 +289,7 @@ class _HomeMainState extends State<HomeMain> {
                             height: 500,
                             child: Obx(() {
                               final scheduleController = Get.find<HomeScheduleController>();
+                              print('Schedules in UI: ${scheduleController.schedules}');
                               if (scheduleController.schedules.isEmpty) {
                                 return SfCalendar(
                                   view: CalendarView.day,
@@ -318,16 +321,16 @@ class _HomeMainState extends State<HomeMain> {
                                 ),
                                 dataSource: ScheduleDataSource(scheduleController.schedules),
                                 appointmentBuilder: (BuildContext context, CalendarAppointmentDetails details) {
-                                  final Schedule schedule = details.appointments.first;
+                                  final Appointment appointment = details.appointments.first;
                                   return Container(
                                     margin: EdgeInsets.only(left: 2, right: 2, top: 2, bottom: 2),
                                     decoration: BoxDecoration(
-                                      color: Color(int.parse('0xff${schedule.color ?? 'ffffff'}')),
+                                      color: appointment.color,
                                       borderRadius: BorderRadius.circular(4),
                                     ),
                                     child: Center(
                                       child: Text(
-                                        schedule.title ?? '',
+                                        appointment.subject,
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 12,
