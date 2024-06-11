@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
 import '../../../assets/colors/color.dart';
-
 
 class BankAccountBottomSheetWidget extends StatefulWidget {
   final Function(String) onSelectAccount;

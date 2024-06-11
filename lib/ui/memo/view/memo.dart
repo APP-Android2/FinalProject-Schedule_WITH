@@ -7,7 +7,6 @@ import '../../../entity/memo_tbl.dart';
 import '../../../widget/main_alert.dart';
 import '../widget/memo_controller.dart';
 import '../widget/memo_ispublic_status.dart';
-import 'memo_main.dart';
 
 class MemoScreen extends StatelessWidget {
   final MemoController controller = Get.find<MemoController>();
@@ -44,6 +43,7 @@ class MemoScreen extends StatelessWidget {
             onPressed: () async {
                 if (memo == null) {
                   Memo newMemo = Memo(
+                    documentId: '',
                     idx: DateTime.now().millisecondsSinceEpoch,
                     title: controller.titleController.value.text,
                     content: controller.contentController.value.text,
@@ -53,10 +53,12 @@ class MemoScreen extends StatelessWidget {
                     mod_dt: DateTime.now(),
                     status: 'Y',
                   );
-                  await controller.addMemo(newMemo);
+                  String documentId = await controller.addMemo(newMemo);
+                  newMemo.documentId = documentId;
                 } else {
                   // 새로운 Memo 객체 생성하여 업데이트
                   Memo updatedMemo = Memo(
+                    documentId: memo!.documentId,
                     idx: memo!.idx,
                     title: controller.titleController.value.text,
                     content: controller.contentController.value.text,
@@ -146,14 +148,13 @@ class MemoScreen extends StatelessWidget {
           }
       ).then((result) {
         if (result == false) {
-          Get.to(() => MemoMainScreen());
+          Navigator.pop(context);
         }
       });
     } else {
       Get.back(result: true);
     }
   }
-
 
   void _handleAddImage() async {
     print('Image added.');
