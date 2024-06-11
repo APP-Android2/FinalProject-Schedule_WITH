@@ -10,11 +10,14 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import '../../../domain/repository/memo_repository.dart';
 import '../../../domain/repository/schedule_repository.dart';
+import '../../../domain/repository/todo_repository.dart';
 import '../../../domain/use_case/memo_use_case.dart';
 import '../../../domain/use_case/schedule_use_case.dart';
+import '../../../domain/use_case/todo_use_case.dart';
 import '../../../entity/schedule_tbl.dart';
 import '../controller/home_memo_controller.dart';
 import '../controller/home_schedule_controller.dart';
+import '../controller/home_todo_controller.dart';
 
 class HomeMain extends StatefulWidget {
   const HomeMain({super.key});
@@ -44,6 +47,10 @@ class _HomeMainState extends State<HomeMain> {
     final memoRepository = MemoRepository();
     final memoUseCase = MemoUseCase(memoRepository);
     Get.put(HomeMemoController(memoUseCase: memoUseCase));
+
+    final todoRepository = TodoRepository();
+    final todoUseCase = TodoUseCase(todoRepository);
+    Get.put(HomeTodoController(todoUseCase: todoUseCase));
   }
 
   @override
@@ -208,13 +215,41 @@ class _HomeMainState extends State<HomeMain> {
                       padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
                     ),
                     Container(
-                      padding: EdgeInsets.fromLTRB(10, 10, 10, 20),
-                      child: Center(
-                        child: Text(
-                          "등록된 TODO 리스트가 없습니다.",
-                          style: TextStyle(color: grey3),
-                        ),
-                      ),
+                      margin: EdgeInsets.fromLTRB(15, 0, 15, 15),
+                      child: Obx(() {
+                        final todoController = Get.find<HomeTodoController>();
+                        if (todoController.todos.isEmpty) {
+                          return Text(
+                            "등록된 TODO 리스트가 없습니다.",
+                            style: TextStyle(color: grey3),
+                          );
+                        }
+                        return Column(
+                          children: todoController.todos.map((todo) {
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 0, right: 16.0), // 패딩을 통해 제목을 왼쪽으로 이동
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                    value: todo.todoStatus == 'Y',
+                                    onChanged: (bool? value) {
+                                      if (value != null) {
+                                        todoController.toggleTodoStatus(todo.idx, value);
+                                      }
+                                    },
+                                    activeColor: Color(0xFF627BFF), // 체크박스 테두리 색상 설정
+                                    checkColor: Colors.white, // 체크표시 색상 설정
+                                    side: BorderSide(color: Color(0xFF627BFF)), // 체크박스 테두리 색상 설정
+                                  ),
+                                  Expanded(
+                                    child: Text(todo.title),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        );
+                      }),
                     ),
                   ],
                 ),
@@ -268,28 +303,41 @@ class _HomeMainState extends State<HomeMain> {
                                   ),
                                 );
                               }
-                              return Stack(
-                                children: [
-                                  SfCalendar(
-                                    view: CalendarView.day,
-                                    headerHeight: 0,
-                                    viewHeaderHeight: 0,
-                                    backgroundColor: Colors.white,
-                                    showCurrentTimeIndicator: false,
-                                    viewNavigationMode: ViewNavigationMode.none,
-                                    timeSlotViewSettings: TimeSlotViewSettings(
-                                      startHour: 5,
-                                      endHour: 24,
-                                      timeFormat: 'a HH:mm',
-                                      timeRulerSize: 70,
+                              return SfCalendar(
+                                view: CalendarView.day,
+                                headerHeight: 0,
+                                viewHeaderHeight: 0,
+                                backgroundColor: Colors.white,
+                                showCurrentTimeIndicator: false,
+                                viewNavigationMode: ViewNavigationMode.none,
+                                timeSlotViewSettings: TimeSlotViewSettings(
+                                  startHour: 5,
+                                  endHour: 24,
+                                  timeFormat: 'a HH:mm',
+                                  timeRulerSize: 70,
+                                ),
+                                dataSource: ScheduleDataSource(scheduleController.schedules),
+                                appointmentBuilder: (BuildContext context, CalendarAppointmentDetails details) {
+                                  final Schedule schedule = details.appointments.first;
+                                  return Container(
+                                    margin: EdgeInsets.only(left: 2, right: 2, top: 2, bottom: 2),
+                                    decoration: BoxDecoration(
+                                      color: Color(int.parse('0xff${schedule.color ?? 'ffffff'}')),
+                                      borderRadius: BorderRadius.circular(4),
                                     ),
-                                  ),
-                                  Positioned.fill(
-                                    child: CustomPaint(
-                                      painter: ScheduleBarPainter(scheduleController.schedules),
+                                    child: Center(
+                                      child: Text(
+                                        schedule.title ?? '',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  );
+                                },
                               );
                             }),
                           ),
@@ -352,7 +400,6 @@ class _HomeMainState extends State<HomeMain> {
   }
 }
 
-// 그룹 항목들의 리스트 아이템
 Widget GroupListItem() {
   return InkWell(
     onTap: () {
@@ -401,38 +448,5 @@ class ScheduleDataSource extends CalendarDataSource {
         color: Color(int.parse('0xff${schedule.color ?? 'ffffff'}')),
       );
     }).toList();
-  }
-}
-
-class ScheduleBarPainter extends CustomPainter {
-  final List<Schedule> schedules;
-
-  ScheduleBarPainter(this.schedules);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..style = PaintingStyle.fill;
-
-    final double hourHeight = size.height / 19; // 5AM ~ 24PM
-
-    for (var schedule in schedules) {
-      final startHour = schedule.startDt!.hour - 5;
-      final endHour = schedule.endDt!.hour - 5;
-      final top = startHour * hourHeight;
-      final height = (endHour - startHour) * hourHeight;
-
-      paint.color = Color(int.parse('0xff${schedule.color ?? 'ffffff'}'));
-
-      canvas.drawRect(
-        Rect.fromLTWH(0, top, size.width, height),
-        paint,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
   }
 }
