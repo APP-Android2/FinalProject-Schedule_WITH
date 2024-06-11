@@ -25,23 +25,23 @@ class ScheduleController extends GetxController {
 
   // entity
   var schedule = Schedule(
-    id: '',
-    idx: 0,
-    title: '',
-    color: lightPink,
-    startDt: DateTime.now(),
-    endDt: DateTime.now(),
-    startTime: DateTime.now(),
-    endTime: DateTime.now(),
-    status: '',
-    public: '',
-    regDt: null,
-    modDt: null,
-    content: '',
-    userIdx: 0,
-    groupIdx: null,
-    alarmIdx: null,
-    alarmStatus: false
+      id: '',
+      idx: 0,
+      title: '',
+      color: lightPink,
+      startDt: DateTime.now(),
+      endDt: DateTime.now(),
+      startTime: DateTime.now(),
+      endTime: DateTime.now(),
+      status: '',
+      public: '',
+      regDt: null,
+      modDt: null,
+      content: '',
+      userIdx: 0,
+      groupIdx: null,
+      alarmIdx: null,
+      alarmStatus: false
   );
 
 
@@ -108,10 +108,12 @@ class ScheduleController extends GetxController {
     fetchCalendarDataSource();
   }
 
-  // 바텀시트 열 때마다 필드값 초기화
+  // 스케줄 추가 화면에서 '등록하기' 버튼 또는 '취소버튼' 누르면 바텀시트 필드값을 초기화하는 메서드
   void resetFields() {
     titleEditingController.clear();
     contentEditingController.clear();
+    selectedStartTm.value = null;
+    selectedEndTm.value = null;
     public.value = '전체 공개';
     color.value = lightPink;
     alarmIdx.value = null;

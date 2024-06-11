@@ -87,7 +87,7 @@ class TabViewCalendar extends StatelessWidget {
                 MainCalendarMonth(),
                 // 장기 일정
                 ShowLongAppoint(),
-                //
+                // 일간 일정
                 MainCalendarDay(),
               ])
       ),
