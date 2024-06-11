@@ -18,8 +18,10 @@ class MainCalendarMonth extends StatefulWidget {
 class _MainCalendarMonthState extends State<MainCalendarMonth> {
   // 스케줄 컨트롤러
   final ScheduleController _scheduleController = Get.find<ScheduleController>();
+
   // 캘린더 컨트롤러
   final CalendarController _calendarController = CalendarController();
+
   // 월별 -> 일별 전환시 현재 시간으로 이동
   final DateTime _jumpToTime = DateTime.now();
 
@@ -170,7 +172,6 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
 // 약속 3개 이상 더보기 아이콘
   Widget buildAppointmentWidget(
       BuildContext context, CalendarAppointmentDetails details) {
-
     if (details.isMoreAppointmentRegion) {
       print(details.isMoreAppointmentRegion);
       // 하나의 셀에 일정 최대 3개만 표시. 3개 초과 시 더보기 아이콘 띄움
@@ -186,10 +187,10 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
         ),
       );
     } else {
-      final SfCalendarCustomAppointment appointment = details.appointments.first;
+      final SfCalendarCustomAppointment appointment =
+          details.appointments.first;
 
       // print('알람 설정 값 확인 ${appointment.alarmStatus}');
-
 
       // 일정 3개 이하일 때 보이는 설정
       return Container(
@@ -203,29 +204,27 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
             children: [
               // 알람 아이콘
               Expanded(
-                  child: Icon(
-                      Icons.access_alarm,
-                      size: 10,
-                      // color: mainBrown)),
-            color: appointment.alarmStatus ? mainBrown : Colors.transparent)),
-
+                flex: 1,
+                child: Icon(Icons.access_alarm,
+                    size: appointment.alarmStatus ? 12 : 0,
+                    color: appointment.alarmStatus
+                        ? mainBrown
+                        : Colors.transparent),
+              ),
               // 일정
               Expanded(
-                  // 일정 텍스트를 가운데 맞추기 위한 여백
-                  child: Padding(
-                      padding: EdgeInsets.only(top: 1),
-                      child: Text(
-                    appointment.subject,
-                    overflow: TextOverflow.fade,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: mainBrown, fontSize: 10),
-                  ))),
-              // 일정 박스를 가운데 맞추기 위한 여백
-              Expanded(child: SizedBox(width: 4))
+                flex: 4,
+                child: Text(
+                  textAlign: TextAlign.center,
+                  appointment.subject,
+                  overflow: TextOverflow.fade,
+                  style: TextStyle(color: mainBrown, fontSize: 10),
+                ),
+              ),
+              // 일정 텍스트를 가운데 맞추기 위한 여백
+              Expanded(child: SizedBox(width: 2)),
             ],
-          )
-      );
+          ));
     }
   }
 }
