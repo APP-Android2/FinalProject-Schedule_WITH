@@ -17,11 +17,11 @@ class _MemoIspublicStatusState extends State<MemoIspublicStatus> {
   @override
   void initState() {
     super.initState();
-    _isPublicStatus = widget.isPublic ? 'true' : 'false';
+    _isPublicStatus = widget.isPublic ? 'Y' : 'N';
   }
 
   void _updateStatus(String status) {
-    bool isPublic = status == 'true';
+    bool isPublic = status == 'Y';
     setState(() {
       _isPublicStatus = status;
     });
@@ -49,16 +49,16 @@ class _MemoIspublicStatusState extends State<MemoIspublicStatus> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       GestureDetector(
-                        onTap: () => _updateStatus('false'),
+                        onTap: () => _updateStatus('N'),
                         child: Row(
                           children: <Widget>[
                             SizedBox(
                               width: 10,
                               height: 10,
                               child: Radio<String>(
-                                value: 'false',
+                                value: 'N',
                                 groupValue: _isPublicStatus,
-                                onChanged: (value) => _updateStatus(value ?? 'false'),
+                                onChanged: (value) => _updateStatus(value ?? 'N'),
                                 activeColor: mainBrown,
                                 fillColor: MaterialStateProperty.resolveWith<Color>(
                                       (states) => states.contains(MaterialState.selected) ? mainBrown : mainBrown.withOpacity(1),
@@ -72,16 +72,16 @@ class _MemoIspublicStatusState extends State<MemoIspublicStatus> {
                       ),
                       SizedBox(width: 20),
                       GestureDetector(
-                        onTap: () => _updateStatus('true'),
+                        onTap: () => _updateStatus('Y'),
                         child: Row(
                           children: <Widget>[
                             SizedBox(
                               width: 10,
                               height: 10,
                               child: Radio<String>(
-                                value: 'true',
+                                value: 'Y',
                                 groupValue: _isPublicStatus,
-                                onChanged: (value) => _updateStatus(value ?? 'true'),
+                                onChanged: (value) => _updateStatus(value ?? 'Y'),
                                 activeColor: mainOrange,
                                 fillColor: MaterialStateProperty.resolveWith<Color>(
                                       (states) => states.contains(MaterialState.selected) ? mainOrange : mainOrange.withOpacity(0.5),

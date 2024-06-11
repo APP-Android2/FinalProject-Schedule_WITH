@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:schedule_with/assets/colors/color.dart';
-import 'package:schedule_with/ui/schedule/widget/schedule_color_option.dart';
+import 'package:schedule_with/ui/schedule/widget/schedule_color_user_selected.dart';
+import 'package:schedule_with/ui/schedule/widget/schedule_color_palette.dart';
 
 class ScheduleColorPicker extends StatefulWidget {
   final msg;
@@ -44,8 +45,8 @@ class _ScheduleColorPickerState extends State<ScheduleColorPicker> {
                   ),
                 ),
               ),
-              // 색상 버튼
-              ColorButtonSet(),
+              // 9개 컬러
+              ScheduleColorPalette(),
             ]
         )
       )

@@ -328,12 +328,12 @@ class _JoinScreenState extends State<LoginJoin> {
                                       // 남자 클릭시
                                       isSelected[0] = true;
                                       isSelected[1] = false;
-                                      gender = "남";
+                                      gender = "남성";
                                     } else {
                                       // 여자 클릭시
                                       isSelected[0] = false;
                                       isSelected[1] = true;
-                                      gender = "여";
+                                      gender = "여성";
                                     }
                                   });
                                 },

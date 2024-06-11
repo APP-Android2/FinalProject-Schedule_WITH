@@ -1,12 +1,26 @@
-import 'package:schedule_with/domain/repository/memo_repository.dart';
-import 'package:schedule_with/entity/memo_tbl.dart';
+import '../../entity/memo_tbl.dart';
+import '../repository/memo/memo_repository.dart';
+
 
 class MemoUseCase {
   final MemoRepository repository;
 
   MemoUseCase(this.repository);
 
-  Stream<List<Memo>> getMemos() {
-    return repository.getMemos();
+  Future<void> createMemo(Memo memo) {
+    return repository.createMemo(memo);
+  }
+
+  Stream<List<Memo>> readMemo() {
+    return repository.readMemos();
+  }
+
+  Future<void> updateMemo(String memoId, Memo memo) {
+    return repository.updateMemo(memoId, memo);
+  }
+
+  Future<void> deleteMemo(String memoId) {
+    return repository.deleteMemo(memoId);
   }
 }
+

@@ -5,9 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:schedule_with/domain/repository/user_repository.dart';
+import 'package:schedule_with/ui/mypage/controller/mypage_controller.dart';
 import 'package:schedule_with/ui/mypage/widget/my_page_alert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../assets/colors/color.dart';
+import '../entity/user_tbl.dart';
 import '../ui/mypage/widget/nick_name_controller.dart';
 
 class MainProfile extends StatefulWidget {
@@ -19,18 +23,34 @@ class MainProfile extends StatefulWidget {
 }
 
 class _MainProfileState extends State<MainProfile> {
-  var _textEditingController = TextEditingController();
+  // var _textEditingController = TextEditingController();
+  final MyPageController myPageController = Get.find<MyPageController>();
+
+
   var user_nickname = TextEditingController();
+
+  UserRepository userRepository = UserRepository();
+  Users? users;
 
   // 배경 이미지
   XFile? _backgroundImage;
   // 프로필 이미지
   XFile? _profileImage;
+
   final ImagePicker picker = ImagePicker();
 
   @override void initState() {
     super.initState();
-    _textEditingController.text = "이름";
+    _initializeUser();
+  }
+
+  Future<void> _initializeUser() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    users = await userRepository.getUserInfoUseId(prefs.getString('id')!);
+    myPageController.text.value = "${users?.name}";
+    ever(myPageController.userUpdated, (_) {
+      _initializeUser(); // Re-fetch user info and update UI
+    }); // 사용자 정보를 가져온 후 UI를 업데이트하기 위해 setState 호출
   }
 
   // 배경 이미지를 가져오는 함수
@@ -70,15 +90,15 @@ class _MainProfileState extends State<MainProfile> {
           padding: EdgeInsets.only(bottom: 35),
           child: InkWell(
             onTap: () {
-              Get.toNamed('/myPageBackgroundPhotoDetail', arguments: _backgroundImage);
+              Get.toNamed('/myPageBackgroundPhotoDetail', arguments: users?.back_img);
             },
             child: Container(
                 width: double.infinity,
                 height: double.infinity,
                 color: grey2,
                 // child 로 배경 이미지 설정
-                child: _backgroundImage == null ? Image.asset("lib/assets/image/image2.png",fit: BoxFit.cover)
-                    : Image.file(File(_backgroundImage!.path),fit: BoxFit.cover)
+                child: users?.back_img == null ? Image.asset("lib/assets/image/image2.png",fit: BoxFit.cover)
+                    : Image.file(File(users!.back_img!),fit: BoxFit.cover)
             ),
           ),
         ),
@@ -92,7 +112,7 @@ class _MainProfileState extends State<MainProfile> {
                 // 프로필
                 InkWell(
                   onTap: () {
-                    Get.toNamed('/myPageProfilePhotoDetail', arguments: _profileImage);
+                    Get.toNamed('/myPageProfilePhotoDetail', arguments: users?.profile_img);
                   },
                   child: Container(
                       width: 70,
@@ -104,8 +124,9 @@ class _MainProfileState extends State<MainProfile> {
                       ),
                       margin: EdgeInsets.only(bottom: 5),
                       child: ClipRRect(
-                          child: _profileImage == null ? Icon(CupertinoIcons.person_fill, color: mainBrown.withOpacity(0.5))
-                              : Image.file(File(_profileImage!.path),fit: BoxFit.cover,)
+                          borderRadius: BorderRadius.circular(25),
+                          child: users?.profile_img == null ? Icon(CupertinoIcons.person_fill, color: mainBrown.withOpacity(0.5))
+                              : Image.file(File(users!.profile_img!),fit: BoxFit.cover,)
                       )
                   ),
                 ),
@@ -120,31 +141,40 @@ class _MainProfileState extends State<MainProfile> {
                         Obx((){
                           return controller.nickNameChangeState.value ? Container(
                             color: Colors.white,
+                            width: 100,
+                            height: 25,
                             child: TextField(
                               decoration: InputDecoration(border: InputBorder.none,isDense: true),
                               style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,decorationThickness: 0),
                               autofocus: true,
-                              controller: _textEditingController,
+                              controller: myPageController.textEditingController,
                             ),
-                            width: 100,
-                            height: 25,
+
                           )
-                              : Text(_textEditingController.text,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),);
+                              : Text(
+                              myPageController.text.value,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold)
+                          );
+
                         }),
                         // 수정 아이콘
                         Obx((){
                           return controller.nickNameChangeState.value ? Container() : InkWell(
-                            onTap: () {
+                            onTap: ()  {
                               // 아이콘을 눌렀을 때
                               Get.dialog(MyPageAlert(
-                                onBackgroundImageSelected: (selectedImage) {
+                                onBackgroundImageSelected: (selectedImage) async {
+                                  users?.back_img = selectedImage.path;
+                                  await userRepository.updateUserInfo(users!, users!.idx);
                                   setState(() {
-                                    _backgroundImage = selectedImage;
                                   });
                                 },
-                                onProfileImageSelected: (selectedImage){
-                                  setState(() {
-                                    _profileImage = selectedImage;
+                                onProfileImageSelected: (selectedImage) async {
+                                  users?.profile_img = selectedImage.path;
+                                  await userRepository.updateUserInfo(users!, users!.idx);
+                                  setState((){
                                   });
                                 },
                               ));

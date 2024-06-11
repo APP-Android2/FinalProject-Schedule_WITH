@@ -1,13 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
+import 'package:schedule_with/dependencies.dart';
 import 'package:schedule_with/ui/group/view/group_detail.dart';
 import 'package:schedule_with/ui/group/view/group_freind_add.dart';
 import 'package:schedule_with/ui/group/view/group_invite.dart';
 import 'package:schedule_with/ui/group/view/group_menu.dart';
 import 'package:schedule_with/ui/group/view/group_search_friend.dart';
-import 'package:schedule_with/ui/home/view/home_main.dart';
 import 'package:schedule_with/ui/login/view/login_find_fail_id.dart';
 import 'package:schedule_with/ui/login/view/login_find_id_password.dart';
 import 'package:schedule_with/ui/login/view/login_find_success_id.dart';
@@ -27,6 +26,7 @@ import 'package:schedule_with/ui/notification/view/notification_main.dart';
 import 'package:schedule_with/ui/notification/view/notification_request_detail.dart';
 import 'package:schedule_with/widget/main_bottom_navigation_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'dependencies.dart';
 import 'domain/repository/user_repository.dart';
 import 'firebase_options.dart';
 
@@ -37,7 +37,11 @@ Future<void> main() async {
   // Firestore 초기 설정
   await Firebase.initializeApp();
 
+  // 의존성
+  setupDependencies();
+  
   UserRepository userRepository = UserRepository();
+  
   // 앱 실행전 로컬파일에 유저의 server_id가 존재하지 않는다면, 새로운 유저이므로, 새로운 idx값과 새로운 server_id를 부여한다.
   var check = await userRepository.isNewUser();
 

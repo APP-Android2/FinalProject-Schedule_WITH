@@ -1,120 +1,106 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:schedule_with/assets/colors/color.dart';
+import 'package:schedule_with/ui/login/view/login_main.dart';
 import 'package:schedule_with/ui/schedule/controller/schedule_controller.dart';
+import 'package:schedule_with/ui/schedule/view/schedule_main.dart';
 
 class ScheduleAlert extends StatefulWidget {
-
-  // final title;
   final msg;
-  final showAll;
-  final showTitle;
-  final showNothing;
+  final YesMsg;
+  final NoMsg;
 
   const ScheduleAlert({super.key,
     this.msg,
-    this.showAll,
-    this.showTitle,
-    this.showNothing
+    this.YesMsg,
+    this.NoMsg
   });
 
   @override
-  State<ScheduleAlert> createState() => _MainAlertState();
+  State<ScheduleAlert> createState() => _ScheduleAlertState();
 }
 
-class _MainAlertState extends State<ScheduleAlert> {
-  final ScheduleController scheduleController = Get.find<ScheduleController>();
-
+class _ScheduleAlertState extends State<ScheduleAlert> {
+  final ScheduleController _scheduleController = Get.find<ScheduleController>();
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Dialog(
-        backgroundColor: Colors.white,
-        child:
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              alignment: Alignment.center,
-              width: 500,
-              height: 40,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-                border: Border(),
-                color: Colors.white,
-              ),
-              child: Text(widget.msg,),
+    return Dialog(
+      backgroundColor: Colors.white.withOpacity(0),
+      child:
+      Column(
+        children: [
+          // 야매로 띄우기
+          SizedBox(height: 330),
+          // 질문
+          Container(
+            alignment: Alignment.center,
+            width: 500,
+            // height: 40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+              color: Colors.white,
             ),
-            Container(
-              height: 45,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: mainOrange
-              ),
-              child: MaterialButton(
-                onPressed: () {
-                  // 선택한 값으로 업데이트
-                  scheduleController.settingVisibility(widget.showAll);
-                  print('공개여부선택 >> 전체공개');
-                  Get.back();
-                },
-                child: Text(widget.showAll,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+              child: Text(widget.msg,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
             ),
-            // SizedBox(height: 10,),
-            Container(
-              height: 45,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: grey1
-              ),
-              child: MaterialButton(
-                onPressed: () {
-                  scheduleController.settingVisibility(widget.showTitle);
-                  print('공개여부선택 >> 일부공개');
-                  Get.back();
-                },
-                child: Text(widget.showTitle,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: mainBrown,
-                    fontWeight: FontWeight.bold,
-                  ),
+          ),
+          // 긍정 버튼
+          Container(
+            height: 45,
+            width: double.infinity,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(10)),
+                color: mainBrown
+            ),
+            child: MaterialButton(
+              onPressed: () {
+                // 파이어베이스에서 해당 스케줄 데이터 삭제 되어야 함
+                Get.offAll(ScheduleMain());
+                // 입력값 초기화
+                _scheduleController.resetFields();
+              },
+              child: Text(widget.YesMsg,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            Container(
-              height: 45,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.vertical(bottom: Radius.circular(10)),
-                  color: grey1
-              ),
-              child: MaterialButton(
-                onPressed: () {
-                  scheduleController.settingVisibility(widget.showNothing);
-                  print('공개여부선택 >> 비공개');
-                  Get.back(result: "비공개");
-                },
-                child: Text(widget.showNothing,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: mainBrown,
-                    fontWeight: FontWeight.bold,
-                  ),
+          ),
+          //버튼 사이 공간
+          SizedBox(height: 12),
+          //부정버튼
+          Container(
+            height: 45,
+            width: double.infinity,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                color: mainOrange
+            ),
+            child: MaterialButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: Text(widget.NoMsg,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-          ],
-        ),
-
+          ),
+        ],
       ),
     );
   }

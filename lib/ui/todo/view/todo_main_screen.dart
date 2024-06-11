@@ -31,37 +31,7 @@ class _TodoMainScreenState extends State<TodoMainScreen> with SingleTickerProvid
     _tabController = TabController(length: 3, vsync: this);
     _tabController.index = 1;
   }
-
   @override
-  void dispose() {
-    _tabController.dispose();
-    _dateController.dispose();
-    _contentController.dispose();
-    super.dispose();
-  }
-
-  void onDateSelected(DateTime date) {
-    setState(() {
-      selectedDate = date;
-      _dateController.text = DateFormat('yyyy-MM-dd').format(date);
-    });
-  }
-
-  void onTodoAdd() {
-    if (selectedDate != null) {
-      showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        builder: (context) => TodoAddBottomSheet(
-          dateController: _dateController,
-          contentController: _contentController,
-          onSave: () {
-            String dateString = DateFormat('yyyy-MM-dd').format(selectedDate!);
-            _todoController.addTodoItem(dateString, _contentController.text);
-            _contentController.clear();
-            Navigator.of(context).pop();
-            setState(() {}); // 상태를 새로고침하여 UI 업데이트
-          },
         ),
       );
     }

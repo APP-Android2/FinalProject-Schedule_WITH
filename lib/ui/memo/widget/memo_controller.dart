@@ -1,20 +1,53 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import '../view/memo_item.dart';
-import '../view/paymemo_item.dart';
+import '../../../domain/use_case/memo_use_case.dart';
+import '../../../entity/memo_tbl.dart';
+import '../../../entity/paymemo_tbl.dart';
 
 class MemoController extends GetxController {
+  final MemoUseCase memoUseCase;
   var memos = <Memo>[].obs;
   var isExpanded = true.obs;
+  var isPublic = false.obs;
+  var titleController = TextEditingController().obs;
+  var contentController = TextEditingController().obs;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  MemoController({required this.memoUseCase});
 
-  void deleteMemo(int index) {
-    if (index >= 0 && index < memos.length) {
-      memos.removeAt(index);
-    }
+  @override
+  void onInit() {
+    super.onInit();
+    fetchMemos();
   }
 
-  void addMemo(Memo memo) {
-    memos.add(memo);
+  Stream<List<Memo>> streamMemos() {
+    return firestore.collection('memos').snapshots().map((snapshot) =>
+        snapshot.docs.map((doc) => Memo.fromDocument(doc.data(), doc.id)).toList());
+  }
+
+  void fetchMemos() {
+    memos.bindStream(memoUseCase.readMemo());
+  }
+
+  Future<String> addMemo(Memo memo) async {
+    DocumentReference ref = await firestore.collection('memo').add(memo.toDocument());
+    return ref.id;
+  }
+
+  Future<void> updateMemo(Memo memo) async {
+    await memoUseCase.updateMemo(memo.idx.toString(), memo);
+    fetchMemos();
+  }
+
+  Future<void> deleteMemo(String memoId) async {
+    Memo? memo = memos.firstWhereOrNull((m) => m.idx.toString() == memoId);
+    if (memo != null) {
+      await firestore.collection('memo').doc(memo.documentId).update({'status': 'D'});
+      memos.remove(memo);
+      update();
+    }
   }
 
   void toggleExpansion() {
@@ -22,48 +55,3 @@ class MemoController extends GetxController {
   }
 }
 
-class PayMemoController extends GetxController {
-  var paymemos = <PayMemo>[].obs;
-  var isExpanded = true.obs;
-  var count = 0.obs;
-
-  void deletePayMemo(int index) {
-    if (index >= 0 && index < paymemos.length) {
-      paymemos.removeAt(index);
-    }
-  }
-
-  void addPayMemo(PayMemo paymemo) {
-    paymemos.add(paymemo);
-  }
-
-  void toggleExpansion() {
-    isExpanded.value = !isExpanded.value;
-  }
-
-  void incrementCount() {
-    count++;
-  }
-
-  void decrementCount() {
-    if (count > 0) {
-      count--;
-    }
-  }
-}
-
-// class PayMemoController extends GetxController {
-//
-//   final RxList<PayMemo> payMemoList = <PayMemo>[].obs;
-//
-//   final RxBool isExpanded = false.obs;
-//
-//   void addPayMemo(PayMemo paymemo) {
-//     payMemoList.add(paymemo);
-//     update();
-//   }
-//
-//   void toggleExpansion() {
-//     isExpanded.value = !isExpanded.value;
-//   }
-// }

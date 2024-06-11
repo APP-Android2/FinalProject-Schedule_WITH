@@ -90,6 +90,32 @@ class _MainAlertState extends State<MyPageAlert> {
     }
   }
 
+  // 앨범 권한 요첨 함수
+  void requestAlbumPermission2() async {
+    PermissionStatus status = await Permission.photos.request();
+    print("${status.isGranted}");
+    print("${status.isPermanentlyDenied}");
+    if (status.isGranted) {
+      // 권한이 허용되었을 때
+      getBackgroundImage(ImageSource.gallery);
+    } else {
+      // 권한이 거부되었을 때
+    }
+  }
+
+  // 앨범 권한 요첨 함수
+  void requestStoragePermission2() async {
+    PermissionStatus status = await Permission.storage.request();
+    print("${status.isGranted}");
+    print("${status.isPermanentlyDenied}");
+    if (status.isGranted) {
+      // 권한이 허용되었을 때
+      getBackgroundImage(ImageSource.gallery);
+    } else {
+      // 권한이 거부되었을 때
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // 수정 아이콘을 눌렀을 때 보여줄 위젯
@@ -139,9 +165,9 @@ class _MainAlertState extends State<MyPageAlert> {
                 onPressed: () async {
                   final isAndroidUnder33 = await PlatformUtils.isAndroidUnder33();
                   if(isAndroidUnder33){
-                    requestStoragePermission();
+                    requestStoragePermission2();
                   }else{
-                    requestAlbumPermission();
+                    requestAlbumPermission2();
                   }
                 },
                 child: Text("배경 사진 변경",

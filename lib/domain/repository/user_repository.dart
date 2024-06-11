@@ -202,7 +202,7 @@ class UserRepository{
         idx: data['idx'],
         server_id: data['server_id'],
         profile_img: data['profile_img'],
-        back_img: data['back_img'],
+        back_img: data['back_img image'],
         id: data['id'],
         pw: data['pw'],
         email: data['email'],
