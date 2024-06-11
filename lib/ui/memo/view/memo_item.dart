@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:schedule_with/assets/colors/color.dart';
-
-import '../widget/memo_slide_delete.dart';
-
-class Memo {
-  String date;
-  String title;
-  String body;
-  bool hasImage;
-  bool isPublic;
-
-  Memo({required this.date, required this.title, required this.body, this.hasImage = false, this.isPublic = true});
-}
+import '../../../entity/memo_tbl.dart';
+import '../widget/memo_controller.dart';
+import 'package:intl/intl.dart';
 
 class MemoItem extends StatelessWidget {
   final Memo memo;
-  final Function onTap;
-  final Function onDelete;
+  final VoidCallback onTap;
+  final VoidCallback onDelete;
 
-  const MemoItem({Key? key, required this.memo, required this.onTap, required this.onDelete}) : super(key: key);
+  const MemoItem({
+    Key? key,
+    required this.memo,
+    required this.onTap,
+    required this.onDelete,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final MemoController memoController = Get.find<MemoController>();
+
     return InkWell(
-      onTap: () => onTap(),
+      onTap: onTap,
       child: Container(
         padding: EdgeInsets.only(left: 16, top: 10, right: 16, bottom: 10),
         child: Column(
@@ -35,11 +35,10 @@ class MemoItem extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(memo.date, style: TextStyle(fontSize: 10, color: grey4)),
+                    Text(DateFormat('yyyy-MM-dd').format(memo.mod_dt), style: TextStyle(fontSize: 10, color: grey4)),
                     Text(memo.title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   ],
                 ),
-                // 공개/비공개
                 Transform.translate(
                   offset: Offset(0, -5),
                   child: Container(
@@ -66,12 +65,11 @@ class MemoItem extends StatelessWidget {
               ],
             ),
             Text(
-              memo.body,
+              memo.content,
               style: TextStyle(fontSize: 12),
               maxLines: memo.hasImage ? 2 : 4,
               overflow: TextOverflow.ellipsis,
             ),
-            // Image Container if available
             if (memo.hasImage) Container(
               width: 70,
               height: 70,

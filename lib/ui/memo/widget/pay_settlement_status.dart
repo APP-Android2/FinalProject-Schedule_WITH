@@ -12,19 +12,20 @@ class PaySettlementStatus extends StatefulWidget {
 }
 
 class _PaySettlementStatusState extends State<PaySettlementStatus> {
-  late bool _isComplete;
+  late String _isCompleteStatus;
 
   @override
   void initState() {
     super.initState();
-    _isComplete = widget.isComplete;
+    _isCompleteStatus = widget.isComplete ? 'Y' : 'N';
   }
 
-  void _payupdateStatus(bool isComplete) {
+  void _payupdateStatus(String status) {
+    bool isComplete = status == 'Y';
     setState(() {
-      _isComplete = isComplete;
-      widget.onStatusChanged(isComplete);
+      _isCompleteStatus = status;
     });
+      widget.onStatusChanged(isComplete);
   }
 
   @override
@@ -48,16 +49,16 @@ class _PaySettlementStatusState extends State<PaySettlementStatus> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       GestureDetector(
-                        onTap: () => _payupdateStatus(false),
+                        onTap: () => _payupdateStatus('N'),
                         child: Row(
                           children: <Widget>[
                             SizedBox(
                               width: 10,
                               height: 10,
-                              child: Radio<bool>(
-                                value: false,
-                                groupValue: _isComplete,
-                                onChanged: (value) => _payupdateStatus(value ?? false),
+                              child: Radio<String>(
+                                value: 'N',
+                                groupValue: _isCompleteStatus,
+                                onChanged: (value) => _payupdateStatus(value ?? 'N'),
                                 activeColor: mainBrown,
                                 fillColor: MaterialStateProperty.resolveWith<Color>(
                                       (states) => states.contains(MaterialState.selected) ? mainBrown : mainBrown.withOpacity(1),
@@ -71,16 +72,16 @@ class _PaySettlementStatusState extends State<PaySettlementStatus> {
                       ),
                       SizedBox(width: 20),
                       GestureDetector(
-                        onTap: () => _payupdateStatus(true),
+                        onTap: () => _payupdateStatus('Y'),
                         child: Row(
                           children: <Widget>[
                             SizedBox(
                               width: 10,
                               height: 10,
-                              child: Radio<bool>(
-                                value: true,
-                                groupValue: _isComplete,
-                                onChanged: (value) => _payupdateStatus(value ?? true),
+                              child: Radio<String>(
+                                value: 'Y',
+                                groupValue: _isCompleteStatus,
+                                onChanged: (value) => _payupdateStatus(value ?? 'Y'),
                                 activeColor: mainOrange,
                                 fillColor: MaterialStateProperty.resolveWith<Color>(
                                       (states) => states.contains(MaterialState.selected) ? mainOrange : mainOrange.withOpacity(0.5),

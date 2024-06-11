@@ -7,13 +7,13 @@ import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:schedule_with/assets/colors/color.dart';
-import 'package:schedule_with/ui/memo/view/paymemo_item.dart';
+import '../../../entity/paymemo_tbl.dart';
 import '../../../widget/main_alert.dart';
-import '../widget/memo_controller.dart';
 import '../widget/pay_bankaccount_bottomsheet.dart';
 import '../widget/pay_settlement_status.dart';
 import '../widget/pay_title__field.dart';
 import '../widget/pay_usage_bottomsheet.dart';
+import '../widget/paymemo_controller.dart';
 import 'memo_main.dart';
 
 class PayMemoScreen extends StatefulWidget {
@@ -75,12 +75,12 @@ class _PayMemoScreenState extends State<PayMemoScreen> {
                       );
                     }
                 ).then((result) {
-                  if (result == true) {
+                  if (result == false) {
                     Get.to(() => MemoMainScreen());
                   }
                 });
               } else {
-                Get.back(result: false);
+                Get.back(result: true);
               }
             },
           ),
@@ -102,7 +102,8 @@ class _PayMemoScreenState extends State<PayMemoScreen> {
           Column(
             children: [
               PaySettlementStatus(
-                  isComplete: _isComplete, onStatusChanged: _handleSettlementChange),
+                  isComplete: _isComplete,
+                  onStatusChanged: _handleSettlementChange),
               PayTitleField(titleController: _titleController),
               _buildBankFields(),
               _buildPersonCounter(),
@@ -125,7 +126,8 @@ class _PayMemoScreenState extends State<PayMemoScreen> {
                           return Wrap(
                             children: [
                               BottomSheetWidget(
-                                onAdd: (String usage, String cost, bool isAddition) {
+                                onAdd: (String usage, String cost,
+                                    bool isAddition) {
                                   setState(() {
                                     // 사용 내역과 비용을 _usageDetails 리스트에 추가
                                     _usageDetails.add("$usage $cost원");
@@ -162,8 +164,8 @@ class _PayMemoScreenState extends State<PayMemoScreen> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   child: Container(
-                    height: 1,
-                    color: grey2
+                      height: 1,
+                      color: grey2
                   ),
                 ),
                 _buildAmountPerPerson(),
@@ -175,12 +177,87 @@ class _PayMemoScreenState extends State<PayMemoScreen> {
     );
   }
 
+
+  // Widget _buildBankFields() {
+  //   return Padding(
+  //     padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 0),
+  //     child: Container(
+  //       decoration: BoxDecoration(border: Border(bottom: BorderSide(color: grey2))),
+  //       child: Padding(
+  //         padding: EdgeInsets.only(bottom: 15),
+  //         child: Row(
+  //           children: <Widget>[
+  //             Expanded(
+  //               flex: 1,
+  //               child: Text('계좌번호', style: TextStyle(fontSize: 14)),
+  //             ),
+  //             Expanded(
+  //               flex: 2,
+  //               child: GestureDetector(
+  //                 onTap: () => _showBankAccountBottomSheet(),
+  //                 child: Row(
+  //                   children: [
+  //                     Spacer(), // This will push the following widgets to the right
+  //                     Expanded(
+  //                       child: Text(
+  //                         _selectedAccount,
+  //                         style: TextStyle(
+  //                             fontSize: 14,
+  //                             color: _selectedAccount == '계좌번호를 입력해 주세요.'
+  //                                 ? grey3
+  //                                 : Colors.black),
+  //                         overflow: TextOverflow.ellipsis, // Prevents text wrapping
+  //                         maxLines: 1, // Ensures text is in a single line
+  //                       ),
+  //                     ),
+  //                     Padding(
+  //                       padding: EdgeInsets.only(left: 5),
+  //                       child: InkWell(
+  //                         onTap: () {
+  //                           Clipboard.setData(ClipboardData(text: _selectedAccount));
+  //                         },
+  //                         child: SvgPicture.asset(
+  //                           "lib/assets/icon/icon_copy_payaccount.svg",
+  //                           color: grey4,
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+  //
+  // void _showBankAccountBottomSheet() {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return BankAccountBottomSheetWidget(
+  //         onSelectAccount: (account) {
+  //           setState(() {
+  //             _selectedAccount = account;
+  //           });
+  //         },
+  //       );
+  //     },
+  //     backgroundColor: Colors.white,
+  //     shape: RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
+  //     ),
+  //     barrierColor: grey4.withOpacity(0.5),
+  //   );
+  // }
+
   Widget _buildBankFields() {
     return Padding(
       padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 0),
       child: Container(
-        decoration: BoxDecoration(border: Border(bottom: BorderSide(
-            color: grey2))),
+        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: grey2))),
         child: Padding(
           padding: EdgeInsets.only(bottom: 15),
           child: Row(
@@ -191,51 +268,36 @@ class _PayMemoScreenState extends State<PayMemoScreen> {
               ),
               Expanded(
                 flex: 2,
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: InkWell(
-                    onTap: () {
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        context: context,
-                        builder: (BuildContext context) {
-                          return BankAccountBottomSheetWidget(
-                              onSelectAccount: (account) {
-                                setState(() {
-                                  _selectedAccount = account;
-                                });
-                              });
-                        },
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(10.0)),
-                        ),
-                        barrierColor: grey4.withOpacity(0.5),
-                      );
-                    },
+                child: GestureDetector(
+                  onTap: _showBankAccountBottomSheet,
+                  child: Container(
+                    alignment: Alignment.centerRight,
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          _selectedAccount,
+                          _selectedAccount.isEmpty || _selectedAccount == '계좌번호를 입력해 주세요.' ? '계좌번호를 입력해 주세요.' : _selectedAccount,
                           style: TextStyle(
                               fontSize: 14,
-                              color: _selectedAccount == '계좌번호를 입력해 주세요.'
-                                  ? grey3
-                                  : Colors.black
+                              color: _selectedAccount.isEmpty || _selectedAccount == '계좌번호를 입력해 주세요.' ? grey3 : Colors.black
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            if (_selectedAccount.isNotEmpty && _selectedAccount != '계좌번호를 입력해 주세요.') {
+                              Clipboard.setData(ClipboardData(text: _selectedAccount));
+                            }
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 5),
+                            child: SvgPicture.asset(
+                                "lib/assets/icon/icon_copy_payaccount.svg",
+                                color: _selectedAccount.isEmpty || _selectedAccount == '계좌번호를 입력해 주세요.' ? grey3 : grey4
+                            ),
                           ),
                         ),
-                    InkWell(
-                      onTap: () {
-                        Clipboard.setData(ClipboardData(text: _selectedAccount));
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 5, top: 0, right: 0, bottom: 0),
-                        child: SvgPicture.asset(
-                            "lib/assets/icon/icon_copy_payaccount.svg", color: grey4),
-                          )
-                        )
                       ],
                     ),
                   ),
@@ -247,6 +309,103 @@ class _PayMemoScreenState extends State<PayMemoScreen> {
       ),
     );
   }
+
+  void _showBankAccountBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return BankAccountBottomSheetWidget(
+          onSelectAccount: (account) {
+            setState(() {
+              _selectedAccount = account;
+            });
+          },
+        );
+      },
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
+      ),
+      barrierColor: grey4.withOpacity(0.5),
+    );
+  }
+
+  // Widget _buildBankFields() {
+  //   return Padding(
+  //     padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 0),
+  //     child: Container(
+  //       decoration: BoxDecoration(
+  //           border: Border(bottom: BorderSide(color: grey2))
+  //       ),
+  //       child: Padding(
+  //         padding: EdgeInsets.only(bottom: 15),
+  //         child: Row(
+  //           children: <Widget>[
+  //             Expanded(
+  //               flex: 1,
+  //               child: Text('계좌번호', style: TextStyle(fontSize: 14)),
+  //             ),
+  //             Expanded(
+  //               flex: 2,
+  //               child: Align(
+  //                 alignment: Alignment.centerRight,
+  //                 child: InkWell(
+  //                   onTap: () {
+  //                     showModalBottomSheet(
+  //                       isScrollControlled: true,
+  //                       context: context,
+  //                       builder: (BuildContext context) {
+  //                         return BankAccountBottomSheetWidget(
+  //                             onSelectAccount: (account) {
+  //                               setState(() {
+  //                                 _selectedAccount = account;
+  //                               });
+  //                             }
+  //                         );
+  //                       },
+  //                       backgroundColor: Colors.white,
+  //                       shape: RoundedRectangleBorder(
+  //                           borderRadius: BorderRadius.vertical(top: Radius.circular(10.0))
+  //                       ),
+  //                       barrierColor: grey4.withOpacity(0.5),
+  //                     );
+  //                   },
+  //                   child: Row(
+  //                     mainAxisSize: MainAxisSize.min,
+  //                     children: [
+  //                       Text(
+  //                         _selectedAccount,
+  //                         style: TextStyle(
+  //                             fontSize: 14,
+  //                             color: _selectedAccount == '계좌번호를 입력해 주세요.'
+  //                                 ? grey3
+  //                                 : Colors.black
+  //                         ),
+  //                       ),
+  //                       InkWell(
+  //                           onTap: () {
+  //                             Clipboard.setData(ClipboardData(text: _selectedAccount));
+  //                           },
+  //                           child: Padding(
+  //                             padding: EdgeInsets.only(left: 5),
+  //                             child: SvgPicture.asset(
+  //                                 "lib/assets/icon/icon_copy_payaccount.svg",
+  //                                 color: grey4
+  //                             ),
+  //                           )
+  //                       )
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
 
   Widget _buildPersonCounter() {
     return Padding(
@@ -307,7 +466,8 @@ class _PayMemoScreenState extends State<PayMemoScreen> {
         padding: EdgeInsets.only(bottom: 60),
         itemBuilder: (context, index) {
           List<String> parts = _usageDetails[index].split(' ');
-          var isIncome = parts[1].startsWith('-');
+          // var isIncome = parts[1].startsWith('-');
+          var isIncome = parts.length > 1 && parts[1].startsWith('-');
           return SwipeActionCell(
             key: ObjectKey(_usageDetails[index]),
             backgroundColor: Colors.white,
@@ -324,12 +484,17 @@ class _PayMemoScreenState extends State<PayMemoScreen> {
               ),
             ],
             child: Padding(
-              padding: EdgeInsets.only(left: 30, top: 10, right: 20, bottom: 10),
+              padding: EdgeInsets.only(
+                  left: 30, top: 10, right: 20, bottom: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text(parts[0], style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: isIncome ? mainOrange : mainBrown)),
-                  Text(parts[1], style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: isIncome ? mainOrange : mainBrown)),
+                  Text(parts[0], style: TextStyle(fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: isIncome ? mainOrange : mainBrown)),
+                  Text(parts[1], style: TextStyle(fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: isIncome ? mainOrange : mainBrown)),
                 ],
               ),
             ),
@@ -341,7 +506,10 @@ class _PayMemoScreenState extends State<PayMemoScreen> {
 
   Widget _buildTotalAmount() {
     int totalAmount = calculateTotalAmount();
-    double screenWidth = MediaQuery.of(context).size.width;
+    double screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
 
     return Padding(
       padding: EdgeInsets.only(left: 20, top: 0, right: 20, bottom: 0),
@@ -357,7 +525,8 @@ class _PayMemoScreenState extends State<PayMemoScreen> {
           ),
           SizedBox(height: 15),
           Container(
-            decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white,))),
+            decoration: BoxDecoration(
+                border: Border(bottom: BorderSide(color: Colors.white,))),
             child: Padding(
               padding: EdgeInsets.only(bottom: 15),
               child: Row(
@@ -414,40 +583,48 @@ class _PayMemoScreenState extends State<PayMemoScreen> {
     return _count > 0 ? total / _count : 0;
   }
 
-  void _saveMemo() {
-    if (_titleController.text.isNotEmpty && _count > 0) {
-      String date = DateTime.now().toString();
+  Future<void> _saveMemo() async {
+    if (_titleController.text.isNotEmpty) {
       int totalAmount = calculateTotalAmount();
       int amountPerPerson = calculateAmountPerPerson().toInt();
 
       if (widget.paymemo == null) {
-        // 새로운 PayMemo를 생성하는 경우
-        controller.addPayMemo(PayMemo(
-          date: DateTime.now().toIso8601String().split('T')[0],
+        PayMemo newPayMemo = PayMemo(
+          documentId: '',
+          idx: DateTime
+              .now()
+              .millisecondsSinceEpoch,
+          reg_dt: DateTime.now(),
+          mod_dt: DateTime.now(),
           title: _titleController.text,
           amount: '$totalAmount원 | $amountPerPerson원',
           isCompleted: _isComplete,
           accountNumber: _selectedAccount,
           participantsCount: _count,
           usageDetails: _usageDetails,
-        ));
-      } else {
-        // 기존의 PayMemo를 업데이트하는 경우
-        int index = controller.paymemos.indexOf(widget.paymemo!);
-        controller.paymemos[index] = PayMemo(
-          date: DateTime.now().toIso8601String().split('T')[0],
-          title: _titleController.text,
-          amount: '$totalAmount원 | $amountPerPerson원',
-          isCompleted: _isComplete,
-          accountNumber: _selectedAccount,
-          participantsCount: _count,
-          usageDetails: _usageDetails,
+          status: 'Y',
         );
+        String documentId = await controller.addPayMemo(newPayMemo);
+        newPayMemo.documentId = documentId;
+      }
+      else {
+        // Update an existing PayMemo
+        PayMemo updatedPayMemo = PayMemo(
+          documentId: widget.paymemo!.documentId,
+          idx: widget.paymemo!.idx,
+          reg_dt: widget.paymemo!.reg_dt,
+          mod_dt: DateTime.now(),
+          title: _titleController.text,
+          amount: '$totalAmount원 | $amountPerPerson원',
+          isCompleted: _isComplete,
+          accountNumber: _selectedAccount,
+          participantsCount: _count,
+          usageDetails: _usageDetails,
+          status: widget.paymemo!.status,
+        );
+        await controller.updatePayMemo(updatedPayMemo);
       }
       Navigator.pop(context);
     }
   }
 }
-
-
-
