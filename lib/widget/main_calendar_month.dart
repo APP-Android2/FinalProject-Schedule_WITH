@@ -154,11 +154,14 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
                     timeTextStyle:
                     TextStyle(color: grey4, fontWeight: FontWeight.bold),
                     timeIntervalHeight: 100,
-                    timeIntervalWidth: 200,
+                    // timeIntervalWidth: 200,
                     timelineAppointmentHeight: 30,
                     timeInterval: Duration(hours: 1),
                     timeFormat: 'a h:mm',
+                    minimumAppointmentDuration: Duration(hours: 1)
+
                   ),
+
                 ),
               ),
             );
