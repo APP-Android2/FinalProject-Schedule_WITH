@@ -61,7 +61,6 @@ class _MainAlertState extends State<MainAlert> {
             ),
             child: MaterialButton(
               onPressed: () async {
-                print('WarningYesNo >> false');
                 if(widget.msg == "로그아웃 하시겠습니까?") {
                   final SharedPreferences prefs = await SharedPreferences.getInstance();
                   prefs.remove('server_id');
@@ -69,6 +68,10 @@ class _MainAlertState extends State<MainAlert> {
                   prefs.remove('status');
                   prefs.remove('id');
                   Get.offAll(LoginMain());
+                }
+                if(widget.msg == "수정사항을 취소하시겠습니까?"){
+                  Get.back();
+                  Get.back();
                 }
                 Get.back(result: false);
               },

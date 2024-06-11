@@ -3,7 +3,8 @@ import 'package:schedule_with/ui/mypage/controller/mypage_controller.dart';
 import 'package:schedule_with/domain/repository/schedule_repository.dart';
 import 'package:schedule_with/domain/use_case/schedule_usecase.dart';
 import 'package:schedule_with/ui/schedule/controller/schedule_controller.dart';
-import 'package:schedule_with/ui/schedule/widget/calendar_cell_custom.dart';
+import 'package:schedule_with/ui/todo/widget/calendar_cell_custom.dart';
+import 'package:schedule_with/ui/todo/controller/todo_controller.dart';
 
 // Get.put으로 의존성 주입 설정
 void setupDependencies() {
@@ -12,7 +13,10 @@ void setupDependencies() {
   Get.put(ScheduleUseCase(Get.find<ScheduleRepository>()));
   Get.put(ScheduleController(Get.find<ScheduleUseCase>()));
   Get.put(CustomCalendarController());
-  
+
+  // todo관련
+  Get.put(TodoController());
+
   // 마이페이지 관련
   Get.put(MyPageController());
 }

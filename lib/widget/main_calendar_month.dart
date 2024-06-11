@@ -86,12 +86,18 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
     }
   }
 
+  // void showAlarmIcon() {
+  //   var
+  //   _scheduleController.alarmStatus.value ?
+  // }
+
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Obx(
-          () {
+              () {
             return SizedBox(
               // 캘린더가 차지할 높이
               height: MediaQuery.of(context).size.height * 0.65,
@@ -151,7 +157,7 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
                   monthViewSettings: MonthViewSettings(
                     numberOfWeeksInView: 6, // 달력에 나타낼 주 수
                     appointmentDisplayMode:
-                        MonthAppointmentDisplayMode.appointment, // 약속 제목 표시
+                    MonthAppointmentDisplayMode.appointment, // 약속 제목 표시
                     appointmentDisplayCount: 3, // 셀 하나에 약속 표시 갯수
                   ),
                   appointmentBuilder: buildAppointmentWidget,
@@ -159,7 +165,7 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
                   timeSlotViewSettings: TimeSlotViewSettings(
                     timeRulerSize: 50,
                     timeTextStyle:
-                        TextStyle(color: grey4, fontWeight: FontWeight.bold),
+                    TextStyle(color: grey4, fontWeight: FontWeight.bold),
                     timeIntervalHeight: 100,
                     timeIntervalWidth: 200,
                     timelineAppointmentHeight: 30,
@@ -167,62 +173,6 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
                     timeFormat: 'a h:mm',
                   ),
                 ),
-        // Container(
-        //   width: double.infinity,
-        //   height: 40,
-        //   child: Row(
-        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //     children: [
-        // 커스텀 date picker
-        //       YearDatePickerButton(),
-        //       // CalendarChangeViewButton(),
-        //     ],
-        //   ),
-        // ),
-        SizedBox(
-          // 캘린더가 차지할 높이
-          height: MediaQuery.of(context).size.height * 0.65,
-          child: SfCalendar(
-          // 최초 표시형식 (월)
-            view: currentView,
-            initialDisplayDate: _jumpToTime,
-            controller: _calendarController,
-            onTap: _onCalendarTap,
-
-            // 임시 데이터 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 나중에 삭제 해야됨
-            // 변경 가능한 표시형식 (월, 주)
-            allowedViews: const [
-              CalendarView.month,
-              CalendarView.week,
-              CalendarView.schedule
-            ],
-            // 배경색
-            backgroundColor: Colors.white,
-            // 오늘 날짜 강조색
-            todayHighlightColor: mainOrange,
-            todayTextStyle: TextStyle(color: Colors.white),
-            // 연월 고르는 버튼 활성화
-            showDatePickerButton: true,
-            // 오늘 날짜로 돌아가는 버튼
-            showTodayButton: true,
-            cellBorderColor: grey3,
-            // 달력 헤더 스타일 설정
-            headerDateFormat: 'yyyy년 MM월',
-            headerHeight: 50,
-            headerStyle: const CalendarHeaderStyle(
-              backgroundColor: Colors.white,
-              textStyle: TextStyle(
-                fontSize: 14,
-                // fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-            // 특정 날짜 선택시 셀 스타일 설정
-            selectionDecoration: BoxDecoration(
-              color: Colors.transparent,
-              border: Border.all(
-                color: isCurrentMonth ? mainOrange : Colors.transparent,
-                width: 2,
               ),
             );
           },
@@ -230,55 +180,67 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
       ],
     );
   }
-}
 
-// 시계 아이콘 넣어지나?
-Widget buildAppointmentWidget(
-    BuildContext context, CalendarAppointmentDetails details) {
-  if (details.isMoreAppointmentRegion) {
-    return Container(
-      width: details.bounds.width,
-      height: details.bounds.height,
-      child: Center(
-        child: Icon(
-          Icons.more_horiz, // 더보기 아이콘
-          size: 16, // 아이콘 크기 조정
-          color: mainBrown, // 아이콘 색상 조정
+
+
+
+// 약속 3개 이상 더보기 아이콘
+  Widget buildAppointmentWidget(
+      BuildContext context, CalendarAppointmentDetails details) {
+    if (details.isMoreAppointmentRegion) {
+      // 하나의 셀에 일정 최대 3개만 표시. 3개 초과 시 더보기 아이콘 띄움
+      return Container(
+        width: details.bounds.width,
+        height: details.bounds.height,
+        child: Center(
+          child: Icon(
+            Icons.more_horiz, // 원하는 아이콘으로 변경
+            size: 16, // 아이콘 크기 조정
+            color: mainBrown, // 아이콘 색상 조정
+          ),
         ),
-      ),
-    );
-  } else {
-    final Appointment appointment = details.appointments.first;
-    return Container(
-      width: details.bounds.width,
-      height: details.bounds.height,
-      decoration: BoxDecoration(
-        color: appointment.color,
-        // borderRadius: BorderRadius.circular(5),
-      ),
-        child: Stack(
+      );
+    } else {
+      final Appointment appointment = details.appointments.first;
+      // 일정 3개 이하일 때 보이는 설정
+      return Container(
+          decoration: BoxDecoration(
+            color: appointment.color,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Positioned(
-                top: 1,
-                left: 1,
-                  child: Icon(Icons.access_alarm,size: 12,
-                  color: mainBrown)),
-              Positioned(
-                top: 1,
-                left: 15,
-                  // 스케줄 텍스트 색상
-                  child: Text(
-                      appointment.subject,
-                      style: TextStyle(color: mainBrown, fontSize: 10),
-                      overflow: TextOverflow.fade))]
-        )
-    );
+              // 알람 아이콘
+              Expanded(
+                  child: Icon(
+                      Icons.access_alarm,
+                      size: 10, color: mainBrown)),
+              // color: _scheduleController.alarmStatus.value ? mainBrown : Colors.transparent)),
+
+              // 일정
+              Expanded(
+                // 일정 텍스트를 가운데 맞추기 위한 여백
+                  child: Padding(
+                      padding: EdgeInsets.only(top: 1),
+                      child: Text(
+                        appointment.subject,
+                        overflow: TextOverflow.fade,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: mainBrown, fontSize: 10),
+                      ))),
+              // 일정 박스를 가운데 맞추기 위한 여백
+              Expanded(child: SizedBox(width: 4))
+            ],
+          )
+      );
+    }
   }
 }
 
-
-//
-// // 약속 3개 이상 더보기 아이콘
+// 시계 아이콘 넣어지나?
 // Widget buildAppointmentWidget(
 //     BuildContext context, CalendarAppointmentDetails details) {
 //   if (details.isMoreAppointmentRegion) {
@@ -287,7 +249,7 @@ Widget buildAppointmentWidget(
 //       height: details.bounds.height,
 //       child: Center(
 //         child: Icon(
-//           Icons.more_horiz, // 원하는 아이콘으로 변경
+//           Icons.more_horiz, // 더보기 아이콘
 //           size: 16, // 아이콘 크기 조정
 //           color: mainBrown, // 아이콘 색상 조정
 //         ),
@@ -296,17 +258,31 @@ Widget buildAppointmentWidget(
 //   } else {
 //     final Appointment appointment = details.appointments.first;
 //     return Container(
+//       width: details.bounds.width,
+//       height: details.bounds.height,
 //       decoration: BoxDecoration(
 //         color: appointment.color,
-//         // borderRadius: BorderRadius.circular(5),
+//         borderRadius: BorderRadius.circular(3),
 //       ),
-//       child: Center(
-//         child: Text(
-//           appointment.subject,
-//           // 스케줄 텍스트 색상
-//           style: TextStyle(color: Colors.black, fontSize: 10),
-//         ),
-//       ),
+//         child: Stack(
+//             children: [
+//               Positioned(
+//                 top: 1,
+//                 left: 1,
+//                   child: Icon(Icons.access_alarm,size: 12,
+//                   color: mainBrown)),
+//               Positioned(
+//                 top: 1,
+//                 left: 15,
+//                   // 스케줄 텍스트 색상
+//                   child: Text(
+//                       appointment.subject,
+//                       style: TextStyle(color: mainBrown, fontSize: 10),
+//                       overflow: TextOverflow.fade))]
+//         )
 //     );
 //   }
 // }
+
+
+

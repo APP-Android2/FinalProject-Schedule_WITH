@@ -7,7 +7,7 @@ import 'package:schedule_with/widget/friend_request_before.dart';
 import 'package:schedule_with/widget/main_calendar_month.dart';
 import 'package:schedule_with/widget/main_tab_bar.dart';
 
-import 'calendar_cell_custom.dart';
+import '../../todo/widget/calendar_cell_custom.dart';
 
 class FriendTabBar extends StatefulWidget {
   const FriendTabBar({super.key});
