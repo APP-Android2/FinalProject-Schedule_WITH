@@ -43,7 +43,7 @@ class MemoItem extends StatelessWidget {
                   offset: Offset(0, -5),
                   child: Container(
                     width: 52,
-                    height: 20,
+                    height: 24,
                     decoration: BoxDecoration(
                       color: memo.isPublic ? mainOrange : mainBrown,
                       borderRadius: BorderRadius.circular(20),
@@ -66,8 +66,8 @@ class MemoItem extends StatelessWidget {
             ),
             Text(
               memo.content,
-              style: TextStyle(fontSize: 12),
-              maxLines: memo.hasImage ? 2 : 4,
+              style: TextStyle(fontSize: 14),
+              maxLines: memo.hasImage ? 2 : 2,
               overflow: TextOverflow.ellipsis,
             ),
             if (memo.hasImage) Container(

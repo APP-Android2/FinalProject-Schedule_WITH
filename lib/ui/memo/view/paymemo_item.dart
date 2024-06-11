@@ -61,7 +61,7 @@ class PayMemoItem extends StatelessWidget {
                       offset: Offset(0, -5),
                     child: Container(
                       width: 60,
-                      height: 20,
+                      height: 24,
                       decoration: BoxDecoration(
                         color: paymemo.isCompleted ? mainOrange : mainBrown,
                         borderRadius: BorderRadius.circular(20),
@@ -101,7 +101,7 @@ class PayMemoItem extends StatelessWidget {
                               ),
                               TextSpan(
                                 text: " | $personalAmount",
-                                style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+                                style: TextStyle(color: Colors.black, fontSize: 16),
                               ),
                             ],
                           ),
