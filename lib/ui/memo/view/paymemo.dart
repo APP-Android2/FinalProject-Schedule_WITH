@@ -155,7 +155,7 @@ class _PayMemoScreenState extends State<PayMemoScreen> {
           ),
           Container(
             color: Colors.white,
-            padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+            padding: EdgeInsets.fromLTRB(0, 10, 0, 30),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
