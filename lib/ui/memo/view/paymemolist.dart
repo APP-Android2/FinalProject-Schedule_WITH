@@ -6,10 +6,20 @@ import 'package:schedule_with/assets/colors/color.dart';
 import 'package:schedule_with/ui/memo/view/paymemo.dart';
 import 'package:schedule_with/ui/memo/view/paymemo_item.dart';
 
-import '../widget/memo_controller.dart';
+import '../../../domain/repository/memo/paymemo_repository.dart';
+import '../../../domain/use_case/paymemo_use__case.dart';
+import '../widget/paymemo_controller.dart';
 
 class PayMemoListView extends StatelessWidget {
-  final PayMemoController controller = Get.put(PayMemoController());
+  final PayMemoController controller;
+  // final PayMemoController controller = Get.put(PayMemoController());
+
+  // PayMemoListView({super.key}) : controller = Get.put(PayMemoController(
+  //     payMemoUseCase: PayMemoUseCase(PayMemoRepository()), userId: 'actual_user_id'
+  // ));
+
+  PayMemoListView({Key? key}) : controller = Get.put(PayMemoController(
+      payMemoUseCase: PayMemoUseCase(PayMemoRepository()))), super(key: key);
 
   @override
   Widget build(BuildContext context) {

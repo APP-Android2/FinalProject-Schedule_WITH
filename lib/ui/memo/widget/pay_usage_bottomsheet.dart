@@ -23,8 +23,9 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
 
   void _addTransaction(bool isIncome) {
     String sign = isIncome ? "" : "-";
+    String cost = costController.text.isEmpty ? "0" : costController.text;
     transactionType = isIncome ? "income" : "expense";
-    widget.onAdd(usageController.text, sign + costController.text, isIncome);
+    widget.onAdd(usageController.text, sign + cost, isIncome);
     FocusScope.of(context).unfocus();
     Navigator.pop(context);
   }

@@ -4,12 +4,22 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:schedule_with/assets/colors/color.dart';
+import '../../../domain/repository/memo/memo_repository.dart';
+import '../../../domain/use_case/memo_use_case.dart';
 import '../widget/memo_controller.dart';
 import 'memo.dart';
 import 'memo_item.dart';
 
 class MemoListView extends StatelessWidget {
-  final MemoController controller = Get.put(MemoController());
+  final MemoController controller;
+  // final MemoController controller = Get.find<MemoController>();
+  // MemoListView({super.key});
+
+  // MemoListView({super.key}) : controller = Get.put(MemoController(
+  //     memoUseCase: MemoUseCase(MemoRepository()), userId: '',
+  // ));
+  MemoListView({Key? key}) : controller = Get.put(MemoController(
+      memoUseCase: MemoUseCase(MemoRepository()))), super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +37,9 @@ class MemoListView extends StatelessWidget {
                   child: Center(
                     child: Text(
                       '메모',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: mainOrange),
+                      style: TextStyle(fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: mainOrange),
                     ),
                   ),
                 ),
@@ -35,9 +47,12 @@ class MemoListView extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: IconButton(
-                      icon: Obx(() => Icon(
-                          controller.isExpanded.value ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                          color: mainOrange)),
+                      icon: Obx(() =>
+                          Icon(
+                              controller.isExpanded.value ? Icons
+                                  .keyboard_arrow_up : Icons
+                                  .keyboard_arrow_down,
+                              color: mainOrange)),
                       onPressed: controller.toggleExpansion,
                     ),
                   ),
@@ -50,7 +65,8 @@ class MemoListView extends StatelessWidget {
             thickness: 1.5,
             color: mainOrange,
           ),
-          Obx(() => controller.isExpanded.value ? Expanded(
+          Obx(() =>
+          controller.isExpanded.value ? Expanded(
             child: ListView.builder(
               padding: EdgeInsets.zero,
               itemCount: controller.memos.length,
@@ -58,17 +74,18 @@ class MemoListView extends StatelessWidget {
                 return Column(
                   children: [
                     SwipeActionCell(
-                      key: ObjectKey(controller.memos[index]),
+                      // key: ObjectKey(controller.memos[index]),
+                      key: ValueKey(controller.memos[index].idx),
                       backgroundColor: Colors.white,
                       trailingActions: <SwipeAction>[
-                      SwipeAction(
-                        title: "삭제",
-                        onTap: (CompletionHandler handler) async {
-                          await handler(true);
-                          controller.memos.removeAt(index);
-                          // setState(() {});
-                        },
-                        color:  mainBrown,
+                        SwipeAction(
+                          title: "삭제",
+                          onTap: (CompletionHandler handler) async {
+                            await handler(true);
+                            controller.deleteMemo(controller.memos[index].idx.toString());
+                            // setState(() {});
+                          },
+                          color: mainBrown,
                         ),
                       ],
                       child: MemoItem(
@@ -77,12 +94,13 @@ class MemoListView extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MemoScreen(memo: controller.memos[index]),
+                              builder: (context) =>
+                                  MemoScreen(memo: controller.memos[index]),
                             ),
                           );
                         },
                         onDelete: () {
-                        controller.deleteMemo(index);
+                          controller.deleteMemo(controller.memos[index].idx.toString());
                         },
                       ),
                     ),
@@ -97,7 +115,7 @@ class MemoListView extends StatelessWidget {
                 );
               },
             ),
-          ) : Offstage()),
+          ) : SizedBox.shrink()),
         ],
       ),
     );
