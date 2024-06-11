@@ -84,8 +84,7 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Obx(
-              () {
+        Obx(() {
             return SizedBox(
               // 캘린더가 차지할 높이
               height: MediaQuery.of(context).size.height * 0.65,
