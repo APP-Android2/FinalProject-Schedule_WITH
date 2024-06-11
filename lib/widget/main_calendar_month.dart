@@ -51,9 +51,9 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
     // 캘린더의 셀 선택시, 스케줄 시작날짜, 마침날짜 값을 선택한 날짜로 초기화
     if (details.targetElement == CalendarElement.calendarCell) {
       _scheduleController.selectedStartDt.value =
-          _calendarController.selectedDate!;
+      _calendarController.selectedDate!;
       _scheduleController.selectedEndDt.value =
-          _calendarController.selectedDate!;
+      _calendarController.selectedDate!;
     } else {}
     // 캘린더 셀 선택시 현재 월인지 확인
     if (onTapElement == 2) {
@@ -69,7 +69,7 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
     // 약속 있으면 스케줄 수정 바텀시트 띄움
     if (todayAppoint == true) {
       showModalBottomSheet(
-          // 바텀 시트 높이 지정하려면 isScrollControlled: true,
+        // 바텀 시트 높이 지정하려면 isScrollControlled: true,
           isScrollControlled: true,
           context: context,
           builder: (BuildContext context) {
@@ -85,7 +85,7 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
     return Column(
       children: [
         Obx(
-          () {
+              () {
             return SizedBox(
               // 캘린더가 차지할 높이
               height: MediaQuery.of(context).size.height * 0.65,
@@ -145,7 +145,7 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
                   monthViewSettings: MonthViewSettings(
                     numberOfWeeksInView: 6, // 달력에 나타낼 주 수
                     appointmentDisplayMode:
-                        MonthAppointmentDisplayMode.appointment, // 약속 제목 표시
+                    MonthAppointmentDisplayMode.appointment, // 약속 제목 표시
                     appointmentDisplayCount: 3, // 셀 하나에 약속 표시 갯수
                   ),
                   appointmentBuilder: buildAppointmentWidget,
@@ -153,7 +153,7 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
                   timeSlotViewSettings: TimeSlotViewSettings(
                     timeRulerSize: 50,
                     timeTextStyle:
-                        TextStyle(color: grey4, fontWeight: FontWeight.bold),
+                    TextStyle(color: grey4, fontWeight: FontWeight.bold),
                     timeIntervalHeight: 100,
                     timeIntervalWidth: 200,
                     timelineAppointmentHeight: 30,
@@ -161,62 +161,6 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
                     timeFormat: 'a h:mm',
                   ),
                 ),
-        // Container(
-        //   width: double.infinity,
-        //   height: 40,
-        //   child: Row(
-        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //     children: [
-        // 커스텀 date picker
-        //       YearDatePickerButton(),
-        //       // CalendarChangeViewButton(),
-        //     ],
-        //   ),
-        // ),
-        SizedBox(
-          // 캘린더가 차지할 높이
-          height: MediaQuery.of(context).size.height * 0.65,
-          child: SfCalendar(
-          // 최초 표시형식 (월)
-            view: currentView,
-            initialDisplayDate: _jumpToTime,
-            controller: _calendarController,
-            onTap: _onCalendarTap,
-
-            // 임시 데이터 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 나중에 삭제 해야됨
-            // 변경 가능한 표시형식 (월, 주)
-            allowedViews: const [
-              CalendarView.month,
-              CalendarView.week,
-              CalendarView.schedule
-            ],
-            // 배경색
-            backgroundColor: Colors.white,
-            // 오늘 날짜 강조색
-            todayHighlightColor: mainOrange,
-            todayTextStyle: TextStyle(color: Colors.white),
-            // 연월 고르는 버튼 활성화
-            showDatePickerButton: true,
-            // 오늘 날짜로 돌아가는 버튼
-            showTodayButton: true,
-            cellBorderColor: grey3,
-            // 달력 헤더 스타일 설정
-            headerDateFormat: 'yyyy년 MM월',
-            headerHeight: 50,
-            headerStyle: const CalendarHeaderStyle(
-              backgroundColor: Colors.white,
-              textStyle: TextStyle(
-                fontSize: 14,
-                // fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-            // 특정 날짜 선택시 셀 스타일 설정
-            selectionDecoration: BoxDecoration(
-              color: Colors.transparent,
-              border: Border.all(
-                color: isCurrentMonth ? mainOrange : Colors.transparent,
-                width: 2,
               ),
             );
           },

@@ -25,23 +25,23 @@ class ScheduleController extends GetxController {
 
   // entity
   var schedule = Schedule(
-    id: '',
-    idx: 0,
-    title: '',
-    color: lightPink,
-    startDt: DateTime.now(),
-    endDt: DateTime.now(),
-    startTime: DateTime.now(),
-    endTime: DateTime.now(),
-    status: '',
-    public: '',
-    regDt: null,
-    modDt: null,
-    content: '',
-    userIdx: 0,
-    groupIdx: null,
-    alarmIdx: null,
-    alarmStatus: false
+      id: '',
+      idx: 0,
+      title: '',
+      color: lightPink,
+      startDt: DateTime.now(),
+      endDt: DateTime.now(),
+      startTime: DateTime.now(),
+      endTime: DateTime.now(),
+      status: '',
+      public: '',
+      regDt: null,
+      modDt: null,
+      content: '',
+      userIdx: 0,
+      groupIdx: null,
+      alarmIdx: null,
+      alarmStatus: false
   );
 
 

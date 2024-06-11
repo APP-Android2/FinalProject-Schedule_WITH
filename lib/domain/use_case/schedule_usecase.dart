@@ -64,7 +64,7 @@ class ScheduleUseCase {
         endTime: schedule.endDt,
         subject: schedule.title,
         color: schedule.color,
-      alarmStatus: schedule.alarmStatus
+        alarmStatus: schedule.alarmStatus
     );
   }
 
