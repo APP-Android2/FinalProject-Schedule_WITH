@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schedule_with/assets/colors/color.dart';
+import 'package:schedule_with/entity/sfcalendar_custom_appointment.dart';
 import 'package:schedule_with/ui/schedule/controller/schedule_controller.dart';
 import 'package:schedule_with/ui/schedule/widget/schedule_edit_bottom_sheet.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -17,8 +18,10 @@ class MainCalendarMonth extends StatefulWidget {
 class _MainCalendarMonthState extends State<MainCalendarMonth> {
   // 스케줄 컨트롤러
   final ScheduleController _scheduleController = Get.find<ScheduleController>();
+
   // 캘린더 컨트롤러
   final CalendarController _calendarController = CalendarController();
+
   // 월별 -> 일별 전환시 현재 시간으로 이동
   final DateTime _jumpToTime = DateTime.now();
 
@@ -29,9 +32,6 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
   // 알람 설정 여부에 따라 스케쥴 타이틀 앞에 아이콘 표시
   var isAlarm = false;
 
-  // 스케줄 인덱스를 가져와서,, 그 인덱스가 null 이 아니면 보여야 되는거잖아
-
-
   @override
   void initState() {
     super.initState();
@@ -39,12 +39,6 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
     _scheduleController.fetchSchedules();
     print('캘린더 초기화');
   }
-
-  // 해당 날짜 선택
-  // 해당 날짜의 일정 확인
-  // 일정에 alarm index 값에 따라 아이콘 출력
-  //  - index 가 Null 이라면 아이콘 없음
-  //  - index 가 Null 이 아니라면 아이콘 띄움
 
   // 선택된 셀의 날짜 확인
   void _onCalendarTap(CalendarTapDetails details) {
@@ -230,83 +224,63 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
       ],
     );
   }
-}
 
-// 시계 아이콘 넣어지나?
-Widget buildAppointmentWidget(
-    BuildContext context, CalendarAppointmentDetails details) {
-  if (details.isMoreAppointmentRegion) {
-    return Container(
-      width: details.bounds.width,
-      height: details.bounds.height,
-      child: Center(
-        child: Icon(
-          Icons.more_horiz, // 더보기 아이콘
-          size: 16, // 아이콘 크기 조정
-          color: mainBrown, // 아이콘 색상 조정
+// 약속 3개 이상 더보기 아이콘
+  Widget buildAppointmentWidget(
+      BuildContext context, CalendarAppointmentDetails details) {
+    if (details.isMoreAppointmentRegion) {
+      print(details.isMoreAppointmentRegion);
+      // 하나의 셀에 일정 최대 3개만 표시. 3개 초과 시 더보기 아이콘 띄움
+      return Container(
+        width: details.bounds.width,
+        height: details.bounds.height,
+        child: Center(
+          child: Icon(
+            Icons.more_horiz, // 원하는 아이콘으로 변경
+            size: 16, // 아이콘 크기 조정
+            color: mainBrown, // 아이콘 색상 조정
+          ),
         ),
-      ),
-    );
-  } else {
-    final Appointment appointment = details.appointments.first;
-    return Container(
-      width: details.bounds.width,
-      height: details.bounds.height,
-      decoration: BoxDecoration(
-        color: appointment.color,
-        // borderRadius: BorderRadius.circular(5),
-      ),
-        child: Stack(
+      );
+    } else {
+      final SfCalendarCustomAppointment appointment =
+          details.appointments.first;
+
+      // print('알람 설정 값 확인 ${appointment.alarmStatus}');
+
+      // 일정 3개 이하일 때 보이는 설정
+      return Container(
+          decoration: BoxDecoration(
+            color: appointment.color,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Positioned(
-                top: 1,
-                left: 1,
-                  child: Icon(Icons.access_alarm,size: 12,
-                  color: mainBrown)),
-              Positioned(
-                top: 1,
-                left: 15,
-                  // 스케줄 텍스트 색상
-                  child: Text(
-                      appointment.subject,
-                      style: TextStyle(color: mainBrown, fontSize: 10),
-                      overflow: TextOverflow.fade))]
-        )
-    );
+              // 알람 아이콘
+              Expanded(
+                flex: 1,
+                child: Icon(Icons.access_alarm,
+                    size: appointment.alarmStatus ? 12 : 0,
+                    color: appointment.alarmStatus
+                        ? mainBrown
+                        : Colors.transparent),
+              ),
+              // 일정
+              Expanded(
+                flex: 4,
+                child: Text(
+                  textAlign: TextAlign.center,
+                  appointment.subject,
+                  overflow: TextOverflow.fade,
+                  style: TextStyle(color: mainBrown, fontSize: 10),
+                ),
+              ),
+              // 일정 텍스트를 가운데 맞추기 위한 여백
+              Expanded(child: SizedBox(width: 2)),
+            ],
+          ));
+    }
   }
 }
-
-
-//
-// // 약속 3개 이상 더보기 아이콘
-// Widget buildAppointmentWidget(
-//     BuildContext context, CalendarAppointmentDetails details) {
-//   if (details.isMoreAppointmentRegion) {
-//     return Container(
-//       width: details.bounds.width,
-//       height: details.bounds.height,
-//       child: Center(
-//         child: Icon(
-//           Icons.more_horiz, // 원하는 아이콘으로 변경
-//           size: 16, // 아이콘 크기 조정
-//           color: mainBrown, // 아이콘 색상 조정
-//         ),
-//       ),
-//     );
-//   } else {
-//     final Appointment appointment = details.appointments.first;
-//     return Container(
-//       decoration: BoxDecoration(
-//         color: appointment.color,
-//         // borderRadius: BorderRadius.circular(5),
-//       ),
-//       child: Center(
-//         child: Text(
-//           appointment.subject,
-//           // 스케줄 텍스트 색상
-//           style: TextStyle(color: Colors.black, fontSize: 10),
-//         ),
-//       ),
-//     );
-//   }
-// }
