@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:schedule_with/assets/colors/color.dart';
+import 'package:schedule_with/ui/alarm/view/alarm_main.dart';
 
 // lib/entity/schedule_tbl.dart
 // 파일명 = 파이어베이스 컬렉션명_tbl
@@ -37,6 +38,8 @@ class Schedule {
   final int? userIdx;
   final int? groupIdx;
   final int? alarmIdx;
+  final bool alarmStatus; // 알람에 추가
+
 
   // Private constructor
   // 외부에서 해당 생성자 직접 호출 불가 = 클래스 생성 방법 통제 가능 = 팩토리 메서드
@@ -58,6 +61,7 @@ class Schedule {
     this.userIdx,
     this.groupIdx,
     this.alarmIdx,
+    required this.alarmStatus
   });
 
   // 팩토리 메서드
@@ -79,6 +83,7 @@ class Schedule {
     int? userIdx,
     int? groupIdx,
     int? alarmIdx,
+    required bool alarmStatus
   }) {
     // ?? 연산자로 null 일 때 디폴트 값 설정 가능
     return Schedule._(
@@ -98,6 +103,7 @@ class Schedule {
       userIdx: userIdx,
       groupIdx: groupIdx,
       alarmIdx: alarmIdx,
+      alarmStatus: alarmStatus
     );
   }
 
@@ -124,6 +130,7 @@ class Schedule {
       userIdx: doc['user_idx'],
       groupIdx: doc['group_idx'],
       alarmIdx: doc['alarm_idx'],
+      alarmStatus: doc['alarm_status'],
     );
   }
 
@@ -147,6 +154,7 @@ class Schedule {
       'user_idx': userIdx,
       'group_idx': groupIdx,
       'alarm_idx': alarmIdx,
+      'alarm_status' : alarmStatus
     };
   }
 }

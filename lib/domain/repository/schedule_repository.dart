@@ -26,21 +26,22 @@ class ScheduleRepository {
     return _firestore.collection('schedule').snapshots().map((snapshot) {
       // snapshot.docs : 스트림의 각 QuerySnapshot을 변환하여 DocumentSnapshot 리스트를 가져옵니다.
       // 각 DocumentSnapshot을 Schedule 객체로 변환하기 위해 map 함수를 사용
+      // 항상 리스트를 반환
       return snapshot.docs.map((doc) {
         // 각 문서의 데이터를 Schedule 객체로 변환
         return Schedule.fromDocument(doc.id, doc.data());
         // toList() : 변환된 Schedule 객체들을 리스트로 묶어 반환
       }).toList();
-
     });
   }
-
-
 
   // .update
   // 문서의 필드값 업데이트
   Future<void> updateSchedule(Schedule schedule) async {
-    await _firestore.collection('schedule').doc(schedule.id).update(schedule.toDocument());
+    await _firestore
+        .collection('schedule')
+        .doc(schedule.id)
+        .update(schedule.toDocument());
   }
 
   // .set
@@ -48,7 +49,10 @@ class ScheduleRepository {
   // schedule 엔티티에 정의해놓은 toDocument 메서드로 map 형태로 변환해줌
   void setSchedule(Schedule schedule) async {
     try {
-      await _firestore.collection('schedules').doc(schedule.id).set(schedule.toDocument());
+      await _firestore
+          .collection('schedules')
+          .doc(schedule.id)
+          .set(schedule.toDocument());
       print("Document successfully set with merge!");
     } catch (e) {
       print("Error setting document: $e");
@@ -58,7 +62,8 @@ class ScheduleRepository {
   // 특정 idx에 해당하는 color 값만 가져오기
   Stream<String> fetchColorByIdx(String idx) {
     return _firestore
-        .collection('schedule').where('idx', isEqualTo: idx)
+        .collection('schedule')
+        .where('idx', isEqualTo: idx)
         .snapshots()
         .map((snapshot) {
       if (snapshot.docs.isNotEmpty) {
@@ -72,11 +77,14 @@ class ScheduleRepository {
   // user idx가 일치하는 문서 정보만 가져오기
   Stream<Schedule> fetchScheduleByUserIdx(int userIdx) {
     return _firestore
-        .collection('schedule').where('user_idx', isEqualTo: userIdx)
+        .collection('schedule')
+        .where('user_idx', isEqualTo: userIdx)
         .snapshots()
         .map((snapshot) {
       if (snapshot.docs.isNotEmpty) {
         // doc = QueryDocumentSnapshot 객체 (문서 1개)
+        // first = 조건이 일치하는 문서 중에 첫번째 문서만 가져 온다
+        // 주로 user idx 처럼 조건 일치하는 문서가 딱 하나 밖에 없을 때 사용
         var doc = snapshot.docs.first;
         // doc.id = 가져온 문서의 id
         // doc.data() = 해당 문서에서 실제 데이터를 가져오는 메서드
@@ -91,7 +99,21 @@ class ScheduleRepository {
       }
     });
   }
+
+  // Alarm Status 가 true 인 문서 정보만 가져오기
+  Stream<List<Schedule>> fetchScheduleByAlarmStatus(bool alarmStatus) {
+    return _firestore
+        .collection('schedule')
+        .where('alarm_status', isEqualTo: alarmStatus)
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.docs.isNotEmpty) {
+        return snapshot.docs.map((doc) {
+          return Schedule.fromDocument(doc.id, doc.data());
+        }).toList();
+      } else {
+        throw Exception('No document found with alarmStatus: $alarmStatus');
+      }
+    });
+  }
 }
-
-
-

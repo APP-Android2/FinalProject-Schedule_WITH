@@ -2,6 +2,7 @@ import 'package:schedule_with/assets/colors/color.dart';
 import 'package:schedule_with/data/data_source/schedule_data_source.dart';
 import 'package:schedule_with/domain/repository/schedule_repository.dart';
 import 'package:schedule_with/entity/schedule_tbl.dart';
+import 'package:schedule_with/entity/sfcalendar_custom_appointment.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 // 비즈니스 로직:
@@ -57,19 +58,20 @@ class ScheduleUseCase {
 
   // schedule 객체를 받아서 Appointment 객체로 변환하는 메소드
   // SfCalendar 에 일정을 띄우려면 appointment 객체여야 함
-  Appointment convertScheduleToAppointment(Schedule schedule) {
-    return Appointment(
+  SfCalendarCustomAppointment convertScheduleToAppointment(Schedule schedule) {
+    return SfCalendarCustomAppointment(
         startTime: schedule.startDt,
         endTime: schedule.endDt,
         subject: schedule.title,
-        color: schedule.color
+        color: schedule.color,
+      alarmStatus: schedule.alarmStatus
     );
   }
 
   // FireStore 에서 받아온 schedule 객체를 Appointment 객체로 변경한 다음 캘린더 데이터 소스 형태로 변환
   Stream<ScheduleDataSource> getCalendarDataSource() {
     return repository.getAllSchedules().map((schedules) {
-      List<Appointment> appointments = schedules.map((schedule) {
+      List<SfCalendarCustomAppointment> appointments = schedules.map((schedule) {
         return convertScheduleToAppointment(schedule);
       }).toList();
 
@@ -77,5 +79,10 @@ class ScheduleUseCase {
     }).handleError((error) {
       return ScheduleDataSource([]);
     });
+  }
+
+  // 알람 상태가 true 인 스케줄의 idx 가져오는 메서드
+  Stream<List<Schedule>> fetchScheduleByAlarmStatus(bool alarmStatus) {
+    return repository.fetchScheduleByAlarmStatus(alarmStatus);
   }
 }
