@@ -7,9 +7,7 @@ import '../../../entity/paymemo_tbl.dart';
 
 class PayMemoProvider with ChangeNotifier {
   PayMemo _payMemo;
-
   PayMemoProvider(this._payMemo);
-
   PayMemo get payMemo => _payMemo;
 
   void toggleCompleted() {

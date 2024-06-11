@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:schedule_with/assets/colors/color.dart';
-import 'package:schedule_with/ui/memo/view/paymemo.dart';
 import '../../../domain/repository/memo/paymemo_repository.dart';
 import '../../../domain/use_case/paymemo_use__case.dart';
-import '../widget/memo_controller.dart';
 import '../widget/memo_floatingactionbutton_expandable.dart';
 import '../widget/paymemo_controller.dart';
-import 'memo.dart';
 import 'paymemolist.dart';
 import 'memolist.dart';
 

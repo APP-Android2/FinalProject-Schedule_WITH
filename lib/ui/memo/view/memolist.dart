@@ -12,12 +12,7 @@ import 'memo_item.dart';
 
 class MemoListView extends StatelessWidget {
   final MemoController controller;
-  // final MemoController controller = Get.find<MemoController>();
-  // MemoListView({super.key});
 
-  // MemoListView({super.key}) : controller = Get.put(MemoController(
-  //     memoUseCase: MemoUseCase(MemoRepository()), userId: '',
-  // ));
   MemoListView({Key? key}) : controller = Get.put(MemoController(
       memoUseCase: MemoUseCase(MemoRepository()))), super(key: key);
 
@@ -83,7 +78,6 @@ class MemoListView extends StatelessWidget {
                           onTap: (CompletionHandler handler) async {
                             await handler(true);
                             controller.deleteMemo(controller.memos[index].idx.toString());
-                            // setState(() {});
                           },
                           color: mainBrown,
                         ),
@@ -94,8 +88,7 @@ class MemoListView extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  MemoScreen(memo: controller.memos[index]),
+                              builder: (context) => MemoScreen(memo: controller.memos[index]),
                             ),
                           );
                         },

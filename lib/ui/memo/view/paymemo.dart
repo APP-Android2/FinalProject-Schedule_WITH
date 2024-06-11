@@ -14,7 +14,6 @@ import '../widget/pay_settlement_status.dart';
 import '../widget/pay_title__field.dart';
 import '../widget/pay_usage_bottomsheet.dart';
 import '../widget/paymemo_controller.dart';
-import 'memo_main.dart';
 
 class PayMemoScreen extends StatefulWidget {
   final PayMemo? paymemo;
@@ -76,7 +75,7 @@ class _PayMemoScreenState extends State<PayMemoScreen> {
                     }
                 ).then((result) {
                   if (result == false) {
-                    Get.to(() => MemoMainScreen());
+                    Navigator.pop(context);
                   }
                 });
               } else {
@@ -177,82 +176,6 @@ class _PayMemoScreenState extends State<PayMemoScreen> {
     );
   }
 
-
-  // Widget _buildBankFields() {
-  //   return Padding(
-  //     padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 0),
-  //     child: Container(
-  //       decoration: BoxDecoration(border: Border(bottom: BorderSide(color: grey2))),
-  //       child: Padding(
-  //         padding: EdgeInsets.only(bottom: 15),
-  //         child: Row(
-  //           children: <Widget>[
-  //             Expanded(
-  //               flex: 1,
-  //               child: Text('계좌번호', style: TextStyle(fontSize: 14)),
-  //             ),
-  //             Expanded(
-  //               flex: 2,
-  //               child: GestureDetector(
-  //                 onTap: () => _showBankAccountBottomSheet(),
-  //                 child: Row(
-  //                   children: [
-  //                     Spacer(), // This will push the following widgets to the right
-  //                     Expanded(
-  //                       child: Text(
-  //                         _selectedAccount,
-  //                         style: TextStyle(
-  //                             fontSize: 14,
-  //                             color: _selectedAccount == '계좌번호를 입력해 주세요.'
-  //                                 ? grey3
-  //                                 : Colors.black),
-  //                         overflow: TextOverflow.ellipsis, // Prevents text wrapping
-  //                         maxLines: 1, // Ensures text is in a single line
-  //                       ),
-  //                     ),
-  //                     Padding(
-  //                       padding: EdgeInsets.only(left: 5),
-  //                       child: InkWell(
-  //                         onTap: () {
-  //                           Clipboard.setData(ClipboardData(text: _selectedAccount));
-  //                         },
-  //                         child: SvgPicture.asset(
-  //                           "lib/assets/icon/icon_copy_payaccount.svg",
-  //                           color: grey4,
-  //                         ),
-  //                       ),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-  //
-  // void _showBankAccountBottomSheet() {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return BankAccountBottomSheetWidget(
-  //         onSelectAccount: (account) {
-  //           setState(() {
-  //             _selectedAccount = account;
-  //           });
-  //         },
-  //       );
-  //     },
-  //     backgroundColor: Colors.white,
-  //     shape: RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
-  //     ),
-  //     barrierColor: grey4.withOpacity(0.5),
-  //   );
-  // }
-
   Widget _buildBankFields() {
     return Padding(
       padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 0),
@@ -309,7 +232,6 @@ class _PayMemoScreenState extends State<PayMemoScreen> {
       ),
     );
   }
-
   void _showBankAccountBottomSheet() {
     showModalBottomSheet(
       context: context,
@@ -329,83 +251,6 @@ class _PayMemoScreenState extends State<PayMemoScreen> {
       barrierColor: grey4.withOpacity(0.5),
     );
   }
-
-  // Widget _buildBankFields() {
-  //   return Padding(
-  //     padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 0),
-  //     child: Container(
-  //       decoration: BoxDecoration(
-  //           border: Border(bottom: BorderSide(color: grey2))
-  //       ),
-  //       child: Padding(
-  //         padding: EdgeInsets.only(bottom: 15),
-  //         child: Row(
-  //           children: <Widget>[
-  //             Expanded(
-  //               flex: 1,
-  //               child: Text('계좌번호', style: TextStyle(fontSize: 14)),
-  //             ),
-  //             Expanded(
-  //               flex: 2,
-  //               child: Align(
-  //                 alignment: Alignment.centerRight,
-  //                 child: InkWell(
-  //                   onTap: () {
-  //                     showModalBottomSheet(
-  //                       isScrollControlled: true,
-  //                       context: context,
-  //                       builder: (BuildContext context) {
-  //                         return BankAccountBottomSheetWidget(
-  //                             onSelectAccount: (account) {
-  //                               setState(() {
-  //                                 _selectedAccount = account;
-  //                               });
-  //                             }
-  //                         );
-  //                       },
-  //                       backgroundColor: Colors.white,
-  //                       shape: RoundedRectangleBorder(
-  //                           borderRadius: BorderRadius.vertical(top: Radius.circular(10.0))
-  //                       ),
-  //                       barrierColor: grey4.withOpacity(0.5),
-  //                     );
-  //                   },
-  //                   child: Row(
-  //                     mainAxisSize: MainAxisSize.min,
-  //                     children: [
-  //                       Text(
-  //                         _selectedAccount,
-  //                         style: TextStyle(
-  //                             fontSize: 14,
-  //                             color: _selectedAccount == '계좌번호를 입력해 주세요.'
-  //                                 ? grey3
-  //                                 : Colors.black
-  //                         ),
-  //                       ),
-  //                       InkWell(
-  //                           onTap: () {
-  //                             Clipboard.setData(ClipboardData(text: _selectedAccount));
-  //                           },
-  //                           child: Padding(
-  //                             padding: EdgeInsets.only(left: 5),
-  //                             child: SvgPicture.asset(
-  //                                 "lib/assets/icon/icon_copy_payaccount.svg",
-  //                                 color: grey4
-  //                             ),
-  //                           )
-  //                       )
-  //                     ],
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
 
   Widget _buildPersonCounter() {
     return Padding(

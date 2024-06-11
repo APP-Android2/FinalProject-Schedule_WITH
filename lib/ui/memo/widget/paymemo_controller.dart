@@ -4,14 +4,12 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import '../../../domain/use_case/paymemo_use__case.dart';
 import '../../../entity/paymemo_tbl.dart';
-import '../view/paymemo_item.dart';
 
 class PayMemoController extends GetxController {
-  late final PayMemoUseCase payMemoUseCase;
+  final PayMemoUseCase payMemoUseCase;
   var paymemos = <PayMemo>[].obs;
   var isExpanded = true.obs;
   var count = 0.obs;
-  late String userId;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   PayMemoController({required this.payMemoUseCase});
@@ -19,7 +17,6 @@ class PayMemoController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // paymemos.bindStream(streamMemos());
     fetchPayMemo();
   }
 
@@ -28,40 +25,25 @@ class PayMemoController extends GetxController {
         snapshot.docs.map((doc) => PayMemo.fromDocument(doc.data(), doc.id)).toList());
   }
 
-  void deletePayMemo(int index) {
-    if (index >= 0 && index < paymemos.length) {
-      paymemos.removeAt(index);
+  Future<void> deletePayMemo(String paymemoId) async {
+    PayMemo? paymemo = paymemos.firstWhereOrNull((m) => m.idx.toString() == paymemoId);
+    if (paymemo != null) {
+      await firestore.collection('paymemo').doc(paymemo.documentId).update({'status': 'D'});
+      paymemos.remove(paymemo);
+      update();
     }
   }
 
   void fetchPayMemo() async {
-    // var stream = payMemoUseCase.readPayMemo(userId);
-    // stream.listen((fetchedMemos) {
-    //   paymemos.assignAll(fetchedMemos);
-    // });
     paymemos.bindStream(payMemoUseCase.readPayMemo());
   }
-
-  // Future<void>  addPayMemo(PayMemo paymemo)  async  {
-  //   // paymemos.add(paymemo);
-  //   await payMemoUseCase.createPayMemo(paymemo);
-  //   fetchPayMemo();
-  // }
 
   Future<String> addPayMemo(PayMemo paymemo) async {
     DocumentReference ref = await firestore.collection('paymemo').add(paymemo.toDocument());
     return ref.id;
   }
 
-  // Future<void> updatePayMemo(PayMemo paymemo) async {
-  //   // Firestore에서 문서를 업데이트
-  //   await firestore.collection('memo').doc(userId).collection('paymemos').doc(paymemo.id).update(paymemo.toDocument());
-  //   fetchPayMemos();  // Firestore에서 최신 데이터를 가져와서 로컬 상태를 업데이트
-  // }
-
   Future<void> updatePayMemo(PayMemo paymemo) async {
-    // await payMemoUseCase.updatePayMemo(userId, paymemo.idx, paymemo);
-    // fetchPayMemos();
     await payMemoUseCase.updatePayMemo(paymemo.idx.toString(), paymemo);
     fetchPayMemo();
   }
@@ -85,31 +67,6 @@ class PayMemoController extends GetxController {
     }
   }
 }
-
-// class PayMemo extends ChangeNotifier {
-//   String date;
-//   String title;
-//   String amount;
-//   bool isCompleted;
-//   String accountNumber;
-//   int participantsCount;
-//   List<String> usageDetails;
-//
-//   PayMemo({
-//     required this.date,
-//     required this.title,
-//     required this.amount,
-//     this.isCompleted = false,
-//     this.accountNumber = '',
-//     this.participantsCount = 1,
-//     this.usageDetails = const [],
-//   });
-//
-//   void toggleCompleted() {
-//     isCompleted = !isCompleted;
-//     notifyListeners();
-//   }
-// }
 
 class PayMemoProvider with ChangeNotifier {
   PayMemo _payMemo;
