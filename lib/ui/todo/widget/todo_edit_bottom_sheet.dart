@@ -3,11 +3,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
+import 'package:schedule_with/domain/repository/todo_repository.dart';
 import 'package:schedule_with/ui/todo/widget/todo_add_bottom_sheet.dart';
 import 'package:schedule_with/ui/todo/widget/todo_date_picker_bottom_sheet.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../assets/colors/color.dart';
 import '../../../widget/main_button.dart';
+import '../../../widget/main_two_button.dart';
 import 'calendar_cell_custom.dart';
 import '../controller/todo_controller.dart';
 
@@ -16,17 +19,21 @@ class TodoEditBottomSheet extends StatelessWidget {
   final TodoController _todoController = Get.find<TodoController>();
   final calendarController;
   final title;
+  final idx;
 
-
+  TodoRepository todoRepository = TodoRepository();
 
   TodoEditBottomSheet({
     super.key,
     this.title,
-    this.calendarController
+    this.calendarController,
+    this.idx,
   });
 
   @override
   Widget build(BuildContext context) {
+    var todo_idx = idx;
+    print("$todo_idx");
     TextEditingController todoContentController = TextEditingController(text: title);
     return SingleChildScrollView(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -45,7 +52,7 @@ class TodoEditBottomSheet extends StatelessWidget {
             InkWell(
               onTap: () {
                 Get.back();
-                Get.bottomSheet(TodoDatePickerBottomSheet(back_page: TodoEditBottomSheet(calendarController: _todoController,title: title,)));
+                Get.bottomSheet(TodoDatePickerBottomSheet(back_page: TodoEditBottomSheet(idx : todo_idx, calendarController: _todoController,title: title,)));
               },
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 20),
@@ -108,23 +115,50 @@ class TodoEditBottomSheet extends StatelessWidget {
               ),
             ),
             Spacer(),
-            Container(
-              margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
-              child: MainButton(
-                text: "확인",
-                onPressed: () {
+            // 삭제하기, 수정하기 버튼
+            MainTwoButton(
+                leftText: '삭제 하기',
+                leftColor: mainBrown,
+                leftOnPressed: () async {
+                  // 유저 번호를 가져온다.
+                  final SharedPreferences prefs = await SharedPreferences.getInstance();
+                  var user_idx = prefs.getInt('idx');
+                  // 파이어베이스 데이터 수정 하는 코드
+                  await todoRepository.updateTodo(user_idx!, todo_idx, {'status' : "N"});
+
+                  // 리스트에서 아이템 제거
+                  _todoController.removeTodoItem(todo_idx);
+
+                  Get.back();
+                },
+                rightText: '수정 완료',
+                rightColor: mainOrange,
+                rightOnPressed: () async {
+                  // 유저 번호를 가져온다.
+                  final SharedPreferences prefs = await SharedPreferences.getInstance();
+                  var user_idx = prefs.getInt('idx');
+
+                  // 파이어베이스 데이터 수정 하는 코드
+                  await todoRepository.updateTodo(
+                      user_idx!,
+                      todo_idx,
+                      {
+                        'title' : todoContentController.text,
+                        'todo_dt' : _todoController.selectedDate.value,
+                        'mod_dt' : DateTime.now()
+                      }
+                  );
                   if (todoContentController.text.isNotEmpty) {
                     _todoController.updateTodoItem(
+                      idx: todo_idx,
                       oldTitle: title,
                       newTitle: todoContentController.text,
                       newDate: _todoController.selectedDate.value,
                     );
                     Get.back();
                   }
-                },
-                color: mainOrange,
-              ),
-            ),
+
+                }),
           ],
         ),
       ),

@@ -1,31 +1,76 @@
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../../domain/repository/todo_repository.dart';
+import 'package:schedule_with/entity/todo_tbl.dart';
 
-import '../view/todo_main_screen.dart';
-
-class TodoController extends GetxController{
+class TodoController extends GetxController {
   var selectedDate = DateTime.now().obs;
   var todoItems = <Todo>[].obs;
+  var todoIdx = 0.obs;
 
-  void addTodoItem(String title, String description, DateTime date) {
+  final TodoRepository todoRepository = TodoRepository();
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchTodos();
+  }
+
+  void fetchTodos() async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      var user_idx = prefs.getInt('idx');
+      if (user_idx != null) {
+        List<Todos> todosFromDb = await todoRepository.getAllTodos(user_idx);
+        print("List: ${todosFromDb.toList()}");
+        todoItems.addAll(todosFromDb.map((todo) => Todo(
+          idx: todo.idx,
+          title: todo.title,
+          date: todo.todo_dt,
+          check: todo.check,
+        )));
+      } else {
+        print("User index not found in SharedPreferences.");
+      }
+    } catch (e) {
+      print("Error fetching todos: $e");
+    }
+  }
+
+  void addTodoItem(int idx, String title, String description, DateTime date) {
     todoItems.add(Todo(
+      idx: idx,
       title: title,
-
       date: date,
       check: false,
     ));
   }
 
-  // 투두 항목 업데이트 메서드
-  void updateTodoItem({required String oldTitle, required String newTitle, required DateTime newDate}) {
-    // 기존 투두 항목 찾기
-    Todo? todoToUpdate = todoItems.firstWhere((todo) => todo.title == oldTitle);
+  void removeTodoItem(int idx) async {
+    Todo? todoToRemove = todoItems.firstWhere((todo) => todo.idx == idx);
+    if (todoToRemove != null) {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      var user_idx = prefs.getInt('idx');
+      if (user_idx != null) {
+        // 업데이트할 새로운 데이터
+        Map<String, dynamic> newData = {
+          'status': 'N'
+        };
+        // updateTodo 메서드 호출
+        await todoRepository.updateTodo(user_idx, idx, newData);
+        // 리스트에서 아이템 제거
+        todoItems.remove(todoToRemove);
+      }
+    }
+  }
 
-    // 투두 항목이 존재하는 경우 업데이트 수행
+  void updateTodoItem({required int idx, required String oldTitle, required String newTitle, required DateTime newDate}) {
+    Todo? todoToUpdate = todoItems.firstWhere((todo) => todo.idx == idx);
+
     if (todoToUpdate != null) {
-      // 기존 투두 항목 삭제
       todoItems.remove(todoToUpdate);
-      // 새로운 투두 항목 추가
       todoItems.add(Todo(
+        idx: idx,
         title: newTitle,
         check: todoToUpdate.check.value,
         date: newDate,
@@ -33,8 +78,9 @@ class TodoController extends GetxController{
     }
   }
 
-  void toggleTodoCheck(Todo todo) {
+  void toggleTodoCheck(Todo todo) async {
     todo.check.value = !todo.check.value;
+    await todoRepository.updateTodoCheck(todo.idx, todo.check.value);
   }
 
   List<Todo> getTodosForDate(DateTime date) {
@@ -43,18 +89,20 @@ class TodoController extends GetxController{
         todo.date.month == date.month &&
         todo.date.day == date.day).toList();
   }
-  // 캘린더에서 날짜 선택 시 해당 날짜로 업데이트
-  void updateDt(DateTime newDate){
+
+  void updateDt(DateTime newDate) {
     selectedDate.value = newDate;
   }
 }
 
 class Todo {
+  final int idx;
   final String title;
   final DateTime date;
   final RxBool check;
 
   Todo({
+    required this.idx,
     required this.title,
     required this.date,
     required bool check,

@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schedule_with/assets/colors/color.dart';
-import 'package:schedule_with/main.dart';
-import 'package:schedule_with/ui/group/widget/my_todo_indicator.dart';
-import 'package:schedule_with/ui/schedule/widget/schedule_edit_bottom_sheet.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
+import '../../group/widget/my_todo_indicator.dart';
 import '../controller/todo_controller.dart';
 
-// GetX 컨트롤러
 class CustomCalendarController extends GetxController {
   var currentMonth = DateTime.now().month.obs;
   var selectedDate = DateTime.now().obs;
@@ -31,6 +28,7 @@ class CalendarCellCustom extends StatefulWidget {
 
 class _CalendarCellCustomState extends State<CalendarCellCustom> {
   final CustomCalendarController customCalendarController = Get.find<CustomCalendarController>();
+  final TodoController todoController = Get.find<TodoController>();
 
   // 현재 표시되는 날짜 (보이는 날짜의 중간)
   void _onViewChanged(ViewChangedDetails details) {
@@ -42,21 +40,6 @@ class _CalendarCellCustomState extends State<CalendarCellCustom> {
   void _onCalendarTap(CalendarTapDetails details) {
     if (details.targetElement == CalendarElement.calendarCell) {
       customCalendarController.updateSelectedDate(details.date!);
-
-      // 약속이 있으면 스케줄 수정 바텀 시트를 띄운다
-      var todayAppoint = details.appointments?.isNotEmpty ?? false;
-
-      if (todayAppoint) {
-        showModalBottomSheet(
-          isScrollControlled: true,
-          context: context,
-          builder: (BuildContext context) {
-            return EditScheduleBottomSheet();
-          },
-        );
-      } else {
-        // 약속이 없을 때의 동작 추가 (필요한 경우)
-      }
     }
   }
 
@@ -87,7 +70,7 @@ class _CalendarCellCustomState extends State<CalendarCellCustom> {
           ),
         ),
         selectionDecoration: BoxDecoration(
-          color: Colors.transparent, // 셀 선택 시 배경색 없애기
+          color: Colors.transparent,
           border: Border.all(
             color: mainOrange,
             width: 2,
@@ -107,7 +90,6 @@ class _CalendarCellCustomState extends State<CalendarCellCustom> {
   }
 }
 
-// 캘린더 셀 내용에 달성률 indicator 넣기 위해 커스터마이징
 class CustomMonthCell extends StatelessWidget {
   final MonthCellDetails details;
   final int currentMonth;
@@ -127,7 +109,7 @@ class CustomMonthCell extends StatelessWidget {
     bool isSelectedDate = (details.date == selectedDate);
     return GestureDetector(
       onTap: () {
-        todoController.selectedDate.value = details.date;
+        todoController.updateDt(details.date);
       },
       child: Container(
         decoration: BoxDecoration(
@@ -137,13 +119,10 @@ class CustomMonthCell extends StatelessWidget {
                 : grey2,
             width: 0.6,
           ),
-          color: isSelectedDate ? Colors.transparent : Colors.white, // 선택된 날짜의 배경색을 투명하게 설정
-
+          color: isSelectedDate ? Colors.transparent : Colors.white,
         ),
-        // 날짜 및 투두 달성률 설정
         child: Stack(
           children: [
-            // 날짜 설정
             Align(
               alignment: Alignment.topCenter,
               child: Text(
@@ -153,7 +132,6 @@ class CustomMonthCell extends StatelessWidget {
                 ),
               ),
             ),
-            // 투두 달성률 설정
             Obx(() {
               var todosForDate = todoController.getTodosForDate(details.date);
               int totalTodo = todosForDate.length;
@@ -168,7 +146,7 @@ class CustomMonthCell extends StatelessWidget {
                     doneTodo: doneTodo,
                   )
                       : SizedBox(),
-                )
+                ),
               );
             }),
           ],

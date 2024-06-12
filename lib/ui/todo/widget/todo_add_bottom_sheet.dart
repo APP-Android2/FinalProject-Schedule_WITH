@@ -3,7 +3,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:schedule_with/assets/colors/color.dart';
+import 'package:schedule_with/domain/repository/todo_repository.dart';
 import 'package:schedule_with/ui/todo/widget/todo_date_picker_bottom_sheet.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../../entity/todo_tbl.dart';
 import '../../../widget/main_button.dart';
 import '../controller/todo_controller.dart';
 import '../view/todo_main_screen.dart';
@@ -11,6 +14,10 @@ import '../view/todo_main_screen.dart';
 class TodoAddBottomSheet extends StatelessWidget {
   final DateFormat formatter = DateFormat('yyyy-MM-dd');
   final TodoController _todoController = Get.find<TodoController>();
+
+  TodoRepository todoRepository = TodoRepository();
+
+  late Todos todo;
 
   TodoAddBottomSheet({super.key});
 
@@ -101,13 +108,37 @@ class TodoAddBottomSheet extends StatelessWidget {
               margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
               child: MainButton(
                 text: "확인",
-                onPressed: () {
+                onPressed: () async {
+                  // 투두 시퀀스 값을 가져온다.
+                  var idx = await todoRepository.getTodoSequence();
+                  todoRepository.updateTodoSequence(idx! + 1);
+
+                  // 유저 번호를 가져온다.
+                  final SharedPreferences prefs = await SharedPreferences.getInstance();
+                  var user_idx = prefs.getInt('idx');
+
                   if (todoContentController.text.isNotEmpty) {
                     _todoController.addTodoItem(
+                      _todoController.todoIdx.value = idx + 1 ,
                       todoContentController.text,
                       "Todo 설명", // You can add a description field to the UI as well
                       _todoController.selectedDate.value,
                     );
+                    // firebase에 저장한다.
+                    todo = Todos(
+                        idx: idx + 1,
+                        user_idx: user_idx!,
+                        group_idx: 0,
+                        todo_dt: _todoController.selectedDate.value,
+                        title: todoContentController.text,
+                        status: "Y",
+                        reg_dt: DateTime.now(),
+                        mod_dt: DateTime.now(),
+                        check: false,
+                    );
+
+                    await todoRepository.saveTodoInfo(todo);
+
                     Get.back();
                   }
                 },

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:schedule_with/domain/repository/todo_repository.dart';
 import 'package:schedule_with/ui/todo/widget/todo_edit_bottom_sheet.dart';
 import '../../../assets/colors/color.dart';
 import '../widget/calendar_cell_custom.dart';
@@ -18,6 +19,13 @@ class _TodoMainScreenState extends State<TodoMainScreen> {
   final TodoController todoController = Get.put(TodoController());
   final CustomCalendarController calendarController = Get.put(CustomCalendarController());
   final DateFormat formatter = DateFormat('yyyy년 MM월 dd일');
+
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch todos here if needed, although it should already be handled in the controller's onInit method.
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,10 +63,10 @@ class _TodoMainScreenState extends State<TodoMainScreen> {
                 return ListTile(
                   onTap: () {
                     showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return TodoEditBottomSheet(title: todo.title,calendarController: calendarController,);
-                        },
+                      context: context,
+                      builder: (context) {
+                        return TodoEditBottomSheet(idx: todo.idx, title: todo.title, calendarController: calendarController,);
+                      },
                     );
                   },
                   leading: Obx(() {
@@ -80,7 +88,7 @@ class _TodoMainScreenState extends State<TodoMainScreen> {
                       },
                     );
                   }),
-                  title: Text(todo.title)
+                  title: Text(todo.title),
                 );
               },
             );
