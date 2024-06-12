@@ -34,8 +34,7 @@ class AddScheduleBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 필드 초기화
-    scheduleController.resetFields();
+
 
     return Obx(() {
     return SingleChildScrollView(
@@ -138,7 +137,6 @@ class AddScheduleBottomSheet extends StatelessWidget {
                     titleText: '알람에 추가',
                     onTap: () {
 
-                      // 추후 알람에 추가되는 로직 넣어야 됨
                     },
                   ),
                   // 메모 입력
@@ -155,6 +153,16 @@ class AddScheduleBottomSheet extends StatelessWidget {
               child: MainButton(
                   text: '등록하기',
                   onPressed: () {
+
+                    print('${scheduleController.selectedStartDt.value}, 시작날짜');
+                    print('${scheduleController.selectedEndDt.value}, 종료날짜');
+                    print('${scheduleController.selectedStartTm.value}, 시작시간');
+                    print('${scheduleController.selectedEndTm.value}, 종료시간');
+
+
+
+                    // 추후 알람에 추가되는 로직 넣어야 됨
+
                     // 입력받은 데이터를 Entity 저장
                     scheduleController.addSchedule();
                     Get.back();
@@ -162,9 +170,14 @@ class AddScheduleBottomSheet extends StatelessWidget {
                         '등록 완료',
                         '스케줄이 등록되었습니다',
                         duration: Duration(seconds: 1),
-                    snackPosition: SnackPosition.BOTTOM);
+                    // snackPosition: SnackPosition.BOTTOM
+                    );
+                    // 필드 초기화
+                    scheduleController.resetFields();
+
                   },
                   color: mainOrange),
+
             ),
             Padding(padding: EdgeInsets.only(bottom: 30))
           ])),

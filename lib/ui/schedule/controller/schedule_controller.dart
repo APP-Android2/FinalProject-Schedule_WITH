@@ -21,26 +21,27 @@ class ScheduleController extends GetxController {
   final TextEditingController contentEditingController = TextEditingController();
 
   // 초기엔 일정 데이터가 없는 빈 리스트로 선언
-  var _dataSource = ScheduleDataSource([]).obs;
+  final _dataSource = ScheduleDataSource([]).obs;
 
   // entity
   var schedule = Schedule(
-    id: '',
-    idx: 0,
-    title: '',
-    color: lightPink,
-    startDt: DateTime.now(),
-    endDt: DateTime.now(),
-    startTime: DateTime.now(),
-    endTime: DateTime.now(),
-    status: '',
-    public: '',
-    regDt: null,
-    modDt: null,
-    content: '',
-    userIdx: 0,
-    groupIdx: null,
-    alarmIdx: null,
+      id: '',
+      idx: 0,
+      title: '',
+      color: lightPink,
+      startDt: DateTime.now(),
+      endDt: DateTime.now(),
+      startTime: DateTime.now(),
+      endTime: DateTime.now(),
+      status: '',
+      public: '',
+      regDt: null,
+      modDt: null,
+      content: '',
+      userIdx: 0,
+      groupIdx: null,
+      alarmIdx: null,
+      alarmStatus: false
   );
 
 
@@ -107,10 +108,12 @@ class ScheduleController extends GetxController {
     fetchCalendarDataSource();
   }
 
-  // 바텀시트 열 때마다 필드값 초기화
+  // 스케줄 추가 화면에서 '등록하기' 버튼 또는 '취소버튼' 누르면 바텀시트 필드값을 초기화하는 메서드
   void resetFields() {
     titleEditingController.clear();
     contentEditingController.clear();
+    selectedStartTm.value = null;
+    selectedEndTm.value = null;
     public.value = '전체 공개';
     color.value = lightPink;
     alarmIdx.value = null;
@@ -150,15 +153,24 @@ class ScheduleController extends GetxController {
   }
 
 
-  // 데이터가 갱신될 때만 업데이트
+  // 데이터가 갱신될 때만 업데이트 (Stream 만 listen 가능)
   void fetchCalendarDataSource() async {
     scheduleUseCase.getCalendarDataSource().listen((dataSource) {
       _dataSource.value = dataSource;
     });
   }
 
-  // ScheduleDataSource 타입의 실제 데이터를 반환
+
+  // 알람 상태가 true인 것만 불러옴
+  void fetchScheduleByAlarmStatus() async {
+    scheduleUseCase.fetchScheduleByAlarmStatus(true);
+  }
+
+  // ScheduleDataSource 타입의 실제 데이터를 Widget 에서 호출 하기 위한 getter 생성
+  // 외부에서 dataSource 로  _dataSource 호출 가능
   ScheduleDataSource get dataSource => _dataSource.value;
+
+  //----
 
   // 사용자가 입력한 값을 서버에 저장하고 로컬 리스트에 추가하는 메서드
   void addSchedule() async {
@@ -181,6 +193,7 @@ class ScheduleController extends GetxController {
       userIdx: userIdx.value,
       groupIdx: groupIdx.value,
       alarmIdx: alarmIdx.value,
+      alarmStatus: alarmStatus.value,
     );
 
     try {
@@ -196,5 +209,4 @@ class ScheduleController extends GetxController {
       isLoading.value = false;
     }
   }
-
 }

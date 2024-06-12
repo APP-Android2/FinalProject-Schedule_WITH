@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:schedule_with/assets/colors/color.dart';
 import 'package:schedule_with/ui/login/view/login_main.dart';
+import 'package:schedule_with/ui/schedule/controller/schedule_controller.dart';
 import 'package:schedule_with/ui/schedule/view/schedule_main.dart';
 
 class ScheduleAlert extends StatefulWidget {
@@ -21,6 +22,8 @@ class ScheduleAlert extends StatefulWidget {
 }
 
 class _ScheduleAlertState extends State<ScheduleAlert> {
+  final ScheduleController _scheduleController = Get.find<ScheduleController>();
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -62,6 +65,8 @@ class _ScheduleAlertState extends State<ScheduleAlert> {
               onPressed: () {
                 // 파이어베이스에서 해당 스케줄 데이터 삭제 되어야 함
                 Get.offAll(ScheduleMain());
+                // 입력값 초기화
+                _scheduleController.resetFields();
               },
               child: Text(widget.YesMsg,
                 style: TextStyle(

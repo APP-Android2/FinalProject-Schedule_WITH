@@ -1,28 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:schedule_with/assets/colors/color.dart';
 
-class PayMemo extends ChangeNotifier {
-  String date;
-  String title;
-  String amount;
-  bool isCompleted;
-  String accountNumber;
-  int participantsCount;
-  List<String> usageDetails;
+import '../../../entity/paymemo_tbl.dart';
 
-  PayMemo({
-    required this.date,
-    required this.title,
-    required this.amount,
-    this.isCompleted = false,
-    this.accountNumber = '',
-    this.participantsCount = 1,
-    this.usageDetails = const [],
-  });
+class PayMemoProvider with ChangeNotifier {
+  PayMemo _payMemo;
+  PayMemoProvider(this._payMemo);
+  PayMemo get payMemo => _payMemo;
 
   void toggleCompleted() {
-    isCompleted = !isCompleted;
+    _payMemo.isCompleted = !_payMemo.isCompleted;
     notifyListeners();
   }
 }
@@ -63,7 +52,7 @@ class PayMemoItem extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(paymemo.date, style: TextStyle(fontSize: 10, color: grey4)),
+                          Text(DateFormat('yyyy-MM-dd').format(paymemo.mod_dt), style: TextStyle(fontSize: 10, color: grey4)),
                           Text(paymemo.title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                         ],
                       ),
@@ -72,7 +61,7 @@ class PayMemoItem extends StatelessWidget {
                       offset: Offset(0, -5),
                     child: Container(
                       width: 60,
-                      height: 20,
+                      height: 24,
                       decoration: BoxDecoration(
                         color: paymemo.isCompleted ? mainOrange : mainBrown,
                         borderRadius: BorderRadius.circular(20),
@@ -112,7 +101,7 @@ class PayMemoItem extends StatelessWidget {
                               ),
                               TextSpan(
                                 text: " | $personalAmount",
-                                style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+                                style: TextStyle(color: Colors.black, fontSize: 16),
                               ),
                             ],
                           ),

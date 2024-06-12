@@ -15,6 +15,16 @@ class GroupFreindAdd extends StatefulWidget {
 }
 
 class _GroupFreindAddState extends State<GroupFreindAdd> {
+  Map<String?, String> userIDToName = {
+    "yj123": "이영주",
+    "sm456": "김승미",
+    "sw789": "이수원",
+    "mj000": "정명재",
+  };
+
+  String enteredID = '';
+  List<String?> searchedIDs = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +55,12 @@ class _GroupFreindAddState extends State<GroupFreindAdd> {
           actions: [
             InkWell(
               onTap: () {
-
+                setState(() {
+                  searchedIDs = userIDToName.keys
+                      .where((id) =>
+                  id!.toLowerCase() == enteredID.toLowerCase())
+                      .toList();
+                });
               },
               child: Container(
                 padding: EdgeInsets.fromLTRB(0, 0, 16, 8),
@@ -86,6 +101,15 @@ class _GroupFreindAddState extends State<GroupFreindAdd> {
               style: TextStyle(decorationThickness: 0),
               // 커서 색상
               cursorColor: mainOrange,
+              // Add onChanged callback to update search results
+              onChanged: (value) {
+                setState(() {
+                  // searchedIDs = userIDToName.keys
+                  //     .where((id) => id!.toLowerCase().contains(value.toLowerCase()))
+                  //     .toList();
+                  enteredID = value;
+                });
+              },
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 10),
                 // ubfocus일 때 border 설정
@@ -103,45 +127,47 @@ class _GroupFreindAddState extends State<GroupFreindAdd> {
               ),
             ),
           ),
-          // 검색한 아이디의 목록
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 5,horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // 프로필 및 유저 이름
-                Row(
+          if (searchedIDs.isNotEmpty)
+          Column(
+            children: searchedIDs.map((id) {
+              return Container(
+                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                        width: 55,
-                        height: 55,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: grey1,
-                            border: Border.all(color: grey2,width: 0.5)
+                    // 프로필 및 유저 이름
+                    Row(
+                      children: [
+                        Container(
+                          width: 55,
+                          height: 55,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: grey1,
+                              border: Border.all(
+                                  color: grey2, width: 0.5)),
+                          margin: EdgeInsets.only(right: 10),
+                          child: SvgPicture.asset(
+                            "lib/assets/icon/icon_plus.svg",
+                            width: 15,
+                            height: 15,
+                            fit: BoxFit.scaleDown,
+                          ),
                         ),
-                        margin: EdgeInsets.only(right: 10),
-                        child: SvgPicture.asset(
-                          "lib/assets/icon/icon_plus.svg",
-                          width: 15,
-                          height: 15,
-                          fit: BoxFit.scaleDown,
-                        )
+                        // Displaying the user's name (if available)
+                        Text(userIDToName[id] ?? "검색 결과가 없습니다."),
+                      ],
                     ),
-                    Text("이수원")
+                    // 친구요청 버튼
+                    FriendAddMiniButton(
+                        text: "친구요청",
+                        onPressed: () {},
+                        color: mainOrange),
                   ],
                 ),
-                // 친구요청 버튼
-                FriendAddMiniButton(
-                    text: "친구요청",
-                    onPressed: () {
-
-                    },
-                    color: mainOrange
-                )
-              ],
-            ),
-          )
+              );
+            }).toList(),
+          ),
         ],
       ),
     );

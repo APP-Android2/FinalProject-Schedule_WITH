@@ -6,15 +6,20 @@ import 'package:schedule_with/assets/colors/color.dart';
 import 'package:schedule_with/ui/memo/view/paymemo.dart';
 import 'package:schedule_with/ui/memo/view/paymemo_item.dart';
 
-import '../widget/memo_controller.dart';
+import '../../../domain/repository/memo/paymemo_repository.dart';
+import '../../../domain/use_case/paymemo_use__case.dart';
+import '../widget/paymemo_controller.dart';
 
 class PayMemoListView extends StatelessWidget {
-  final PayMemoController controller = Get.put(PayMemoController());
+  final PayMemoController controller;
+
+  PayMemoListView({Key? key}) : controller = Get.put(PayMemoController(
+      payMemoUseCase: PayMemoUseCase(PayMemoRepository()))), super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return  Container(
-        padding: EdgeInsets.zero, // 추가된 패딩 제거
+        padding: EdgeInsets.zero,
       child: Column(
         children: [
           Container(
@@ -71,8 +76,7 @@ class PayMemoListView extends StatelessWidget {
                     title: "삭제",
                     onTap: (CompletionHandler handler) async {
                     await handler(true);
-                    controller.paymemos.removeAt(index);
-                    // setState(() {});
+                    controller.deletePayMemo(controller.paymemos[index].idx.toString());
                       },
                       color:  mainBrown,
                       ),
@@ -83,13 +87,12 @@ class PayMemoListView extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                PayMemoScreen(paymemo: controller.paymemos[index]),
+                            builder: (context) => PayMemoScreen(paymemo: controller.paymemos[index]),
                           ),
                         );
                       },
                       onDelete: () {
-                        controller.deletePayMemo(index);
+                        controller.deletePayMemo(controller.paymemos[index].idx.toString());
                         },
                       ),
                     ),
