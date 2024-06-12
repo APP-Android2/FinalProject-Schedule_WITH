@@ -1,6 +1,7 @@
 import '../../entity/memo_tbl.dart';
 import '../repository/memo/memo_repository.dart';
 
+
 class MemoUseCase {
   final MemoRepository repository;
 

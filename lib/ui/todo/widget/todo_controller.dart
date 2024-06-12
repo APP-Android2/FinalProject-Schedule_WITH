@@ -1,45 +1,45 @@
 import 'package:get/get.dart';
+import 'package:schedule_with/ui/todo/widget/todo_item_data.dart';
 
 class TodoController extends GetxController {
-  var todoItems = <TodoItemData>[].obs;
-
-  List<TodoItemData> getTodoItemsForDate(String date) {
-    return todoItems.where((item) => item.date == date).toList();
-  }
+  var selectedDate = DateTime.now().obs;
+  var todoList = <TodoItemData>[].obs;
 
   void addTodoItem(String date, String content) {
-    todoItems.add(TodoItemData(date: date, content: content, isCompleted: false));
+    final newItem = TodoItemData(date: date, content: content);
+    todoList.add(newItem);
+    print('Todo item added: $date - $content');
   }
 
-  void updateTodoItem(String date, TodoItemData updatedItem) {
-    int index = todoItems.indexWhere((item) => item.date == date && item.content == updatedItem.content);
+  void updateTodoItem(String oldDate, TodoItemData updatedItem) {
+    int index = todoList.indexWhere((item) => item.date == oldDate && item.content == updatedItem.content);
     if (index != -1) {
-      todoItems[index] = updatedItem;
+      todoList[index] = updatedItem;
+    } else {
+      todoList.removeWhere((item) => item.date == oldDate && item.content == updatedItem.content);
+      addTodoItem(updatedItem.date, updatedItem.content);
     }
+    print('Todo item updated: ${updatedItem.date} - ${updatedItem.content}');
   }
 
   void deleteTodoItem(String date, TodoItemData itemToDelete) {
-    todoItems.removeWhere((item) => item.date == date && item.content == itemToDelete.content);
+    todoList.removeWhere((item) => item.date == date && item.content == itemToDelete.content);
+    print('Todo item deleted: $date - ${itemToDelete.content}');
+  }
+
+  List<TodoItemData> getTodoItemsForDate(String date) {
+    return todoList.where((item) => item.date == date).toList();
+  }
+
+  void updateSelectedDate(DateTime date) {
+    selectedDate.value = date;
+    print('Selected date updated: $date');
   }
 
   double calculateCompletionRate(String date) {
-    List<TodoItemData> itemsForDate = getTodoItemsForDate(date);
-    if (itemsForDate.isEmpty) {
-      return 0.0;
-    }
-    int completedCount = itemsForDate.where((item) => item.isCompleted).length;
-    return completedCount / itemsForDate.length;
+    final todosForDate = getTodoItemsForDate(date);
+    if (todosForDate.isEmpty) return 0.0;
+    final completedCount = todosForDate.where((item) => item.isCompleted).length;
+    return completedCount / todosForDate.length;
   }
-}
-
-class TodoItemData {
-  final String date;
-  String content;
-  bool isCompleted;
-
-  TodoItemData({
-    required this.date,
-    required this.content,
-    this.isCompleted = false,
-  });
 }
