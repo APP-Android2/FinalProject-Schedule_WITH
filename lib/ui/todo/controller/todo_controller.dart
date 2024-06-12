@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../domain/repository/todo_repository.dart';
@@ -7,6 +8,7 @@ class TodoController extends GetxController {
   var selectedDate = DateTime.now().obs;
   var todoItems = <Todo>[].obs;
   var todoIdx = 0.obs;
+  TextEditingController todoContent = TextEditingController();
 
   final TodoRepository todoRepository = TodoRepository();
 

@@ -11,11 +11,10 @@ class UserRepository{
 
   // userSequence 값을 가져온다.
   Future<int?> getUserSequence() async {
-    QuerySnapshot querySnapshot = await _firebase.collection('Sequence').get();
-    if (querySnapshot.docs.isNotEmpty) {
-      // 첫 번째 문서 가져오기
-      DocumentSnapshot doc = querySnapshot.docs.first;
-      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    DocumentSnapshot querySnapshot = await _firebase.collection('Sequence').doc("UserSequence").get();
+    if (querySnapshot.exists) {
+
+      Map<String, dynamic> data = querySnapshot.data() as Map<String, dynamic>;
       return data['value'];
     } else {
       return null;

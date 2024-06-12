@@ -9,6 +9,10 @@ import 'package:schedule_with/widget/main_app_bar.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
+import '../../todo/controller/todo_controller.dart';
+import '../../todo/widget/calendar_cell_custom.dart';
+import '../../todo/widget/todo_add_bottom_sheet.dart';
+
 class HomeMain extends StatefulWidget {
   const HomeMain({super.key});
 
@@ -27,6 +31,9 @@ class _HomeMainState extends State<HomeMain> {
   ];
 
   var imagePosition = 0;
+
+  final TodoController todoController = Get.put(TodoController());
+  final CustomCalendarController calendarController = Get.put(CustomCalendarController());
 
   @override
   Widget build(BuildContext context) {
@@ -172,35 +179,97 @@ class _HomeMainState extends State<HomeMain> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
+                      color: Colors.transparent,
+                      padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          IconAndText(
-                            iconRoute: 'lib/assets/icon/icon_todo.svg',
-                            text: "TODO 리스트",
-                            height: 18,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconAndText(
+                                iconRoute: 'lib/assets/icon/icon_todo.svg',
+                                text: "TODO 리스트",
+                                height: 18,
+                              ),
+                              Padding(padding: EdgeInsets.only(right: 5)),
+                              Obx(() {
+                                var todosForDate = todoController.getTodosForDate(calendarController.selectedDate.value);
+                                double completionPercentage = todosForDate.isEmpty
+                                    ? 0.0
+                                    : todosForDate.where((todo) => todo.check.value).length / todosForDate.length * 100;
+                                return Text("${completionPercentage.toStringAsFixed(0)}%", style: TextStyle(color: mainOrange));
+                              }),
+                            ],
                           ),
-                          SvgPicture.asset(
-                            "lib/assets/icon/icon_plus2.svg",
-                            width: 17,
-                            height: 17,
-                          )
+                          InkWell(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return TodoAddBottomSheet();
+                                },
+                              );
+                            },
+                            child: SvgPicture.asset(
+                              "lib/assets/icon/icon_plus2.svg",
+                              width: 17,
+                              height: 17,
+                            ),
+                          ),
                         ],
                       ),
-                      color: Colors.transparent,
-                      padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
                     ),
-                    Container(
-                      padding: EdgeInsets.fromLTRB(10, 10, 10, 20),
-                      child: Center(
-                        child: Text(
+                    Obx(() {
+                      var todosForDate = todoController.getTodosForDate(calendarController.selectedDate.value);
+                      return todosForDate.isNotEmpty
+                          ? Container(
+                        padding: EdgeInsets.fromLTRB(10, 10, 10, 20),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: todosForDate.length,
+                          itemBuilder: (_, index) {
+                            var todo = todosForDate[index];
+                            return ListTile(
+                              leading: Obx(() {
+                                return Checkbox(
+                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  visualDensity: VisualDensity(
+                                    horizontal: VisualDensity.minimumDensity,
+                                    vertical: VisualDensity.minimumDensity,
+                                  ),
+                                  checkColor: Colors.white,
+                                  activeColor: Colors.white,
+                                  fillColor: todo.check.value
+                                      ? MaterialStatePropertyAll(mainOrange)
+                                      : MaterialStatePropertyAll(Colors.white),
+                                  side: MaterialStateBorderSide.resolveWith(
+                                        (states) => BorderSide(width: 1.0, color: mainOrange),
+                                  ),
+                                  value: todo.check.value,
+                                  onChanged: (value) {
+                                    todoController.toggleTodoCheck(todo);
+                                  },
+                                );
+                              }),
+                              title: Text(todo.title),
+                            );
+                          },
+                        ),
+                      )
+                          : Container(
+                        padding: EdgeInsets.fromLTRB(10, 10, 10, 20),
+                        child: Center(
+                          child: Text(
                             "등록된 TODO 리스트가 없습니다.",
-                          style: TextStyle(
-                            color: grey3,
+                            style: TextStyle(
+                              color: grey3,
+                            ),
                           ),
                         ),
-                      ),
-                    )
+                      );
+                    })
                   ],
                 ),
               ),

@@ -94,7 +94,6 @@ class TodoEditBottomSheet extends StatelessWidget {
                     child: SizedBox(
                       height: 20,
                       child: TextField(
-
                         controller: todoContentController,
                         textAlign: TextAlign.right,
                         cursorColor: mainOrange,

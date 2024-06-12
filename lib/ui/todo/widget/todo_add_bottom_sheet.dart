@@ -19,16 +19,18 @@ class TodoAddBottomSheet extends StatelessWidget {
 
   late Todos todo;
 
-  TodoAddBottomSheet({super.key});
+  TodoAddBottomSheet({super.key,});
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController todoContentController = TextEditingController();
+    print("${_todoController.selectedDate.value}");
+    // TextEditingController todoContentController = TextEditingController();
 
     return SingleChildScrollView(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
         height: MediaQuery.of(context).size.height * 0.5,
+        width: MediaQuery.of(context).size.width,
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -61,7 +63,7 @@ class TodoAddBottomSheet extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Obx(() => Text(
-                            '${formatter.format(_todoController.selectedDate.value)}',
+                            formatter.format(_todoController.selectedDate.value),
                             style: TextStyle(fontSize: 16, color: grey4))),
                         Padding(padding: EdgeInsets.only(right: 10)),
                         SvgPicture.asset("lib/assets/icon/icon_detail_open.svg")
@@ -84,7 +86,7 @@ class TodoAddBottomSheet extends StatelessWidget {
                     child: SizedBox(
                       height: 20,
                       child: TextField(
-                        controller: todoContentController,
+                        controller: _todoController.todoContent,
                         textAlign: TextAlign.right,
                         cursorColor: mainOrange,
                         style: TextStyle(
@@ -117,10 +119,11 @@ class TodoAddBottomSheet extends StatelessWidget {
                   final SharedPreferences prefs = await SharedPreferences.getInstance();
                   var user_idx = prefs.getInt('idx');
 
-                  if (todoContentController.text.isNotEmpty) {
+                  if (_todoController.todoContent.text.isNotEmpty) {
                     _todoController.addTodoItem(
                       _todoController.todoIdx.value = idx + 1 ,
-                      todoContentController.text,
+                      // todoContentController.text,
+                      _todoController.todoContent.text,
                       "Todo 설명", // You can add a description field to the UI as well
                       _todoController.selectedDate.value,
                     );
@@ -130,7 +133,7 @@ class TodoAddBottomSheet extends StatelessWidget {
                         user_idx: user_idx!,
                         group_idx: 0,
                         todo_dt: _todoController.selectedDate.value,
-                        title: todoContentController.text,
+                        title: _todoController.todoContent.text, // todoContentController.text,
                         status: "Y",
                         reg_dt: DateTime.now(),
                         mod_dt: DateTime.now(),
@@ -138,7 +141,7 @@ class TodoAddBottomSheet extends StatelessWidget {
                     );
 
                     await todoRepository.saveTodoInfo(todo);
-
+                    _todoController.todoContent.text = "";
                     Get.back();
                   }
                 },
