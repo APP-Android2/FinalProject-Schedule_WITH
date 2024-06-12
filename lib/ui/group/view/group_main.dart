@@ -12,14 +12,19 @@ import '../widget/group_divider.dart';
 
 class GroupMain extends StatefulWidget {
   final List<GroupProfile> groupProfile = [
-    GroupProfile(ProfileImage: "", UserName: "이수원"),
-    GroupProfile(ProfileImage: "", UserName: "이수원2"),
-    GroupProfile(ProfileImage: "", UserName: "이수원3"),
+    GroupProfile(ProfileImage: "", UserName: "스케줄 위드"),
+    GroupProfile(ProfileImage: "", UserName: "멋쟁이 사자처럼"),
+    GroupProfile(ProfileImage: "", UserName: "안드로이드 스쿨 2기"),
+    GroupProfile(ProfileImage: "", UserName: "인천 정모"),
+    GroupProfile(ProfileImage: "", UserName: "스터디 그룹"),
+    GroupProfile(ProfileImage: "", UserName: "친구모임"),
   ];
   final List<FriendProfile> friendProfile = [
+    FriendProfile(ProfileImage: "", UserName: "이영주"),
+    FriendProfile(ProfileImage: "", UserName: "김승미"),
     FriendProfile(ProfileImage: "", UserName: "이수원"),
-    FriendProfile(ProfileImage: "", UserName: "이수원"),
-    FriendProfile(ProfileImage: "", UserName: "이수원"),
+    FriendProfile(ProfileImage: "", UserName: "정명재"),
+    FriendProfile(ProfileImage: "", UserName: "이영주"),
   ];
 
   // GroupMain({Key? key}) : super(key: key);
@@ -167,52 +172,4 @@ class _GroupMainState extends State<GroupMain> {
     );
   }
 }
-//
-// class MyProfile extends StatefulWidget {
-//   const MyProfile({super.key});
-//
-//   @override
-//   State<MyProfile> createState() => _MyProfileState();
-// }
-//
-// class _MyProfileState extends State<MyProfile> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return InkWell(
-//       onTap: (){Get.toNamed('/groupDetail');},
-//       child: Container(
-//         color: Colors.white,
-//         padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-//         child: Row(
-//           crossAxisAlignment: CrossAxisAlignment.center,
-//           children: [
-//             Container(
-//               width: 55,
-//               height: 55,
-//               decoration: BoxDecoration(
-//                 borderRadius: BorderRadius.circular(20),
-//                 color: grey1,
-//                 border: Border.all(color: grey2, width: 1),
-//               ),
-//               margin: EdgeInsets.only(bottom: 5),
-//               child: FittedBox(
-//                 fit: BoxFit.none,
-//                 child: Icon(CupertinoIcons.person_fill,
-//                   color: mainBrown.withOpacity(0.5),
-//                 ),
-//               ),
-//             ),
-//             SizedBox(width: 10),
-//             Text(
-//               "김진경",
-//               style: TextStyle(
-//                 fontSize: 16,
-//               ),
-//             )
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-//
+
