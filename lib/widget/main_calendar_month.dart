@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schedule_with/assets/colors/color.dart';
+import 'package:schedule_with/entity/schedule_tbl.dart';
 import 'package:schedule_with/entity/sfcalendar_custom_appointment.dart';
 import 'package:schedule_with/ui/schedule/controller/schedule_controller.dart';
+import 'package:schedule_with/ui/schedule/widget/appointment_builder.dart';
 import 'package:schedule_with/ui/schedule/widget/schedule_edit_bottom_sheet.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
@@ -36,13 +38,12 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
   void initState() {
     super.initState();
     _scheduleController.onInit();
-    _scheduleController.fetchSchedules();
+    // _scheduleController.fetchListenSchedules();
     print('캘린더 초기화');
   }
 
   // 선택된 셀의 날짜 확인
   void _onCalendarTap(CalendarTapDetails details) {
-    var todayAppoint = details.appointments?.isNotEmpty ?? false;
     // 선택한 요소의 인덱스 (0 = 헤더 , 1 = 요일 , 2 = 셀)
     var onTapElement = details.targetElement.index;
     var userSelectMonth = _calendarController.selectedDate?.month;
@@ -66,18 +67,6 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
         }
       });
     }
-    // 약속 있으면 스케줄 수정 바텀시트 띄움
-    if (todayAppoint == true) {
-      showModalBottomSheet(
-        // 바텀 시트 높이 지정하려면 isScrollControlled: true,
-          isScrollControlled: true,
-          context: context,
-          builder: (BuildContext context) {
-            return EditScheduleBottomSheet();
-          });
-    } else {
-      // 약속이 없을 때의 동작 추가 (필요한 경우)
-    }
   }
 
   @override
@@ -85,71 +74,77 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
     return Column(
       children: [
         Obx(() {
-            return SizedBox(
-              // 캘린더가 차지할 높이
-              height: MediaQuery.of(context).size.height * 0.65,
-              // DataPicker 테마 설정 시 라이브러리 별도로 필요하여 추가해줌
-              child: SfDateRangePickerTheme(
-                data: SfDateRangePickerThemeData(
-                  backgroundColor: Colors.white,
-                  viewHeaderBackgroundColor: Colors.white,
-                  headerBackgroundColor: grey1,
+          return SizedBox(
+            // 캘린더가 차지할 높이
+            height: MediaQuery
+                .of(context)
+                .size
+                .height * 0.70,
+            // DataPicker 테마 설정 시 라이브러리 별도로 필요하여 추가해줌
+            child: SfDateRangePickerTheme(
+              data: SfDateRangePickerThemeData(
+                backgroundColor: Colors.white,
+                viewHeaderBackgroundColor: Colors.white,
+                headerBackgroundColor: grey1,
+              ),
+              // 캘린더
+              child: SfCalendar(
+                // dataSource가 변경될 때 캘린더를 자동으로 업데이트
+                dataSource: _scheduleController.dataSource,
+                // 최초 표시형식 (월)
+                view: currentView,
+                initialSelectedDate: _jumpToTime,
+                initialDisplayDate: _jumpToTime,
+                controller: _calendarController,
+                onTap: _onCalendarTap,
+                // 변경 가능한 표시형식 (월, 주)
+                allowedViews: const [
+                  CalendarView.month,
+                  CalendarView.week,
+                ],
+                // 배경색
+                backgroundColor: Colors.white,
+                // 오늘 날짜 강조색
+                todayHighlightColor: Colors.transparent,
+                todayTextStyle: TextStyle(color: Colors.black87),
+                // 연월 고르는 버튼 활성화
+                showDatePickerButton: true,
+                // 오늘 날짜로 돌아가는 버튼
+                showTodayButton: true,
+                cellBorderColor: grey3,
+                // 달력 헤더 스타일 설정
+                viewHeaderStyle: ViewHeaderStyle(
+                    dayTextStyle: TextStyle(color: Colors.black)),
+                headerDateFormat: 'yyyy년 MM월',
+                headerHeight: 50,
+                headerStyle: CalendarHeaderStyle(
+                    backgroundColor: Colors.white,
+                    textStyle: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black87,
+                    )),
+                // 특정 날짜 선택시 셀 스타일 설정
+                selectionDecoration: BoxDecoration(
+                  color: Colors.transparent,
+                  border: Border.all(
+                    color: isCurrentMonth ? mainOrange : Colors.transparent,
+                    width: 2,
+                  ),
                 ),
-                // 캘린더
-                child: SfCalendar(
-                  // dataSource가 변경될 때 캘린더를 자동으로 업데이트
-                  dataSource: _scheduleController.dataSource,
-                  // 최초 표시형식 (월)
-                  view: currentView,
-                  initialSelectedDate: _jumpToTime,
-                  initialDisplayDate: _jumpToTime,
-                  controller: _calendarController,
-                  onTap: _onCalendarTap,
-                  // 변경 가능한 표시형식 (월, 주)
-                  allowedViews: const [
-                    CalendarView.month,
-                    CalendarView.week,
-                  ],
-                  // 배경색
-                  backgroundColor: Colors.white,
-                  // 오늘 날짜 강조색
-                  todayHighlightColor: mainOrange,
-                  todayTextStyle: TextStyle(color: Colors.white),
-                  // 연월 고르는 버튼 활성화
-                  showDatePickerButton: true,
-                  // 오늘 날짜로 돌아가는 버튼
-                  showTodayButton: true,
-                  cellBorderColor: grey3,
-                  // 달력 헤더 스타일 설정
-                  viewHeaderStyle: ViewHeaderStyle(
-                      dayTextStyle: TextStyle(color: Colors.black)),
-                  headerDateFormat: 'yyyy년 MM월',
-                  headerHeight: 50,
-                  headerStyle: CalendarHeaderStyle(
-                      backgroundColor: Colors.white,
-                      textStyle: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black,
-                      )),
-                  // 특정 날짜 선택시 셀 스타일 설정
-                  selectionDecoration: BoxDecoration(
-                    color: Colors.transparent,
-                    border: Border.all(
-                      color: isCurrentMonth ? mainOrange : Colors.transparent,
-                      width: 2,
-                    ),
+                // month 설정
+                cellEndPadding: 0,
+                monthViewSettings: MonthViewSettings(
+                  monthCellStyle: MonthCellStyle(
+                    todayBackgroundColor: grey2
                   ),
-                  // month 설정
-                  cellEndPadding: 0,
-                  monthViewSettings: MonthViewSettings(
-                    numberOfWeeksInView: 6, // 달력에 나타낼 주 수
-                    appointmentDisplayMode:
-                    MonthAppointmentDisplayMode.appointment, // 약속 제목 표시
-                    appointmentDisplayCount: 3, // 셀 하나에 약속 표시 갯수
-                  ),
-                  appointmentBuilder: buildAppointmentWidget,
-                  // week 설정
-                  timeSlotViewSettings: TimeSlotViewSettings(
+                  numberOfWeeksInView: 6, // 달력에 나타낼 주 수
+                  appointmentDisplayMode:
+                  MonthAppointmentDisplayMode.appointment, // 약속 제목 표시
+                  appointmentDisplayCount: 3, // 셀 하나에 약속 표시 갯수
+                ),
+                appointmentBuilder: buildAppointmentWidget,
+                // week 설정
+                timeSlotViewSettings: TimeSlotViewSettings(
                     timeRulerSize: 50,
                     timeTextStyle:
                     TextStyle(color: grey4, fontWeight: FontWeight.bold),
@@ -159,74 +154,13 @@ class _MainCalendarMonthState extends State<MainCalendarMonth> {
                     timeInterval: Duration(hours: 1),
                     timeFormat: 'a h:mm',
                     minimumAppointmentDuration: Duration(hours: 1)
-
-                  ),
-
                 ),
               ),
-            );
-          },
+            ),
+          );
+        },
         )
       ],
     );
-  }
-
-// 약속 3개 이상 더보기 아이콘
-  Widget buildAppointmentWidget(
-      BuildContext context, CalendarAppointmentDetails details) {
-    if (details.isMoreAppointmentRegion) {
-      print(details.isMoreAppointmentRegion);
-      // 하나의 셀에 일정 최대 3개만 표시. 3개 초과 시 더보기 아이콘 띄움
-      return Container(
-        width: details.bounds.width,
-        height: details.bounds.height,
-        child: Center(
-          child: Icon(
-            Icons.more_horiz, // 원하는 아이콘으로 변경
-            size: 16, // 아이콘 크기 조정
-            color: mainBrown, // 아이콘 색상 조정
-          ),
-        ),
-      );
-    } else {
-      final SfCalendarCustomAppointment appointment =
-          details.appointments.first;
-
-      // print('알람 설정 값 확인 ${appointment.alarmStatus}');
-
-      // 일정 3개 이하일 때 보이는 설정
-      return Container(
-          decoration: BoxDecoration(
-            color: appointment.color,
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // 알람 아이콘
-              Expanded(
-                flex: 1,
-                child: Icon(Icons.access_alarm,
-                    size: appointment.alarmStatus ? 12 : 0,
-                    color: appointment.alarmStatus
-                        ? mainBrown
-                        : Colors.transparent),
-              ),
-              // 일정
-              Expanded(
-                flex: 4,
-                child: Text(
-                  textAlign: TextAlign.center,
-                  appointment.subject,
-                  overflow: TextOverflow.fade,
-                  style: TextStyle(color: mainBrown, fontSize: 10),
-                ),
-              ),
-              // 일정 텍스트를 가운데 맞추기 위한 여백
-              Expanded(child: SizedBox(width: 2)),
-            ],
-          ));
-    }
   }
 }

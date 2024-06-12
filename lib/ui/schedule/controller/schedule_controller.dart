@@ -6,7 +6,7 @@ import 'package:schedule_with/assets/colors/color.dart';
 import 'package:schedule_with/data/data_source/schedule_data_source.dart';
 import 'package:schedule_with/domain/use_case/schedule_usecase.dart';
 import 'package:schedule_with/entity/schedule_tbl.dart';
-import 'package:schedule_with/ui/schedule/widget/calendar_cell_custom.dart';
+import 'package:schedule_with/ui/todo/widget/calendar_cell_custom.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class ScheduleController extends GetxController {

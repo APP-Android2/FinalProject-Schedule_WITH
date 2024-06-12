@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:schedule_with/ui/schedule/widget/calendar_cell_custom.dart';
-import 'package:schedule_with/ui/todo/widget/todo_add_bottom_sheet.dart';
+import 'package:intl/intl.dart';
+import 'package:schedule_with/domain/repository/todo_repository.dart';
+import 'package:schedule_with/ui/todo/widget/todo_edit_bottom_sheet.dart';
 import '../../../assets/colors/color.dart';
+import '../widget/calendar_cell_custom.dart';
+import '../controller/todo_controller.dart';
+import '../widget/todo_add_bottom_sheet.dart';
 
 class TodoMainScreen extends StatefulWidget {
   const TodoMainScreen({super.key});
@@ -13,49 +16,93 @@ class TodoMainScreen extends StatefulWidget {
 }
 
 class _TodoMainScreenState extends State<TodoMainScreen> {
-  final List<Todo> _todoItems = [
-    Todo(title: '할일1', description: '할일 설명1'),
-    Todo(title: '할일2', description: '할일 설명2'),
-    Todo(title: '할일3', description: '할일 설명3'),
-    Todo(title: '할일4', description: '할일 설명4'),
+  final TodoController todoController = Get.put(TodoController());
+  final CustomCalendarController calendarController = Get.put(CustomCalendarController());
+  final DateFormat formatter = DateFormat('yyyy년 MM월 dd일');
 
-  ];
 
-  void _addTodoItem(String title, String description) {
-    if (title.isNotEmpty && description.isNotEmpty) {
-      setState(() {
-        _todoItems.add(Todo(
-          title: title,
-          description: description,
-        ));
-      });
-    }
+  @override
+  void initState() {
+    super.initState();
+    // Fetch todos here if needed, although it should already be handled in the controller's onInit method.
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // 화면에서 캘린더가 차지할 크기 (0.60이하 overflow)
-            SizedBox(
-              height: 215,
-            //   height: MediaQuery.of(context).size.height * 0.7,
-              // 달성률 캘린더
-              // child:
+      body: Column(
+        children: [
+          SizedBox(
+            height: 215,
             child: CalendarCellCustom(),
+          ),
+          Container(
+            padding: EdgeInsets.all(10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Obx(() {
+                  return Text("${formatter.format(calendarController.selectedDate.value)}");
+                }),
+                Obx(() {
+                  var todosForDate = todoController.getTodosForDate(calendarController.selectedDate.value);
+                  double completionPercentage = todosForDate.isEmpty
+                      ? 0.0
+                      : todosForDate.where((todo) => todo.check.value).length / todosForDate.length * 100;
+                  return Text("${completionPercentage.toStringAsFixed(0)}%", style: TextStyle(color: mainOrange));
+                }),
+              ],
             ),
-            // 투두 리스트 넣을 부분
-            _buildTodoList(),
-          ],
-        ),
+          ),
+          Expanded(child: Obx(() {
+            var todosForDate = todoController.getTodosForDate(calendarController.selectedDate.value);
+            return ListView.builder(
+              itemCount: todosForDate.length,
+              itemBuilder: (_, index) {
+                var todo = todosForDate[index];
+                return ListTile(
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return TodoEditBottomSheet(idx: todo.idx, title: todo.title, calendarController: calendarController,);
+                      },
+                    );
+                  },
+                  leading: Obx(() {
+                    return Checkbox(
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      visualDensity: VisualDensity(
+                        horizontal: VisualDensity.minimumDensity,
+                        vertical: VisualDensity.minimumDensity,
+                      ),
+                      checkColor: Colors.white,
+                      activeColor: Colors.white,
+                      fillColor: todo.check.value ? MaterialStatePropertyAll(mainOrange) : MaterialStatePropertyAll(Colors.white),
+                      side: MaterialStateBorderSide.resolveWith(
+                            (states) => BorderSide(width: 1.0, color: mainOrange),
+                      ),
+                      value: todo.check.value,
+                      onChanged: (value) {
+                        todoController.toggleTodoCheck(todo);
+                      },
+                    );
+                  }),
+                  title: Text(todo.title),
+                );
+              },
+            );
+          })),
+        ],
       ),
-      // 플로팅 버튼
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-
+          showModalBottomSheet(
+            context: context,
+            builder: (context) {
+              return TodoAddBottomSheet();
+            },
+          );
         },
         backgroundColor: mainOrange,
         child: Icon(Icons.add, color: Colors.white),
@@ -63,32 +110,4 @@ class _TodoMainScreenState extends State<TodoMainScreen> {
       ),
     );
   }
-
-
-
-  //
-  Widget _buildTodoList() {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemBuilder: (_, index) {
-        return ListTile(
-          title: Text(_todoItems[index].title),
-          subtitle: Text(_todoItems[index].description),
-        );
-      },
-      itemCount: _todoItems.length,
-    );
-  }
-}
-
-
-// Todo
-class Todo {
-  final String title;
-  final String description;
-
-  Todo({
-    required this.title,
-    required this.description,
-  });
 }
